@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #060814;
+    color: #e2e8f0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.light body {
+    background-color: #f1f5f9;
+    color: #0f172a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 240, 255, 0.45);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  }
+
+  html.light ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.4);
+  }
+  html.light ::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 165, 233, 0.6);
+    box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+  }
+}
+
+.specular-border {
+  position: relative;
+}
+
+.specular-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+html.light .specular-border::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(226, 232, 240, 0.5) 50%,
+    rgba(203, 213, 225, 0.2) 100%
+  );
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* =========================================================
+   Light Mode Theme Overrides
+   Transforms deep obsidian spatial UI into crystalline frosted glass
+   ========================================================= */
+
+html.light {
+  color-scheme: light;
+}
+
+/* Frosted glass cards */
+html.light .bg-white\/\[0\.04\],
+html.light .bg-white\/\[0\.03\],
+html.light .bg-white\/\[0\.02\] {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light .bg-white\/\[0\.05\] {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html.light .bg-white\/\[0\.07\],
+html.light .bg-white\/\[0\.08\],
+html.light .hover\:bg-white\/\[0\.07\]:hover,
+html.light .hover\:bg-white\/\[0\.08\]:hover,
+html.light .hover\:bg-white\/\[0\.06\]:hover {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+}
+
+html.light .bg-white\/\[0\.12\] {
+  background-color: rgba(14, 165, 233, 0.12) !important;
+  color: #0369a1 !important;
+}
+
+/* Border colors */
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20,
+html.light .border-white\/25,
+html.light .border-white\/5 {
+  border-color: rgba(226, 232, 240, 0.85) !important;
+}
+
+/* Text Hierarchy */
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-white\/90,
+html.light .text-white\/80 {
+  color: #1e293b !important;
+}
+
+html.light .text-white\/70,
+html.light .text-white\/60,
+html.light .text-white\/50 {
+  color: #475569 !important;
+}
+
+html.light .text-white\/40,
+html.light .text-white\/30,
+html.light .text-white\/20 {
+  color: #64748b !important;
+}
+
+/* Secondary dark capsules & inputs */
+html.light .bg-black\/40,
+html.light .bg-black\/50,
+html.light .bg-black\/60,
+html.light .bg-black\/30 {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-black\/40 input,
+html.light .bg-black\/40 textarea,
+html.light .bg-black\/40 select,
+html.light input.bg-black\/40,
+html.light textarea.bg-black\/40,
+html.light select.bg-black\/40,
+html.light input.bg-black\/30 {
+  color: #0f172a !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Sidebar & Sticky Header in Light Mode */
+html.light aside {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light header.sticky {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Welcome banner in Light mode */
+html.light .bg-gradient-to-r.from-blue-900\/25,
+html.light .bg-gradient-to-r.from-blue-900\/30 {
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.85) 0%, rgba(238, 242, 255, 0.8) 50%, rgba(243, 232, 255, 0.85) 100%) !important;
+  border-color: rgba(186, 230, 253, 0.6) !important;
+  box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.08) !important;
+}
+
+/* AI Operations banner in Light mode */
+html.light .bg-gradient-to-r.from-blue-950\/40 {
+  background: linear-gradient(135deg, rgba(243, 232, 255, 0.85) 0%, rgba(224, 242, 254, 0.8) 100%) !important;
+  border-color: rgba(216, 180, 254, 0.5) !important;
+}
+
+/* Neon accents adjusted for crystalline light mode */
+html.light .text-cyan-300,
+html.light .text-cyan-400 {
+  color: #0284c7 !important;
+}
+
+html.light .text-purple-300,
+html.light .text-purple-400 {
+  color: #7c3aed !important;
+}
+
+html.light .text-emerald-300,
+html.light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-rose-300,
+html.light .text-rose-400 {
+  color: #e11d48 !important;
+}
+
+html.light .text-amber-300,
+html.light .text-amber-400 {
+  color: #d97706 !important;
+}
+
+/* SVG Chart adjustments for Light mode */
+html.light .shadow-glass {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+}
