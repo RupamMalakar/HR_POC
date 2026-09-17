@@ -16,6 +16,9 @@ import { ReportsView, HRProfileView } from './components/views/HRProfileAndRepor
 import { CommandPalette } from './components/modals/CommandPalette';
 import { NewActionModal } from './components/modals/NewActionModal';
 import { ReviewDrawer } from './components/modals/ReviewDrawer';
+import { LoginView } from './components/auth/LoginView';
+import { EmployeePortal } from './components/views/EmployeePortal';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { hrService } from './services/hrService';
 import {
   DashboardMetrics,
@@ -29,9 +32,19 @@ import {
   ActivityEvent,
   Category
 } from './types/hr';
-import { initialMetrics, velocityDataset, initialRequests, initialTriageQueue, initialDeliverables, initialHRActions, initialInsights, initialCategoryVolumes, initialActivities } from './services/mockData';
+import {
+  initialMetrics,
+  velocityDataset,
+  initialRequests,
+  initialTriageQueue,
+  initialDeliverables,
+  initialHRActions,
+  initialInsights,
+  initialCategoryVolumes,
+  initialActivities
+} from './services/mockData';
 
-export function App() {
+function HROperationsPortal() {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [metrics, setMetrics] = useState<DashboardMetrics>(initialMetrics);
   const [velocity, setVelocity] = useState<VelocityData>(velocityDataset['7D']);
@@ -79,7 +92,7 @@ export function App() {
     loadData();
   }, []);
 
-  // Keyboard shortcut listener for Alt+T (Quick Triage) and Cmd+K (handled also in CommandPalette)
+  // Keyboard shortcut listener for Alt+T (Quick Triage) and Cmd+K
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -155,7 +168,7 @@ export function App() {
 
       {/* 2. Main Shell Layout: screen locked, sidebar stationary */}
       <div className="relative z-10 flex h-full w-full p-4 gap-4 lg:gap-6 overflow-hidden">
-        {/* Floating Frosted Glass Sidebar (Desktop) - Fixed in viewport */}
+        {/* Floating Frosted Glass Sidebar (Desktop) */}
         <Sidebar
           activeTab={activeTab}
           onSelectTab={(tab) => {
@@ -189,7 +202,7 @@ export function App() {
           </div>
         )}
 
-        {/* Main Viewport: Independent Smooth Scroll Container for All Pages */}
+        {/* Main Viewport */}
         <div className="flex-1 min-w-0 h-full flex flex-col overflow-y-auto overflow-x-hidden pr-1.5 scroll-smooth">
           {/* Top Sticky Header */}
           <Header
@@ -305,6 +318,40 @@ export function App() {
         onResolve={handleResolveRequest}
       />
     </div>
+  );
+}
+
+function PortalRouter() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen bg-[#050713] flex flex-col items-center justify-center text-white/60 font-sans gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+        <span className="text-xs font-mono tracking-wider text-cyan-300/80">AUTHENTICATING HR AI ECOSYSTEM...</span>
+      </div>
+    );
+  }
+
+  // Not logged in -> Show Login view
+  if (!user) {
+    return <LoginView />;
+  }
+
+  // Role: EMPLOYEE -> Show User / Employee Self-Service Portal
+  if (user.role === 'EMPLOYEE') {
+    return <EmployeePortal />;
+  }
+
+  // Role: HR_ADMIN or HR_SPECIALIST -> Show HR Operations Cockpit
+  return <HROperationsPortal />;
+}
+
+export function App() {
+  return (
+    <AuthProvider>
+      <PortalRouter />
+    </AuthProvider>
   );
 }
 

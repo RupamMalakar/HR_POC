@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavTab } from './Sidebar';
 import { ThemeToggle } from './ThemeToggle';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   activeTab: NavTab;
@@ -61,6 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCommandPalette,
   onToggleMobileMenu
 }) => {
+  const { user, logout, demoLogin } = useAuth();
   const current = tabTitles[activeTab] || tabTitles.dashboard;
 
   return (
@@ -80,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
               {current.title}
             </h1>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide bg-cyan-500/15 border border-cyan-400/30 text-cyan-300">
-              LIVE FEED
+              HR PORTAL
             </span>
           </div>
           <p className="text-xs text-white/50 hidden sm:block">
@@ -89,7 +91,17 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-3.5">
+      <div className="flex items-center gap-3">
+        {/* Quick Portal Switcher */}
+        <button
+          onClick={() => demoLogin('EMPLOYEE')}
+          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-mono transition-all"
+          title="Switch view to Alex Johnson (Employee / User Self-Service Portal)"
+        >
+          <span className="material-symbols-outlined text-[16px]">person</span>
+          <span>User Portal →</span>
+        </button>
+
         {/* Glass Search Input - Click opens command palette */}
         <div
           onClick={onOpenCommandPalette}
@@ -98,59 +110,44 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="material-symbols-outlined absolute left-3 text-white/40 group-hover:text-neon-cyan text-[18px] pointer-events-none transition-colors">
             search
           </span>
-          <div className="w-56 md:w-64 pl-9 pr-14 py-2 bg-black/30 border border-white/10 group-hover:border-neon-cyan/50 rounded-xl text-xs text-white/50 backdrop-blur-md flex items-center transition-all">
-            <span>Search cases, employees...</span>
+          <div className="w-48 md:w-56 pl-9 pr-12 py-2 bg-black/30 border border-white/10 group-hover:border-neon-cyan/50 rounded-xl text-xs text-white/50 backdrop-blur-md flex items-center transition-all">
+            <span>Search cases...</span>
           </div>
           <span className="absolute right-2.5 text-[10px] font-mono text-white/40 border border-white/10 rounded px-1.5 py-0.5 bg-white/5">
             ⌘K
           </span>
         </div>
 
-        {/* Date Pill */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-white/[0.04] border border-white/10 rounded-xl text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer text-xs font-mono backdrop-blur-md">
-          <span className="material-symbols-outlined text-[16px] text-cyan-400">
-            calendar_today
-          </span>
-          <span className="hidden sm:inline">Today, Oct 24</span>
-          <span className="material-symbols-outlined text-[14px] text-white/40">
-            expand_more
-          </span>
-        </div>
-
-        {/* Theme Toggle (Dark / Light) */}
+        {/* Theme Toggle */}
         <ThemeToggle />
-
-        {/* Glass Notification Bell */}
-        <button
-          aria-label="Notifications"
-          onClick={() => alert("3 high-priority notifications: Alex Johnson bonus reconciliation, Priya Sharma dependent tier, Daniel Thomas sabbatical.")}
-          className="relative p-2 rounded-xl bg-white/[0.04] border border-white/10 text-white/70 hover:text-white hover:bg-white/[0.09] transition-all backdrop-blur-md"
-          type="button"
-        >
-          <span className="material-symbols-outlined text-[20px]">notifications</span>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full shadow-[0_0_8px_#f43f5e]" />
-        </button>
 
         <div className="h-6 w-px bg-white/15 mx-1 hidden sm:block" />
 
-        {/* Sarah's Frosted Avatar Profile */}
-        <div className="flex items-center gap-3 pl-1 bg-white/[0.03] border border-white/10 py-1.5 px-3 rounded-xl backdrop-blur-md">
+        {/* User Frosted Avatar Profile */}
+        <div className="flex items-center gap-2.5 pl-1 bg-white/[0.03] border border-white/10 py-1.5 px-3 rounded-xl backdrop-blur-md">
           <div className="flex flex-col text-right hidden sm:flex">
             <span className="text-xs text-white font-semibold leading-tight tracking-tight">
-              Sarah Jenkins
+              {user?.name || 'Sarah Jenkins'}
             </span>
             <span className="text-[10px] font-mono text-cyan-300/70 leading-none mt-0.5">
-              HR Operations Lead
+              {user?.role || 'HR_ADMIN'}
             </span>
           </div>
           <div className="relative">
             <img
-              alt="Sarah Jenkins Headshot"
-              className="w-9 h-9 rounded-xl object-cover ring-2 ring-white/25 shadow-lg"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0"
+              alt="Avatar"
+              className="w-8 h-8 rounded-xl object-cover ring-2 ring-white/25 shadow-lg"
+              src={user?.avatarUrl || "https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0"}
             />
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-obsidian" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-obsidian" />
           </div>
+          <button
+            onClick={logout}
+            className="text-white/40 hover:text-rose-400 p-1 rounded transition-colors ml-1"
+            title="Log Out"
+          >
+            <span className="material-symbols-outlined text-[16px]">logout</span>
+          </button>
         </div>
       </div>
     </header>

@@ -55,6 +55,7 @@ export interface DeliverableItem {
   generatedAt: string;
   contentPreview: string;
   pdfUrl?: string;
+  previewUrl?: string;
 }
 
 export interface HRActionItem {
