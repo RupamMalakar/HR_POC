@@ -24,3 +24,13 @@ build
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite3
+chroma_db/

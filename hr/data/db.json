@@ -1,0 +1,424 @@
+{
+  "metrics": {
+    "openRequests": {
+      "count": 0,
+      "changePercent": 0,
+      "comparisonText": "0 open"
+    },
+    "highPriority": {
+      "count": 0,
+      "requiresAttention": 0
+    },
+    "pendingHRActions": {
+      "count": 0,
+      "waitingOver24h": 0
+    },
+    "slaCompliance": {
+      "percent": 100,
+      "changePercent": 0,
+      "targetPercent": 92
+    },
+    "avgSla": "0m",
+    "resolvedOvernight": 3,
+    "aiTriagedToday": 0,
+    "aiAssistedCases": 0,
+    "draftsGenerated": 0
+  },
+  "velocity": {
+    "7D": {
+      "range": "7D",
+      "labels": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "incoming": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "resolved": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "openTotal": 0,
+      "receivedToday": 0,
+      "resolvedToday": 0
+    },
+    "30D": {
+      "range": "30D",
+      "labels": [
+        "Week 1",
+        "Week 2",
+        "Week 3",
+        "Week 4"
+      ],
+      "incoming": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "resolved": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "openTotal": 0,
+      "receivedToday": 0,
+      "resolvedToday": 0
+    },
+    "90D": {
+      "range": "90D",
+      "labels": [
+        "August",
+        "September",
+        "October"
+      ],
+      "incoming": [
+        0,
+        0,
+        0
+      ],
+      "resolved": [
+        0,
+        0,
+        0
+      ],
+      "openTotal": 0,
+      "receivedToday": 0,
+      "resolvedToday": 0
+    }
+  },
+  "requests": [
+    {
+      "id": "REQ-1124",
+      "title": "Attendance regularization for biometric missed punch",
+      "subject": "Attendance regularization for biometric missed punch",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering - Cloud Platform",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+      },
+      "category": "leave",
+      "priority": "medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-17T12:18:50.492Z",
+      "createdDate": "Sep 17, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "description": "wewe",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 17, 2026, 12:18 PM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Sep 17, 2026, 12:19 PM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-5325",
+      "title": "New HR Request",
+      "subject": "New HR Request",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "email": "rupam.sharma@enterprise.org",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+      },
+      "category": "other",
+      "priority": "medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-17T12:17:39.228Z",
+      "createdDate": "Sep 17, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "Autonomous Intake",
+        "autoRouted": true
+      },
+      "description": "",
+      "tags": [
+        "General"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 17, 2026, 12:17 PM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Employee"
+        },
+        {
+          "date": "Sep 17, 2026, 12:17 PM",
+          "title": "Approved & Resolved",
+          "desc": "Approved by HR Director",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved by HR Director",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-1051",
+      "title": "asdfghjkl",
+      "subject": "asdfghjkl",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Alex Johnson",
+        "department": "Product Engineering - Cloud Platform",
+        "email": "alex.johnson@enterprise.internal",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80"
+      },
+      "category": "benefits",
+      "priority": "high",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-17T12:15:55.296Z",
+      "createdDate": "Sep 17, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "BENEFITS Inquiry",
+        "autoRouted": true
+      },
+      "description": "vvbvb",
+      "tags": [
+        "benefits"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 17, 2026, 12:15 PM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Alex Johnson"
+        },
+        {
+          "date": "Sep 17, 2026, 12:16 PM",
+          "title": "Approved & Resolved",
+          "desc": "Case reviewed and verified against internal HR handbook policies.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c-1789647386941",
+          "author": "Alex Johnson",
+          "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+          "text": "REQ-1051",
+          "time": "Just now",
+          "isHr": false
+        },
+        {
+          "id": "c-1789647386959",
+          "author": "Alex Johnson",
+          "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
+          "text": "REQ-1051",
+          "time": "Just now",
+          "isHr": false
+        }
+      ],
+      "resolutionNotes": "okokokoko\n",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "lastUpdated": "Just now"
+    }
+  ],
+  "triageQueue": [],
+  "deliverables": [],
+  "hrActions": [],
+  "insights": [],
+  "categoryVolumes": [
+    {
+      "category": "payroll",
+      "name": "Payroll & Compensation",
+      "count": 0,
+      "percentage": 0
+    },
+    {
+      "category": "benefits",
+      "name": "Health & Benefits",
+      "count": 0,
+      "percentage": 0
+    },
+    {
+      "category": "leave",
+      "name": "Leave & Attendance",
+      "count": 0,
+      "percentage": 0
+    },
+    {
+      "category": "documents",
+      "name": "Letters & Verification",
+      "count": 0,
+      "percentage": 0
+    },
+    {
+      "category": "compliance",
+      "name": "HR Policies",
+      "count": 0,
+      "percentage": 0
+    }
+  ],
+  "activities": [
+    {
+      "id": "ACT-1789647540911",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR approved & resolved case REQ-1124",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1789647530493",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-1124 (leave)",
+      "timeAgo": "Just now",
+      "subText": "Attendance regularization for biometric missed punch",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1789647478304",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR approved & resolved case REQ-5325",
+      "timeAgo": "Just now",
+      "subText": "Approved by HR Director",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1789647459228",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-5325 (other)",
+      "timeAgo": "Just now",
+      "subText": "New HR Request",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1789647402261",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR approved & resolved case REQ-1051",
+      "timeAgo": "Just now",
+      "subText": "okokokoko\n",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1789647373712",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR approved & resolved case REQ-1051",
+      "timeAgo": "Just now",
+      "subText": "Case reviewed and verified against internal HR handbook policies.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1789647355314",
+      "actorType": "user",
+      "actorName": "Alex Johnson",
+      "actionText": "Alex Johnson submitted REQ-1051 (benefits)",
+      "timeAgo": "Just now",
+      "subText": "asdfghjkl",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-INIT-1",
+      "actorType": "ai",
+      "actorName": "HR AI Engine",
+      "actionText": "Intake pipeline active & persistent storage connected",
+      "timeAgo": "Just now",
+      "subText": "Sync Server active on port 8000 with file database",
+      "tag": {
+        "text": "Online",
+        "color": "emerald"
+      }
+    }
+  ],
+  "users": {
+    "admin": {
+      "id": "usr_admin_1",
+      "name": "Sarah Jenkins",
+      "email": "sarah.jenkins@enterprise.internal",
+      "role": "HR_ADMIN",
+      "title": "HR Operations Lead",
+      "avatarUrl": "https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0"
+    },
+    "specialist": {
+      "id": "usr_spec_2",
+      "name": "David Chen",
+      "email": "david.chen@enterprise.internal",
+      "role": "HR_SPECIALIST",
+      "title": "Senior People Partner",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+    },
+    "employee": {
+      "id": "usr_emp_3",
+      "name": "Rupam Sharma",
+      "email": "rupam.sharma@enterprise.org",
+      "role": "EMPLOYEE",
+      "title": "Lead Full-Stack Engineer",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+    }
+  }
+}

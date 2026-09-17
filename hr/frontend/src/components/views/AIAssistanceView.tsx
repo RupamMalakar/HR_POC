@@ -14,12 +14,13 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
     {
       id: 'COP-0',
       sender: 'assistant',
-      text: 'Hello Sarah. I am your HR AI Assistant grounded in enterprise policies, statutory labor laws, and live employee rosters. How can I assist you with operations today?',
+      text: 'Hello Sarah. I am your HR AI Assistant connected directly to the Company Policy RAG Agent. I am grounded in our official PDF knowledge base — covering annual leave, medical absences, hybrid remote policies, expense reimbursement, and code of conduct. How can I assist your operations today?',
       timestamp: '09:00 AM',
       suggestedActions: [
-        "Review Alex Johnson's Q3 retention bonus addendum",
-        "Check sabbatical carry-forward policy limits",
-        "Draft Verification of Employment for Elena Rostova"
+        "How many annual leave days do employees receive?",
+        "What is the home office equipment reimbursement stipend?",
+        "What is the parental leave entitlement for primary caregivers?",
+        "What are the per diem meal rules for business travel?"
       ]
     }
   ]);
@@ -45,7 +46,15 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
       const response = await hrService.queryCopilot(query);
       setMessages(prev => [...prev, response]);
     } catch {
-      // fallback
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `COP-${Date.now()}`,
+          sender: 'assistant',
+          text: "I was unable to retrieve a verified answer from the RAG knowledge base. Please ensure the RAG backend service is active.",
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -61,16 +70,16 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
           </div>
           <div>
             <h2 className="font-display text-lg font-bold text-white tracking-tight">
-              Enterprise HR AI Copilot
+              Enterprise HR Policy RAG Assistant
             </h2>
             <p className="text-xs text-white/50">
-              Grounded in 14 internal handbooks, compliance codes, and live payroll matrices
+              Grounded in Company Policy Documents (PDF Knowledge Base) via LangChain RAG
             </p>
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-cyan-300">
           <span className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" />
-          <span>RAG Vector DB Connected</span>
+          <span>RAG Agent Active (:8001)</span>
         </div>
       </div>
 
@@ -101,7 +110,7 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
                 {/* Message Bubble */}
                 <div className={`space-y-2.5 ${isUser ? 'text-right' : ''}`}>
                   <div
-                    className={`p-4 rounded-2xl text-xs leading-relaxed text-left inline-block ${
+                    className={`p-4 rounded-2xl text-xs leading-relaxed text-left inline-block whitespace-pre-line ${
                       isUser
                         ? 'bg-blue-600/30 border border-blue-400/30 text-white'
                         : 'bg-white/[0.05] border border-white/10 text-slate-100'
@@ -112,21 +121,31 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
 
                   {/* Citations */}
                   {msg.citations && msg.citations.length > 0 && (
-                    <div className="p-3 rounded-xl bg-black/40 border border-white/10 text-left space-y-1.5">
-                      <p className="font-mono text-[10px] uppercase text-cyan-300 font-semibold tracking-wider flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">menu_book</span>
-                        Verified Citations:
+                    <div className="p-3.5 rounded-xl bg-black/40 border border-cyan-500/20 text-left space-y-2">
+                      <p className="font-mono text-[10px] uppercase text-cyan-300 font-semibold tracking-wider flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+                        Verified Grounding Sources (PDF Knowledge Base):
                       </p>
-                      {msg.citations.map((c, i) => (
-                        <div key={i} className="text-[11px] text-white/70">
-                          <span className="font-semibold text-white">{c.title}</span> — {c.section} {c.page ? `(p. ${c.page})` : ''}
-                        </div>
-                      ))}
+                      <div className="flex flex-wrap gap-2">
+                        {msg.citations.map((c, i) => (
+                          <div
+                            key={i}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950/40 border border-cyan-500/30 text-[11px] text-cyan-200"
+                          >
+                            <span className="font-medium text-white">{c.title}</span>
+                            {c.page && (
+                              <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono">
+                                Page {c.page}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  {/* Suggested Actions */}
-                  {msg.suggestedActions && (
+                  {/* Suggested Actions / Follow-ups */}
+                  {msg.suggestedActions && msg.suggestedActions.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-1 text-left">
                       {msg.suggestedActions.map((act, i) => (
                         <button
@@ -154,10 +173,31 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
                 <span className="material-symbols-outlined text-[18px] animate-spin">sync</span>
               </div>
               <div className="p-4 rounded-2xl bg-white/[0.05] border border-white/10 text-xs text-cyan-300 font-mono flex items-center gap-2">
-                <span>Grounding policy knowledge &amp; drafting response...</span>
+                <span className="w-2 h-2 rounded-full bg-neon-cyan animate-ping" />
+                <span>Retrieving policy chunks &amp; synthesizing grounded response...</span>
               </div>
             </div>
           )}
+        </div>
+
+        {/* Quick Suggestion Chips */}
+        <div className="px-4 py-2 bg-black/20 border-t border-white/5 flex items-center gap-2 overflow-x-auto text-[11px]">
+          <span className="text-white/40 font-mono text-[10px] flex-shrink-0">Quick Queries:</span>
+          {[
+            "Annual leave days quota",
+            "Home office equipment stipend",
+            "Paid parental leave duration",
+            "Sick leave & medical cert policy"
+          ].map((chip, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSend(chip)}
+              disabled={loading}
+              className="px-2.5 py-0.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-white/70 hover:text-white transition-all whitespace-nowrap text-[10px]"
+            >
+              {chip}
+            </button>
+          ))}
         </div>
 
         {/* Input Bar */}

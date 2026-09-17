@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:hr": "vite --port 5173",
+    "dev:employee": "vite --port 5174",
+    "server": "node ../hr-sync-server.mjs",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"

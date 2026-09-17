@@ -53,8 +53,164 @@ export default function EmployeePortalApp() {
     }
   }, [user]);
 
-  // Core Data State
-  const [requests, setRequests] = useState<HrRequest[]>(INITIAL_REQUESTS);
+  // Real-time live synchronization with central HR desk
+  useEffect(() => {
+    const unsubscribe = hrService.subscribe((event) => {
+      if (event.type === 'REQUEST_CREATED') {
+        const item = event.data?.request;
+        if (item) {
+          setRequests((prev) => {
+            if (prev.some((r) => r.id === item.id || (r.id && item.id && r.id.toLowerCase() === item.id.toLowerCase()))) {
+              return prev;
+            }
+            const cat = item.category === 'leave' ? 'Leave & Time'
+              : item.category === 'payroll' ? 'Payroll'
+              : item.category === 'benefits' ? 'Employee Info'
+              : item.category === 'documents' ? 'Documents'
+              : 'Leave & Time';
+
+            const newHrReq: HrRequest = {
+              id: item.id,
+              subject: item.subject || item.title || 'HR Inquiry',
+              category: cat,
+              status: 'SUBMITTED',
+              priority: item.priority === 'high' ? 'High' : 'Medium',
+              lastUpdated: 'Just now',
+              createdDate: 'Today',
+              description: item.description || '',
+              assignedTo: 'Triage Queue (HR Operations)',
+              timeline: item.timeline || [
+                {
+                  date: 'Just now',
+                  title: 'Request Created',
+                  desc: 'Submitted through HR Service Desk self-service portal.',
+                  actor: item.employee?.name || CURRENT_USER.name,
+                }
+              ],
+              comments: item.comments || []
+            };
+            const updatedList = [newHrReq, ...prev];
+            try { localStorage.setItem('hr_employee_portal_requests', JSON.stringify(updatedList)); } catch {}
+            return updatedList;
+          });
+        }
+      }
+
+      if (event.type === 'REQUEST_UPDATED') {
+        const updated = event.data?.request;
+        if (updated) {
+          const newStatus: any = (updated.status === 'resolved' || updated.statusUpper === 'RESOLVED')
+            ? 'RESOLVED'
+            : (updated.status === 'in_review' || updated.statusUpper === 'IN PROGRESS')
+            ? 'IN PROGRESS'
+            : 'SUBMITTED';
+
+          setRequests((prev) => {
+            const next = prev.map((r) => {
+              const isMatch = r.id === updated.id || 
+                              (r.id && updated.id && r.id.toLowerCase() === updated.id.toLowerCase()) ||
+                              (r.subject && updated.title && r.subject === updated.title);
+
+              if (isMatch) {
+                return {
+                  ...r,
+                  id: updated.id || r.id,
+                  status: newStatus,
+                  timeline: Array.isArray(updated.timeline) && updated.timeline.length ? updated.timeline : [
+                    ...r.timeline,
+                    {
+                      date: new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
+                      title: 'Status Updated: ' + newStatus,
+                      desc: updated.resolutionNotes || 'HR Operations verified and processed this ticket.',
+                      actor: 'HR Specialist'
+                    }
+                  ],
+                  comments: Array.isArray(updated.comments) ? updated.comments : r.comments
+                };
+              }
+              return r;
+            });
+            try { localStorage.setItem('hr_employee_portal_requests', JSON.stringify(next)); } catch {}
+            return next;
+          });
+
+          showToast(`🎉 HR Desk updated ticket ${updated.id} to ${newStatus}`);
+        }
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  // Core Data State - with localStorage persistence
+  const [requests, setRequests] = useState<HrRequest[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('hr_employee_portal_requests');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch {}
+    }
+    return INITIAL_REQUESTS;
+  });
+
+  // Load from Central Sync Server / Database on Mount
+  useEffect(() => {
+    async function loadRequestsFromDatabase() {
+      try {
+        const serverReqs = await hrService.getRequests();
+        if (Array.isArray(serverReqs)) {
+          const mapped: HrRequest[] = serverReqs.map((r: any) => {
+            const cat = r.category === 'leave' ? 'Leave & Time'
+              : r.category === 'payroll' ? 'Payroll'
+              : r.category === 'benefits' ? 'Employee Info'
+              : r.category === 'documents' ? 'Documents'
+              : (r.category as any) || 'Leave & Time';
+
+            const status: any = (r.status === 'resolved' || r.statusUpper === 'RESOLVED')
+              ? 'RESOLVED'
+              : (r.status === 'in_review' || r.statusUpper === 'IN PROGRESS')
+              ? 'IN PROGRESS'
+              : 'SUBMITTED';
+
+            const prio = r.priority === 'high' ? 'High' : r.priority === 'urgent' ? 'Urgent' : r.priority === 'low' ? 'Low' : 'Medium';
+
+            return {
+              id: r.id,
+              subject: r.subject || r.title || 'HR Inquiry',
+              category: cat,
+              status,
+              priority: prio,
+              lastUpdated: r.waitingTime || 'Recent',
+              createdDate: r.createdDate || (r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Today'),
+              description: r.description || '',
+              assignedTo: r.assignedTo || (status === 'RESOLVED' ? 'Resolved by HR Operations' : 'Triage Queue (HR Operations)'),
+              timeline: Array.isArray(r.timeline) && r.timeline.length ? r.timeline : [
+                {
+                  date: r.createdDate || 'Today',
+                  title: 'Request Created',
+                  desc: 'Submitted through HR Service Desk self-service portal.',
+                  actor: r.employee?.name || CURRENT_USER.name,
+                }
+              ],
+              comments: Array.isArray(r.comments) ? r.comments : [],
+              attachmentName: r.attachmentName
+            };
+          });
+
+          setRequests(mapped);
+          try {
+            localStorage.setItem('hr_employee_portal_requests', JSON.stringify(mapped));
+          } catch {}
+        }
+      } catch (err) {
+        console.warn('Could not fetch initial requests from server:', err);
+      }
+    }
+    loadRequestsFromDatabase();
+  }, []);
+
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   const [leaveBalance, setLeaveBalance] = useState<LeaveBalance>(INITIAL_LEAVE_BALANCE);
   const [policies, setPolicies] = useState<PolicyItem[]>(POLICIES);
@@ -87,20 +243,21 @@ export default function EmployeePortalApp() {
   };
 
   // Handlers
-  const handleAddRequest = (newReqData: Partial<HrRequest>) => {
+  const handleAddRequest = async (newReqData: Partial<HrRequest>) => {
+    const reqId = newReqData.id || `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
     const fullReq: HrRequest = {
-      id: newReqData.id || `REQ-${Math.floor(1024 + Math.random() * 800)}`,
+      id: reqId,
       subject: newReqData.subject || 'Untitled Request',
       category: newReqData.category || 'Leave & Time',
       status: newReqData.status || 'SUBMITTED',
       priority: newReqData.priority || 'Medium',
       lastUpdated: 'Just now',
-      createdDate: '17 Sep 2026',
+      createdDate: new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
       description: newReqData.description || '',
       assignedTo: 'Triage Queue (HR Operations)',
       timeline: [
         {
-          date: '17 Sep 2026, 09:30 AM',
+          date: new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
           title: 'Request Created',
           desc: 'Submitted through HR Service Desk self-service portal.',
           actor: user?.name || CURRENT_USER.name,
@@ -110,11 +267,16 @@ export default function EmployeePortalApp() {
       attachmentName: newReqData.attachmentName,
     };
 
-    setRequests((prev) => [fullReq, ...prev]);
+    setRequests((prev) => {
+      const updated = [fullReq, ...prev.filter(r => r.id !== fullReq.id)];
+      try { localStorage.setItem('hr_employee_portal_requests', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
 
-    // Synchronize to Enterprise HR Service Desk
-    hrService
-      .createRequest({
+    // Synchronize to Enterprise HR Service Desk & Database
+    try {
+      await hrService.createRequest({
+        id: fullReq.id,
         title: fullReq.subject,
         category:
           fullReq.category === 'Leave & Time'
@@ -123,6 +285,8 @@ export default function EmployeePortalApp() {
             ? 'payroll'
             : fullReq.category === 'Employee Info'
             ? 'benefits'
+            : fullReq.category === 'Documents'
+            ? 'documents'
             : 'other',
         priority:
           fullReq.priority === 'Urgent'
@@ -130,6 +294,8 @@ export default function EmployeePortalApp() {
             : (fullReq.priority.toLowerCase() as 'low' | 'medium' | 'high') ||
               'medium',
         description: fullReq.description,
+        timeline: fullReq.timeline,
+        attachmentName: fullReq.attachmentName,
         employee: {
           id: user?.id || CURRENT_USER.employeeId,
           name: user?.name || CURRENT_USER.name,
@@ -137,8 +303,10 @@ export default function EmployeePortalApp() {
           email: user?.email || CURRENT_USER.email,
           avatar: user?.avatarUrl || ASSETS.avatar,
         },
-      })
-      .catch((err) => console.warn('Could not sync request to HR service:', err));
+      });
+    } catch (err) {
+      console.warn('Could not sync request to HR service:', err);
+    }
 
     // Add notification
     const newNotif: NotificationItem = {
@@ -155,8 +323,8 @@ export default function EmployeePortalApp() {
   };
 
   const handleAddCommentToRequest = (requestId: string, commentText: string) => {
-    setRequests((prev) =>
-      prev.map((r) => {
+    setRequests((prev) => {
+      const next = prev.map((r) => {
         if (r.id === requestId) {
           const updatedComments = [
             ...r.comments,
@@ -177,11 +345,23 @@ export default function EmployeePortalApp() {
           if (selectedRequest && selectedRequest.id === requestId) {
             setSelectedRequest(updatedReq);
           }
+          fetch(`http://localhost:8000/api/v1/requests/${encodeURIComponent(requestId)}/comments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              author: user?.name || CURRENT_USER.name,
+              avatar: user?.avatarUrl || ASSETS.avatar,
+              text: commentText,
+              isHr: false
+            })
+          }).catch(() => {});
           return updatedReq;
         }
         return r;
-      })
-    );
+      });
+      try { localStorage.setItem('hr_employee_portal_requests', JSON.stringify(next)); } catch {}
+      return next;
+    });
     showToast('Response posted to ticket thread');
   };
 

@@ -84,13 +84,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       const lower = q.toLowerCase();
       if (lower.includes('leave') || lower.includes('balance') || lower.includes('days')) {
-        answer = `You currently have 18 total available leave days valid thru Dec 2026: 8 Casual Leaves (out of 12), 6 Sick Leaves (out of 10), and 12 Earned Leaves (out of 18). You have an active leave request (REQ-1023) currently under approval.`;
+        answer = `You currently have 18 total available leave days valid thru Dec 2026: 8 Casual Leaves (out of 12), 6 Sick Leaves (out of 10), and 12 Earned Leaves (out of 18). You can submit a new leave request anytime from the Raise Request section.`;
         source = 'Enterprise Leave Policy & Employee Records Database';
       } else if (lower.includes('reimbursement') || lower.includes('expense')) {
         answer = `Broadband & utility reimbursements can be filed up to ₹4,500/quarter under Quick Links > Payroll. Expense submissions are reimbursed along with your monthly payroll if submitted before the 20th of the month.`;
         source = 'Travel & Expense Reimbursement Policy 2026 (Section 3.1)';
       } else if (lower.includes('experience') || lower.includes('letter') || lower.includes('certificate')) {
-        answer = `You can request digitally signed Employment Verification or Experience Certificates instantly through "Raise Request" > "Documents". Your active request REQ-1019 is currently being drafted by HR Operations.`;
+        answer = `You can request digitally signed Employment Verification or Experience Certificates instantly through "Raise Request" > "Documents".`;
         source = 'Employee Self-Service Documentation Guidelines';
       } else if (lower.includes('work from home') || lower.includes('hybrid') || lower.includes('remote')) {
         answer = `Our Hybrid Workplace Guidelines 2026 mandate 2-3 days of in-office presence per week with flexible core hours from 10:30 AM to 4:30 PM. Eligible hybrid staff may also claim a one-time ergonomic setup allowance of ₹25,000.`;

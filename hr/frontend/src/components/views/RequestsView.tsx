@@ -5,12 +5,14 @@ interface RequestsViewProps {
   requests: RequestItem[];
   onSelectRequest: (item: RequestItem) => void;
   onNewRequest: () => void;
+  onResolveDirect?: (id: string) => void;
 }
 
 export const RequestsView: React.FC<RequestsViewProps> = ({
   requests,
   onSelectRequest,
-  onNewRequest
+  onNewRequest,
+  onResolveDirect
 }) => {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -48,7 +50,7 @@ export const RequestsView: React.FC<RequestsViewProps> = ({
           </div>
           <button
             onClick={onNewRequest}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs shadow-neon-cyan transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs shadow-neon-cyan transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             <span>Create Case</span>
@@ -69,6 +71,28 @@ export const RequestsView: React.FC<RequestsViewProps> = ({
               placeholder="Search by case ID, title, employee..."
               className="w-full pl-9 pr-4 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-neon-cyan"
             />
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex items-center gap-1.5">
+            {[
+              { id: 'all', label: 'All Status' },
+              { id: 'open', label: 'Open' },
+              { id: 'in_review', label: 'In Review' },
+              { id: 'resolved', label: 'Resolved' }
+            ].map((st) => (
+              <button
+                key={st.id}
+                onClick={() => setSelectedStatus(st.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                  selectedStatus === st.id
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-semibold'
+                    : 'bg-white/5 text-white/60 hover:text-white border border-transparent'
+                }`}
+              >
+                {st.label}
+              </button>
+            ))}
           </div>
 
           {/* Category Filter */}
@@ -193,16 +217,39 @@ export const RequestsView: React.FC<RequestsViewProps> = ({
                     <td className="px-5 py-4 font-mono text-white/50 whitespace-nowrap">
                       {req.waitingTime}
                     </td>
-                    <td className="px-5 py-4 text-right">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectRequest(req);
-                        }}
-                        className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-xs border border-white/15 transition-all inline-flex items-center gap-1 hover:border-cyan-400/50 cursor-pointer"
-                      >
-                        Review <span className="text-cyan-300">→</span>
-                      </button>
+                    <td className="px-5 py-4 text-right whitespace-nowrap">
+                      {req.status === 'resolved' ? (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold text-xs">
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                          Resolved
+                        </span>
+                      ) : (
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (onResolveDirect) {
+                                onResolveDirect(req.id);
+                              } else {
+                                onSelectRequest(req);
+                              }
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-semibold text-xs border border-emerald-400/40 shadow-xs transition-all inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">check</span>
+                            Approve
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectRequest(req);
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-xs border border-white/15 transition-all inline-flex items-center gap-1 hover:border-cyan-400/50 cursor-pointer"
+                          >
+                            Review <span className="text-cyan-300">→</span>
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

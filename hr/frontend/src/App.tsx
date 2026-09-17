@@ -49,7 +49,18 @@ function HROperationsPortal() {
   const [metrics, setMetrics] = useState<DashboardMetrics>(initialMetrics);
   const [velocity, setVelocity] = useState<VelocityData>(velocityDataset['7D']);
   const [activeVelocityRange, setActiveVelocityRange] = useState<'7D' | '30D' | '90D'>('7D');
-  const [requests, setRequests] = useState<RequestItem[]>(initialRequests);
+  const [requests, setRequests] = useState<RequestItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('hr_admin_requests');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch {}
+    }
+    return initialRequests;
+  });
   const [triageQueue, setTriageQueue] = useState<AITriageItem[]>(initialTriageQueue);
   const [deliverables, setDeliverables] = useState<DeliverableItem[]>(initialDeliverables);
   const [hrActions, setHRActions] = useState<HRActionItem[]>(initialHRActions);
@@ -78,7 +89,10 @@ function HROperationsPortal() {
           hrService.getActivities()
         ]);
         setMetrics(m);
-        setRequests(reqs);
+        if (Array.isArray(reqs)) {
+          setRequests(reqs);
+          try { localStorage.setItem('hr_admin_requests', JSON.stringify(reqs)); } catch {}
+        }
         setTriageQueue(tQ);
         setDeliverables(delivs);
         setHRActions(acts);
@@ -90,6 +104,26 @@ function HROperationsPortal() {
       }
     }
     loadData();
+  }, []);
+
+  // Real-time live synchronization across dual portals
+  useEffect(() => {
+    const unsubscribe = hrService.subscribe(async () => {
+      try {
+        const [m, reqs, actLogs] = await Promise.all([
+          hrService.getMetrics(),
+          hrService.getRequests(),
+          hrService.getActivities()
+        ]);
+        setMetrics(m);
+        if (Array.isArray(reqs)) {
+          setRequests(reqs);
+          try { localStorage.setItem('hr_admin_requests', JSON.stringify(reqs)); } catch {}
+        }
+        setActivities(actLogs);
+      } catch {}
+    });
+    return unsubscribe;
   }, []);
 
   // Keyboard shortcut listener for Alt+T (Quick Triage) and Cmd+K
@@ -117,7 +151,11 @@ function HROperationsPortal() {
   // Create new request
   const handleCreateRequest = async (newReq: Partial<RequestItem>) => {
     const created = await hrService.createRequest(newReq);
-    setRequests(prev => [created, ...prev]);
+    setRequests(prev => {
+      const next = [created, ...prev.filter(r => r.id !== created.id)];
+      try { localStorage.setItem('hr_admin_requests', JSON.stringify(next)); } catch {}
+      return next;
+    });
     const updatedMetrics = await hrService.getMetrics();
     setMetrics(updatedMetrics);
     const updatedActivities = await hrService.getActivities();
@@ -127,7 +165,15 @@ function HROperationsPortal() {
   // Resolve / Review request
   const handleResolveRequest = async (id: string, notes: string) => {
     await hrService.reviewRequest(id, notes, 'resolved');
-    setRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'resolved', resolutionNotes: notes } : r));
+    setRequests(prev => {
+      const next = prev.map(r => 
+        r.id === id || (r.id && id && r.id.toLowerCase() === id.toLowerCase())
+          ? { ...r, status: 'resolved' as const, resolutionNotes: notes } 
+          : r
+      );
+      try { localStorage.setItem('hr_admin_requests', JSON.stringify(next)); } catch {}
+      return next;
+    });
     const updatedMetrics = await hrService.getMetrics();
     setMetrics(updatedMetrics);
     const updatedActivities = await hrService.getActivities();
@@ -235,6 +281,7 @@ function HROperationsPortal() {
                 requests={requests}
                 onSelectRequest={(item) => setSelectedReviewItem(item)}
                 onNewRequest={() => setIsNewActionOpen(true)}
+                onResolveDirect={(id) => handleResolveRequest(id, 'Approved and resolved directly by HR Operations Lead.')}
               />
             )}
 
@@ -321,8 +368,19 @@ function HROperationsPortal() {
   );
 }
 
+import { SplitWorkflowView } from './components/views/SplitWorkflowView';
+
 function PortalRouter() {
   const { user, isLoading } = useAuth();
+
+  const isSplitView = typeof window !== 'undefined' && (
+    new URLSearchParams(window.location.search).get('view') === 'split' ||
+    window.location.pathname === '/split'
+  );
+
+  if (isSplitView) {
+    return <SplitWorkflowView />;
+  }
 
   if (isLoading) {
     return (
@@ -336,6 +394,20 @@ function PortalRouter() {
   // Not logged in -> Show Login view
   if (!user) {
     return <LoginView />;
+  }
+
+  const urlPortal = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('portal') : null;
+  const isEmployeePort = typeof window !== 'undefined' && (
+    window.location.port === '5174' ||
+    window.location.port === '3000'
+  );
+
+  if (urlPortal === 'employee' || (isEmployeePort && user.role === 'EMPLOYEE')) {
+    return <EmployeePortal />;
+  }
+
+  if (urlPortal === 'hr' && user.role !== 'EMPLOYEE') {
+    return <HROperationsPortal />;
   }
 
   // Role: EMPLOYEE -> Show User / Employee Self-Service Portal

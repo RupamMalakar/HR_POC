@@ -13,267 +13,63 @@ import {
 
 export const initialMetrics: DashboardMetrics = {
   openRequests: {
-    count: 128,
-    changePercent: 12.0,
-    comparisonText: "+12% this wk"
+    count: 0,
+    changePercent: 0,
+    comparisonText: "0 open"
   },
   highPriority: {
-    count: 17,
-    requiresAttention: 5
+    count: 0,
+    requiresAttention: 0
   },
   pendingHRActions: {
-    count: 24,
-    waitingOver24h: 8
+    count: 0,
+    waitingOver24h: 0
   },
   slaCompliance: {
-    percent: 94.8,
-    changePercent: 2.1,
+    percent: 100.0,
+    changePercent: 0,
     targetPercent: 92.0
   },
-  avgSla: "38m",
-  resolvedOvernight: 72,
-  aiTriagedToday: 86,
-  aiAssistedCases: 64,
-  draftsGenerated: 38
+  avgSla: "0m",
+  resolvedOvernight: 0,
+  aiTriagedToday: 0,
+  aiAssistedCases: 0,
+  draftsGenerated: 0
 };
 
 export const velocityDataset: Record<'7D' | '30D' | '90D', VelocityData> = {
   '7D': {
     range: '7D',
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    incoming: [45, 52, 68, 80, 55, 92, 102],
-    resolved: [38, 44, 58, 70, 62, 78, 88],
-    openTotal: 128,
-    receivedToday: 86,
-    resolvedToday: 72
+    incoming: [0, 0, 0, 0, 0, 0, 0],
+    resolved: [0, 0, 0, 0, 0, 0, 0],
+    openTotal: 0,
+    receivedToday: 0,
+    resolvedToday: 0
   },
   '30D': {
     range: '30D',
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-    incoming: [310, 420, 390, 480],
-    resolved: [290, 405, 380, 460],
-    openTotal: 128,
-    receivedToday: 86,
-    resolvedToday: 72
+    incoming: [0, 0, 0, 0],
+    resolved: [0, 0, 0, 0],
+    openTotal: 0,
+    receivedToday: 0,
+    resolvedToday: 0
   },
   '90D': {
     range: '90D',
     labels: ['August', 'September', 'October'],
-    incoming: [1250, 1480, 1620],
-    resolved: [1210, 1420, 1590],
-    openTotal: 128,
-    receivedToday: 86,
-    resolvedToday: 72
+    incoming: [0, 0, 0],
+    resolved: [0, 0, 0],
+    openTotal: 0,
+    receivedToday: 0,
+    resolvedToday: 0
   }
 };
 
-export const initialRequests: RequestItem[] = [
-  {
-    id: "HR-1028",
-    title: "Payroll discrepancy in Q3 retention bonus payment",
-    employee: {
-      id: "EMP-410",
-      name: "Alex Johnson",
-      department: "Platform Engineering",
-      email: "alex.johnson@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80",
-      title: "Senior Staff Engineer",
-      tenure: "3.5 years"
-    },
-    category: "payroll",
-    priority: "high",
-    status: "in_review",
-    waitingTime: "3h 42m",
-    createdAt: "2026-10-24T06:15:00Z",
-    aiTriage: {
-      confidence: 0.98,
-      classification: "Payroll Discrepancy / Bonus Adjustment",
-      autoRouted: true
-    },
-    description: "October payslip reflects standard base but omits the agreed retention milestone payment documented in Addendum C. Requesting payroll reconciliation before the Nov 1 tax cut-off.",
-    tags: ["Bonus", "Addendum C", "Withholding"]
-  },
-  {
-    id: "HR-1025",
-    title: "Benefits eligibility: Dependent coverage under global plan",
-    employee: {
-      id: "EMP-492",
-      name: "Priya Sharma",
-      department: "Product Design",
-      email: "priya.sharma@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80",
-      title: "Lead Product Designer",
-      tenure: "2.1 years"
-    },
-    category: "benefits",
-    priority: "medium",
-    status: "in_review",
-    waitingTime: "5h 12m",
-    createdAt: "2026-10-24T04:45:00Z",
-    aiTriage: {
-      confidence: 0.94,
-      classification: "Health Insurance Tier Expansion",
-      autoRouted: true
-    },
-    description: "Inquiring if legal guardianship extension allows primary dependent enrollment under our European cross-border healthcare provider tier without underwriting waiting periods.",
-    tags: ["Healthcare", "Dependents", "Cross-border"]
-  },
-  {
-    id: "HR-1022",
-    title: "Leave policy issue: Carry-forward sabbatical balance query",
-    employee: {
-      id: "EMP-304",
-      name: "Daniel Thomas",
-      department: "Data Infrastructure",
-      email: "daniel.thomas@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
-      title: "Principal Architect",
-      tenure: "4.8 years"
-    },
-    category: "leave",
-    priority: "medium",
-    status: "in_review",
-    waitingTime: "7h 20m",
-    createdAt: "2026-10-24T02:37:00Z",
-    aiTriage: {
-      confidence: 0.96,
-      classification: "Statutory Sabbatical Reconciliation",
-      autoRouted: true
-    },
-    description: "System flagged an automatic forfeiture warning on 12 days accrued sabbatical time. Policy Section 6.4 allows written exception for active production rollouts.",
-    tags: ["Sabbatical", "Carry-forward", "Exemption"]
-  },
-  {
-    id: "HR-1019",
-    title: "Urgent: Relocation allowance reimbursement verification",
-    employee: {
-      id: "EMP-612",
-      name: "Elena Rostova",
-      department: "AI Research",
-      email: "elena.r@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=120&q=80",
-      title: "Research Scientist",
-      tenure: "0.8 years"
-    },
-    category: "payroll",
-    priority: "high",
-    status: "open",
-    waitingTime: "1h 15m",
-    createdAt: "2026-10-24T08:42:00Z",
-    aiTriage: {
-      confidence: 0.99,
-      classification: "Relocation Tax Exemption Review",
-      autoRouted: true
-    },
-    description: "Submitted receipts for international relocation package. Finance requires HR sign-off on the gross-up rate before issuing payment voucher.",
-    tags: ["Relocation", "Tax Gross-up"]
-  },
-  {
-    id: "HR-1015",
-    title: "Standard Verification of Employment for Mortgage Lender",
-    employee: {
-      id: "EMP-522",
-      name: "Marcus Vance",
-      department: "Legal & Compliance",
-      email: "marcus.v@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80",
-      title: "Corporate Counsel",
-      tenure: "1.9 years"
-    },
-    category: "documents",
-    priority: "low",
-    status: "resolved",
-    waitingTime: "12m",
-    createdAt: "2026-10-24T01:10:00Z",
-    aiTriage: {
-      confidence: 0.99,
-      classification: "Automated VOE Dispatch",
-      autoRouted: true
-    },
-    description: "Bank pre-approval requires signed letter confirming employment continuity, annual base compensation, and good standing.",
-    tags: ["VOE", "Automated"]
-  },
-  {
-    id: "HR-1011",
-    title: "Remote Work Equipment Stipend claim for ergonomic desk",
-    employee: {
-      id: "EMP-733",
-      name: "Kavita Nair",
-      department: "Quality Assurance",
-      email: "kavita.n@enterprise.internal",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
-      title: "Senior QA Analyst",
-      tenure: "1.4 years"
-    },
-    category: "benefits",
-    priority: "low",
-    status: "resolved",
-    waitingTime: "45m",
-    createdAt: "2026-10-23T22:00:00Z",
-    aiTriage: {
-      confidence: 0.97,
-      classification: "Fringe Benefit Approval",
-      autoRouted: true
-    },
-    description: "Annual ergonomics stipend claim of $750 with attached receipt from Herman Miller. Awaiting manager approval acknowledgement.",
-    tags: ["Stipend", "Remote Work"]
-  }
-];
+export const initialRequests: RequestItem[] = [];
 
-export const initialTriageQueue: AITriageItem[] = [
-  {
-    id: "TR-904",
-    requestId: "HR-1028",
-    title: "Payroll discrepancy in Q3 retention bonus payment",
-    employeeName: "Alex Johnson",
-    predictedCategory: "payroll",
-    confidenceScore: 0.98,
-    urgencyScore: "HIGH",
-    reasoning: "Keyword matching: 'withholding', 'retention bonus', 'Addendum C'. Scanned payroll ledger delta exceeds $3,000 threshold.",
-    suggestedAction: "Route to Senior Payroll Specialist; run automated gross compensation recalculator tool.",
-    status: "AUTO_ROUTED",
-    timestamp: "2 mins ago"
-  },
-  {
-    id: "TR-903",
-    requestId: "HR-1025",
-    title: "Benefits eligibility: Dependent coverage under global plan",
-    employeeName: "Priya Sharma",
-    predictedCategory: "benefits",
-    confidenceScore: 0.94,
-    urgencyScore: "MEDIUM",
-    reasoning: "Matched European cross-border healthcare underwriter guideline #41. Dependent legal status requires proof of guardianship.",
-    suggestedAction: "Request notarized legal custody decree from employee and dispatch carrier rider form.",
-    status: "NEEDS_VERIFICATION",
-    timestamp: "14 mins ago"
-  },
-  {
-    id: "TR-902",
-    requestId: "HR-1022",
-    title: "Leave policy issue: Carry-forward sabbatical balance query",
-    employeeName: "Daniel Thomas",
-    predictedCategory: "leave",
-    confidenceScore: 0.96,
-    urgencyScore: "MEDIUM",
-    reasoning: "Detected sabbatical forfeiture notification trigger. Tenure is > 3 years (eligible under section 6.4 handbook).",
-    suggestedAction: "Generate automatic 6-month extension authorization voucher with VP Engineering approval tag.",
-    status: "AUTO_ROUTED",
-    timestamp: "32 mins ago"
-  },
-  {
-    id: "TR-901",
-    requestId: "HR-1019",
-    title: "Urgent: Relocation allowance reimbursement verification",
-    employeeName: "Elena Rostova",
-    predictedCategory: "payroll",
-    confidenceScore: 0.99,
-    urgencyScore: "HIGH",
-    reasoning: "Tax equalization policy applied. Cross-referenced immigration visa type O-1 with mobility tax credit table.",
-    suggestedAction: "Apply tax gross-up rate of 38.2% and forward to Global Mobility Payroll batch.",
-    status: "AUTO_ROUTED",
-    timestamp: "1 hour ago"
-  }
-];
+export const initialTriageQueue: AITriageItem[] = [];
 
 export const initialDeliverables: DeliverableItem[] = [
   {
@@ -445,36 +241,12 @@ export const initialActivities: ActivityEvent[] = [
   {
     id: "ACT-LOG-1",
     actorType: "ai",
-    actorName: "AI",
-    actionText: "AI triaged HR-1028 Payroll",
-    timeAgo: "2 min ago",
-    subText: "Autonomous confidence 98%",
+    actorName: "HR AI Engine",
+    actionText: "Intake pipeline active and listening",
+    timeAgo: "Just now",
+    subText: "Ready to triage incoming requests",
     tag: {
-      text: "High priority",
-      color: "rose"
-    }
-  },
-  {
-    id: "ACT-LOG-2",
-    actorType: "user",
-    actorName: "Sarah",
-    actionText: "Sarah approved deliverable HR-1024",
-    timeAgo: "18 min ago",
-    subText: "Employee response letter generated",
-    tag: {
-      text: "Approved",
-      color: "cyan"
-    }
-  },
-  {
-    id: "ACT-LOG-3",
-    actorType: "resolved",
-    actorName: "Resolved",
-    actionText: "HR-1021 resolved Benefits",
-    timeAgo: "32 min ago",
-    subText: "Priya Sharma dependent tier confirmed",
-    tag: {
-      text: "Completed",
+      text: "Online",
       color: "emerald"
     }
   }

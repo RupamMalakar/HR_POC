@@ -29,6 +29,11 @@ export interface RequestItem {
   description: string;
   resolutionNotes?: string;
   tags?: string[];
+  timeline?: any[];
+  comments?: any[];
+  statusUpper?: string;
+  attachmentName?: string;
+  subject?: string;
 }
 
 export interface AITriageItem {
