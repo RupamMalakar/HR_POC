@@ -156,53 +156,32 @@ export const AskHrView: React.FC<AskHrViewProps> = ({
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsTyping(false);
-      let reply = '';
-      let sources = ['People Operations Knowledge Base 2026'];
-      const q = query.toLowerCase();
-
-      // Smart grounded response generator
-      if (q.includes('leave') || q.includes('vacation') || q.includes('holiday') || q.includes('off')) {
-        const casualRem = leaveBalance?.casual.remaining ?? 8;
-        const sickRem = leaveBalance?.sick.remaining ?? 6;
-        const earnedRem = leaveBalance?.earned.remaining ?? 12;
-        const total = casualRem + sickRem + earnedRem;
-
-        reply = `According to your live records as of September 2026, you have **${total} days** of total available leaves remaining:\n\n• **Casual Leave (CL):** ${casualRem} days remaining (out of 12 annual)\n• **Sick & Medical Leave (SL):** ${sickRem} days remaining (out of 10)\n• **Earned / Privilege Leave (EL):** ${earnedRem} days remaining (out of 18)\n\n📌 **Key Guidelines:**\n1. Up to 15 unused Earned Leaves roll over into 2027 or can be encashed in December.\n2. You can raise a new leave request anytime via the "Raise Request" tab.`;
-        sources = ['Leave & Time Attendance System', 'Company Leave Policy v3.2'];
-      } else if (q.includes('parental') || q.includes('maternity') || q.includes('paternity') || q.includes('baby') || q.includes('child')) {
-        reply = `Under our **2026 Global Parental & Caregiver Policy**:\n\n• **Primary Caregiver (Maternity/Adoption):** 26 weeks of fully paid leave. You may commence leave up to 8 weeks before the expected due date.\n• **Secondary Caregiver (Paternity):** 6 continuous weeks of fully paid leave, valid within the child's first 12 months, plus 2 weeks of phased return-to-work.\n• **Health Coverage:** Both mother and newborn are covered under the Group Medical Insurance scheme from Day 1 without waiting periods.\n• **Childcare Allowance:** In-office creche access or an ₹8,000/month subsidy for children under 6.`;
-        sources = ['Parental Leave Policy 2026 (Section 2.1)', 'Employee Benefits Manual 2026'];
-      } else if (q.includes('tax') || q.includes('12bb') || q.includes('proof') || q.includes('deduction') || q.includes('regime') || q.includes('form 16')) {
-        reply = `For the **Financial Year 2026–27 (Assessment Year 2027–28)**:\n\n• **Submission Window:** The Self-Service Tax Portal accepts investment declarations and Form 12BB until **15 January 2027**.\n• **New Tax Regime Default:** Standard deduction of ₹75,000 applies automatically without requiring proof uploads.\n• **Old Tax Regime Declarations:** Requires receipts for Section 80C (PPF, ELSS up to ₹1.5L), Section 80D (Health Insurance up to ₹25K/₹50K), and Rent Receipts with Landlord PAN for HRA exemption.\n• **Form 16 Release:** Available for download annually by June 10.`;
-        sources = ['Annual Tax Declaration Guide 2026', 'Finance & Payroll Circular 04/2026'];
-      } else if (q.includes('broadband') || q.includes('internet') || q.includes('reimburse') || q.includes('wifi') || q.includes('utility')) {
-        reply = `**Utility & Hybrid Work Stipend Rules (FY 2026):**\n\n• **Broadband & Mobile:** Permanent hybrid and remote employees can claim up to **₹1,500/month** (capped at ₹4,500 per calendar quarter).\n• **Submission Cutoff:** Claims filed in the Expense Portal before the 20th of the month are disbursed directly in that month's salary cycle.\n• **Eligible Invoices:** Official broadband provider invoices mentioning the employee's name and installation address.`;
-        sources = ['Travel & Expense Policy 2026 (Sec 4.3)', 'Hybrid Workplace Guidelines'];
-      } else if (q.includes('remote') || q.includes('work from home') || q.includes('hybrid') || q.includes('wfh') || q.includes('city')) {
-        reply = `Under our **Hybrid Workplace Guidelines 2026**:\n\n• **Standard Cadence:** Employees are expected in-office 2 to 3 days per week to support team collaboration.\n• **Domestic Work from Anywhere (WFA):** You may work remotely from another domestic location (e.g. your home town) for up to **30 calendar days per fiscal year** with manager email concurrence.\n• **International Remote Work:** Requires People Operations and Tax Compliance clearance at least 30 days in advance due to permanent establishment considerations.`;
-        sources = ['Hybrid Workplace Guidelines 2026 (Section 1.4)', 'Global Mobility Compliance'];
-      } else if (q.includes('medical') || q.includes('insurance') || q.includes('hospital') || q.includes('mediclaim') || q.includes('health')) {
-        reply = `**Group Medical Insurance (GMC) Details:**\n\n• **Sum Insured:** ₹7,50,000 family floater coverage (covers self, spouse, up to 2 children, and dependent parents).\n• **TPA Partner:** MediAssist TPA with 10,000+ cashless network hospitals nationwide.\n• **OPD & Dental:** Dedicated outpatient consultations and prescription coverage of up to ₹15,000 per financial year.\n• **Emergency Desk:** 1800-425-9449 (24/7 dedicated enterprise corporate desk).`;
-        sources = ['Group Medical Insurance Policy 2026', 'Benefits Guide v4'];
-      } else if (q.includes('bank') || q.includes('salary account') || q.includes('ifsc') || q.includes('direct deposit')) {
-        reply = `To update your salary disbursement bank account:\n\n1. Go to **Employee Profile > Bank & Payroll Details**.\n2. Enter the new Account Number, Bank Name, and IFSC code.\n3. Upload a copy of a cancelled cheque or bank statement showing your name clearly.\n4. Verification takes 1-2 business days with Payroll team before the 20th of the month cutoff.`;
-        sources = ['Payroll Standard Operating Procedure 2026'];
-      } else {
-        reply = `Based on our company HR handbook and standard operating procedures, here is what applies to your query regarding **"${query}"**:\n\nOur People Operations team maintains verified policies covering this area. If your scenario involves unique circumstances or an exception requiring formal approval, you can convert this discussion directly into an HR Service Desk ticket.`;
-        sources = ['Enterprise HR Handbook 2026', 'Service Desk Directory'];
+      
+      try {
+        const { hrService } = await import('../../services/hrService');
+        const response = await hrService.queryCopilot(query);
+        
+        const assistantMsg: ChatMessage = {
+          id: response.id,
+          sender: 'assistant',
+          text: response.text,
+          timestamp: response.timestamp,
+          sources: response.citations?.map(c => c.title) || [],
+        };
+        setMessages((prev) => [...prev, assistantMsg]);
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: 'bot-' + Date.now(),
+            sender: 'assistant',
+            text: "I am unable to retrieve a verified answer from the knowledge base right now. Please try again later.",
+            timestamp: 'Just now',
+          }
+        ]);
       }
-
-      const assistantMsg: ChatMessage = {
-        id: 'bot-' + Date.now(),
-        sender: 'assistant',
-        text: reply,
-        timestamp: 'Just now',
-        sources,
-      };
-
-      setMessages((prev) => [...prev, assistantMsg]);
     }, 650);
   };
 

@@ -71,66 +71,55 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const displayedRequests = requests.slice((page - 1) * pageSize, page * pageSize);
 
   // Quick prompt submission
-  const handleAiSubmit = (e?: React.FormEvent) => {
+  const handleAiSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const q = aiQuery.trim();
     if (!q) return;
 
     setIsAsking(true);
-    setTimeout(() => {
-      setIsAsking(false);
-      let answer = '';
-      let source = 'Company People Policy Portal (HR-Handbook-v4.2)';
-
-      const lower = q.toLowerCase();
-      if (lower.includes('leave') || lower.includes('balance') || lower.includes('days')) {
-        answer = `You currently have 18 total available leave days valid thru Dec 2026: 8 Casual Leaves (out of 12), 6 Sick Leaves (out of 10), and 12 Earned Leaves (out of 18). You can submit a new leave request anytime from the Raise Request section.`;
-        source = 'Enterprise Leave Policy & Employee Records Database';
-      } else if (lower.includes('reimbursement') || lower.includes('expense')) {
-        answer = `Broadband & utility reimbursements can be filed up to ₹4,500/quarter under Quick Links > Payroll. Expense submissions are reimbursed along with your monthly payroll if submitted before the 20th of the month.`;
-        source = 'Travel & Expense Reimbursement Policy 2026 (Section 3.1)';
-      } else if (lower.includes('experience') || lower.includes('letter') || lower.includes('certificate')) {
-        answer = `You can request digitally signed Employment Verification or Experience Certificates instantly through "Raise Request" > "Documents".`;
-        source = 'Employee Self-Service Documentation Guidelines';
-      } else if (lower.includes('work from home') || lower.includes('hybrid') || lower.includes('remote')) {
-        answer = `Our Hybrid Workplace Guidelines 2026 mandate 2-3 days of in-office presence per week with flexible core hours from 10:30 AM to 4:30 PM. Eligible hybrid staff may also claim a one-time ergonomic setup allowance of ₹25,000.`;
-        source = 'Hybrid Workplace Guidelines 2026';
-      } else {
-        answer = `Here is what the HR policy states regarding "${q}": Full details can be accessed in our Knowledge Hub or submitted as a support ticket to your dedicated People Partner.`;
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q })
+      });
+      if (!res.ok) throw new Error('API failed');
+      const data = await res.json();
+      
+      let source = 'Company HR Handbook & Portal';
+      if (data.sources && data.sources.length > 0) {
+        source = data.sources[0].document.replace('.pdf', '').replace(/_/g, ' ') + ' (Page ' + data.sources[0].page + ')';
       }
 
       setAiAnswer({
         query: q,
-        answer,
+        answer: data.answer || "No response received.",
         source,
       });
-    }, 500);
+    } catch (err) {
+      setAiAnswer({
+        query: q,
+        answer: "I am unable to retrieve a verified answer from the knowledge base right now. Please try again later.",
+        source: "System Error",
+      });
+    } finally {
+      setIsAsking(false);
+    }
   };
 
   const handlePromptClick = (text: string) => {
     setAiQuery(text);
-    // trigger answer
-    setIsAsking(true);
+    // Use timeout to allow state to update before submitting
     setTimeout(() => {
-      setIsAsking(false);
-      let answer = '';
-      let source = 'Company HR Handbook & Portal';
-      if (text.includes('leaves')) {
-        answer = `You have 18 total available leave days: 8 Casual Leaves, 6 Sick Leaves, and 12 Earned Leaves valid through Dec 2026.`;
-        source = 'Enterprise Leave Policy (Section 2.4)';
-      } else if (text.includes('reimbursement')) {
-        answer = `All operational and utility reimbursements can be submitted under Quick Links > Payroll. Claims submitted prior to the 20th are paid in the current month's salary.`;
-        source = 'Financial Expense Policy 2026';
-      } else {
-        answer = `Employment Verification Letters and Experience Letters can be requested directly via "Raise Request" > "Documents" and are digitally issued within 2 business days.`;
-        source = 'Document Services Guidelines';
-      }
-      setAiAnswer({
-        query: text,
-        answer,
-        source,
+      // Create a synthetic event
+      const syntheticEvent = { preventDefault: () => {} } as React.FormEvent;
+      // Temporarily set aiQuery to the text so the submit function uses it
+      const currentQuery = aiQuery;
+      aiQuery = text; 
+      handleAiSubmit(syntheticEvent).then(() => {
+        aiQuery = currentQuery; // Restore state just in case
       });
-    }, 450);
+    }, 50);
   };
 
   // Find policies for the featured cards
@@ -158,7 +147,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={onOpenApplyLeave}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
             type="button"
           >
             <Calendar className="w-4 h-4 text-[#0D9488]" />
@@ -167,7 +156,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <button
             onClick={onOpenPayslip}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
             type="button"
           >
             <CreditCard className="w-4 h-4 text-[#0D9488]" />
@@ -176,7 +165,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <button
             onClick={() => onSelectPolicy(hybridPolicy)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
             type="button"
           >
             <Briefcase className="w-4 h-4 text-[#0D9488]" />
@@ -185,7 +174,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <button
             onClick={onOpenBankUpdate}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
             type="button"
           >
             <CreditCard className="w-4 h-4 text-[#0D9488]" />
@@ -205,14 +194,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <>
               <button
                 onClick={() => onSelectPolicy(taxPolicy)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white transition-all animate-in fade-in"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 transition-all animate-in fade-in"
               >
                 <Layers className="w-4 h-4 text-[#0D9488]" />
                 <span>Annual Tax Declaration</span>
               </button>
               <button
                 onClick={() => onNavigate('raise-request')}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white transition-all animate-in fade-in"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full crystal-glass text-[#0F172A] text-[13px] font-medium shadow-glass-sm hover:bg-white/90 transition-all animate-in fade-in"
               >
                 <PlusCircle className="w-4 h-4 text-[#0D9488]" />
                 <span>Submit Expense Claim</span>
@@ -228,13 +217,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="relative z-10 flex flex-col space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-[#06B6D4] text-white flex items-center justify-center shadow-md shadow-teal-600/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-[#06B6D4] text-[#0F172A] flex items-center justify-center shadow-md shadow-teal-600/20">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-[20px] text-[#0F172A] font-bold">Ask HR Assistant</h2>
-                <span className="px-2.5 py-0.5 rounded-full bg-teal-100 text-[#0F766E] text-[11px] font-bold uppercase tracking-wider border border-teal-200/60 shadow-2xs">
+                <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[11px] font-bold uppercase tracking-wider border border-teal-200/60 shadow-2xs">
                   Instant AI
                 </span>
               </div>
@@ -256,7 +245,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 value={aiQuery}
                 onChange={(e) => setAiQuery(e.target.value)}
                 placeholder="Type your HR question here..."
-                className="w-full bg-transparent border-none outline-none text-[14px] text-[#0F172A] placeholder:text-slate-400 py-2 font-normal"
+                className="w-full bg-transparent border-none outline-none text-[14px] text-[#0F172A] placeholder:text-[#64748B] py-2 font-normal"
               />
             </div>
             <button
@@ -275,21 +264,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <button
               type="button"
               onClick={() => handlePromptClick('How many leaves do I have?')}
-              className="px-3 py-1 rounded-lg bg-white/60 hover:bg-white text-[#0F172A] text-[12px] font-normal border border-white/80 shadow-2xs transition-all"
+              className="px-3 py-1 rounded-lg bg-white/40 hover:bg-slate-700/80 text-[#0F172A] text-[12px] font-normal border border-white/60 shadow-2xs transition-all"
             >
               "How many leaves do I have?"
             </button>
             <button
               type="button"
               onClick={() => handlePromptClick('What is the reimbursement policy?')}
-              className="px-3 py-1 rounded-lg bg-white/60 hover:bg-white text-[#0F172A] text-[12px] font-normal border border-white/80 shadow-2xs transition-all"
+              className="px-3 py-1 rounded-lg bg-white/40 hover:bg-slate-700/80 text-[#0F172A] text-[12px] font-normal border border-white/60 shadow-2xs transition-all"
             >
               "What is the reimbursement policy?"
             </button>
             <button
               type="button"
               onClick={() => handlePromptClick('How can I get an experience letter?')}
-              className="px-3 py-1 rounded-lg bg-white/60 hover:bg-white text-[#0F172A] text-[12px] font-normal border border-white/80 shadow-2xs transition-all"
+              className="px-3 py-1 rounded-lg bg-white/40 hover:bg-slate-700/80 text-[#0F172A] text-[12px] font-normal border border-white/60 shadow-2xs transition-all"
             >
               "How can I get an experience letter?"
             </button>
@@ -297,10 +286,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Instant AI Answer Card Display */}
           {aiAnswer && (
-            <div className="p-4 rounded-xl bg-white/95 border border-teal-200/80 shadow-glass-sm space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-4 rounded-xl bg-white/80 border border-teal-200/60 shadow-glass-sm space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-md bg-teal-600 text-white flex items-center justify-center text-[11px] font-bold">
+                  <div className="w-5 h-5 rounded-md bg-teal-600 text-[#0F172A] flex items-center justify-center text-[11px] font-bold">
                     AI
                   </div>
                   <span className="text-[13px] font-semibold text-[#0F172A]">
@@ -309,7 +298,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <button
                   onClick={() => setAiAnswer(null)}
-                  className="text-slate-400 hover:text-slate-600 text-[12px]"
+                  className="text-[#64748B] hover:text-[#334155] text-[12px]"
                 >
                   Dismiss
                 </button>
@@ -317,7 +306,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <p className="text-[13.5px] text-[#0F172A] leading-relaxed">
                 {aiAnswer.answer}
               </p>
-              <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              <div className="pt-2 border-t border-white/60 flex flex-wrap items-center justify-between gap-2 text-[11px]">
                 <span className="text-slate-500">
                   Grounding: <strong>{aiAnswer.source}</strong>
                 </span>
@@ -330,7 +319,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </button>
                   <button
                     onClick={() => onNavigate('raise-request')}
-                    className="text-slate-700 hover:text-black font-semibold"
+                    className="text-[#334155] hover:text-[#0F172A] font-semibold"
                   >
                     Raise Ticket
                   </button>
@@ -349,10 +338,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="group flex flex-col justify-between p-5 crystal-glass-card rounded-2xl hover:bg-white/90 hover:shadow-glass hover:-translate-y-1 transition-all text-left"
         >
           <div className="flex items-start justify-between mb-4 w-full">
-            <div className="w-12 h-12 rounded-xl bg-teal-500/10 text-[#0D9488] flex items-center justify-center group-hover:bg-[#0D9488] group-hover:text-white transition-all shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-teal-500/10 text-[#0D9488] flex items-center justify-center group-hover:bg-[#0D9488] group-hover:text-[#0F172A] transition-all shadow-xs">
               <Calendar className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-[#0D9488] group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-5 h-5 text-[#334155] group-hover:text-[#0D9488] group-hover:translate-x-1 transition-all" />
           </div>
           <div>
             <h3 className="text-[16px] text-[#0F172A] font-semibold group-hover:text-[#0D9488] transition-colors">
@@ -370,10 +359,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="group flex flex-col justify-between p-5 crystal-glass-card rounded-2xl hover:bg-white/90 hover:shadow-glass hover:-translate-y-1 transition-all text-left"
         >
           <div className="flex items-start justify-between mb-4 w-full">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white transition-all shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-blue-50/800/10 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-[#0F172A] transition-all shadow-xs">
               <CreditCard className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-[#2563EB] group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-5 h-5 text-[#334155] group-hover:text-[#2563EB] group-hover:translate-x-1 transition-all" />
           </div>
           <div>
             <h3 className="text-[16px] text-[#0F172A] font-semibold group-hover:text-[#2563EB] transition-colors">
@@ -391,10 +380,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="group flex flex-col justify-between p-5 crystal-glass-card rounded-2xl hover:bg-white/90 hover:shadow-glass hover:-translate-y-1 transition-all text-left"
         >
           <div className="flex items-start justify-between mb-4 w-full">
-            <div className="w-12 h-12 rounded-xl bg-teal-500/10 text-[#0D9488] flex items-center justify-center group-hover:bg-[#0D9488] group-hover:text-white transition-all shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-teal-500/10 text-[#0D9488] flex items-center justify-center group-hover:bg-[#0D9488] group-hover:text-[#0F172A] transition-all shadow-xs">
               <BookOpen className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-[#0D9488] group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-5 h-5 text-[#334155] group-hover:text-[#0D9488] group-hover:translate-x-1 transition-all" />
           </div>
           <div>
             <h3 className="text-[16px] text-[#0F172A] font-semibold group-hover:text-[#0D9488] transition-colors">
@@ -412,10 +401,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           className="group flex flex-col justify-between p-5 crystal-glass-card rounded-2xl hover:bg-white/90 hover:shadow-glass hover:-translate-y-1 transition-all text-left"
         >
           <div className="flex items-start justify-between mb-4 w-full">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-[#0F172A] transition-all shadow-xs">
               <BadgeAlert className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="w-5 h-5 text-[#334155] group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
           </div>
           <div>
             <h3 className="text-[16px] text-[#0F172A] font-semibold group-hover:text-indigo-600 transition-colors">
@@ -465,11 +454,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="text-[12px] text-[#64748B] font-medium">In Progress</span>
               <div className="text-[32px] leading-tight font-bold text-[#0F172A]">{inProgressCount}</div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span className="w-2 h-2 rounded-full bg-blue-50/800"></span>
                 <span className="text-[11px] text-[#64748B] font-medium">Assigned to HR</span>
               </div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-200/50 flex items-center justify-center shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-blue-50/80 text-blue-600 border border-blue-200/50 flex items-center justify-center shadow-xs">
               <Clock className="w-6 h-6" />
             </div>
           </div>
@@ -540,7 +529,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/40 text-[#64748B] text-[11px] uppercase tracking-wider font-semibold border-b border-white/50">
+                  <tr className="bg-white/40 text-[#64748B] text-[11px] uppercase tracking-wider font-semibold border-b border-white/60">
                     <th className="py-3 px-6" scope="col">Request ID</th>
                     <th className="py-3 px-6" scope="col">Subject</th>
                     <th className="py-3 px-6" scope="col">Category</th>
@@ -554,7 +543,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <tr
                       key={req.id}
                       onClick={() => onSelectRequest(req)}
-                      className="hover:bg-white/70 transition-colors cursor-pointer"
+                      className="hover:bg-white/90/70 transition-colors cursor-pointer"
                     >
                       <td className="py-3.5 px-6 font-mono font-semibold text-slate-500">
                         {req.id}
@@ -563,7 +552,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         {req.subject}
                       </td>
                       <td className="py-3.5 px-6">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/80 border border-white/90 text-[12px] text-slate-600 shadow-2xs">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/80 border border-white/60 text-[12px] text-[#334155] shadow-2xs">
                           {req.category}
                         </span>
                       </td>
@@ -579,7 +568,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             <span>IN PROGRESS</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50/80 text-blue-700 text-[11px] font-semibold border border-blue-200/60 shadow-2xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50/800/20 text-blue-700 text-[11px] font-semibold border border-blue-200/60 shadow-2xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                             <span>SUBMITTED</span>
                           </span>
@@ -594,7 +583,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             e.stopPropagation();
                             onSelectRequest(req);
                           }}
-                          className="inline-flex items-center px-3 py-1 rounded-lg bg-white/80 hover:bg-white text-[#0F172A] text-[12px] font-semibold border border-white shadow-2xs transition-all"
+                          className="inline-flex items-center px-3 py-1 rounded-lg bg-white/80 hover:bg-white/90 text-[#0F172A] text-[12px] font-semibold border border-white/60 shadow-2xs transition-all"
                         >
                           View
                         </button>
@@ -606,7 +595,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Pagination Footer */}
-            <div className="px-6 py-3.5 bg-white/40 border-t border-white/50 flex items-center justify-between text-[12px] text-[#64748B]">
+            <div className="px-6 py-3.5 bg-white/40 border-t border-white/60 flex items-center justify-between text-[12px] text-[#64748B]">
               <span>
                 Showing {Math.min(displayedRequests.length, requests.length)} of {requests.length} requests
               </span>
@@ -614,14 +603,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="px-2.5 py-1 rounded-lg bg-white/70 text-[#0F172A] hover:bg-white disabled:opacity-40 border border-white shadow-2xs"
+                  className="px-2.5 py-1 rounded-lg bg-slate-50 text-[#0F172A] hover:bg-white/90 disabled:opacity-40 border border-white/60 shadow-2xs"
                 >
                   Previous
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
-                  className="px-2.5 py-1 rounded-lg bg-white/70 text-[#0F172A] hover:bg-white disabled:opacity-40 border border-white shadow-2xs"
+                  className="px-2.5 py-1 rounded-lg bg-slate-50 text-[#0F172A] hover:bg-white/90 disabled:opacity-40 border border-white/60 shadow-2xs"
                 >
                   Next
                 </button>
@@ -707,8 +696,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   }}
                   className={`p-3 rounded-xl transition-all flex items-start gap-3 cursor-pointer ${
                     !notif.read
-                      ? 'bg-white/70 hover:bg-white border border-white/80 shadow-2xs'
-                      : 'hover:bg-white/60'
+                      ? 'bg-slate-50 hover:bg-white/90 border border-white/60 shadow-2xs'
+                      : 'hover:bg-white/90/60'
                   }`}
                 >
                   <span
@@ -731,14 +720,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="p-5 crystal-glass rounded-2xl shadow-glass space-y-3.5">
             <div className="flex items-center justify-between pb-1 border-b border-white/60">
               <h3 className="text-[16px] text-[#0F172A] font-semibold">Upcoming Holidays</h3>
-              <Calendar className="w-4 h-4 text-slate-400" />
+              <Calendar className="w-4 h-4 text-[#64748B]" />
             </div>
 
             <div className="space-y-2">
               {holidays.slice(0, 3).map((h) => (
                 <div
                   key={h.id}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-white/50 border border-white/60 hover:bg-white/80 transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-white/60 hover:bg-white/80 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-teal-500/10 text-[#0D9488]">
@@ -752,7 +741,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </p>
                     </div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-md bg-white/80 text-[11px] text-[#334155] border border-white shadow-2xs font-medium">
+                  <span className="px-2 py-0.5 rounded-md bg-white/80 text-[11px] text-[#334155] border border-white/60 shadow-2xs font-medium">
                     {h.fullDate.split(' ')[0]} {h.fullDate.split(' ')[1]}
                   </span>
                 </div>
@@ -839,19 +828,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* NEED HELP? CARD (Crystal Dark Glass Variant) */}
-          <div className="p-5 crystal-glass-dark rounded-2xl text-white shadow-xl space-y-3 relative overflow-hidden">
+          <div className="p-5 crystal-glass rounded-2xl text-[#0F172A] shadow-xl space-y-3 relative overflow-hidden">
             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#0D9488]/30 rounded-full blur-2xl pointer-events-none"></div>
             <div className="relative z-10 space-y-1">
               <div className="flex items-center gap-2">
                 <HelpCircle className="w-5 h-5 text-[#2DD4BF]" />
-                <h3 className="text-[16px] text-white font-semibold">Need help?</h3>
+                <h3 className="text-[16px] text-[#0F172A] font-semibold">Need help?</h3>
               </div>
-              <p className="text-[13px] text-slate-300">Can't find what you're looking for?</p>
+              <p className="text-[13px] text-[#334155]">Can't find what you're looking for?</p>
             </div>
             <div className="relative z-10 grid grid-cols-2 gap-2 pt-1">
               <button
                 onClick={() => onNavigate('ask-hr')}
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[13px] transition-all font-medium border border-white/15 backdrop-blur-md shadow-xs active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/70 text-[#0F172A] text-[13px] transition-all font-medium border border-white/15 backdrop-blur-md shadow-xs active:scale-[0.98]"
                 type="button"
               >
                 <Bot className="w-4 h-4 text-teal-300" />
@@ -859,7 +848,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
               <button
                 onClick={() => onNavigate('raise-request')}
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-[#0D9488] to-[#0F766E] text-white text-[13px] hover:brightness-110 transition-all font-medium shadow-md shadow-teal-900/30 active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-[#0D9488] to-[#0F766E] text-[#0F172A] text-[13px] hover:brightness-110 transition-all font-medium shadow-md shadow-teal-900/30 active:scale-[0.98]"
                 type="button"
               >
                 <PlusCircle className="w-4 h-4" />

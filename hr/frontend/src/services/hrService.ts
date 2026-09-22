@@ -381,18 +381,24 @@ export const hrService = {
   async queryCopilot(prompt: string): Promise<CopilotMessage> {
     try {
       // 1. Query the RAG agent backend (port 8001 direct or port 8000 proxy)
-      let res = await fetch('http://localhost:8001/api/chat', {
+      let res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: prompt })
-      }).catch(() => null);
+      }).catch((e) => {
+        console.warn('Primary fetch failed:', e);
+        return null;
+      });
 
       if (!res || !res.ok) {
-        res = await fetch('http://localhost:8000/api/chat', {
+        res = await fetch('/api/v1/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: prompt })
-        }).catch(() => null);
+        }).catch((e) => {
+          console.warn('Fallback fetch failed:', e);
+          return null;
+        });
       }
 
       if (res && res.ok) {

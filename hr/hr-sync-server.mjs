@@ -235,7 +235,10 @@ const server = http.createServer((req, res) => {
             sources: [{ document: "employee_handbook.pdf", page: 1 }]
           });
         });
-        ragReq.write(JSON.stringify({ question }));
+        // End of error handler
+        const payload = JSON.stringify({ question });
+        ragReq.setHeader('Content-Length', Buffer.byteLength(payload));
+        ragReq.write(payload);
         ragReq.end();
         return;
       } catch (err) {

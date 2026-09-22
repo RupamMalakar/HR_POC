@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
             src={ASSETS.logo}
           />
           <span className="text-[16px] text-[#0F172A] font-semibold hidden sm:inline">
-            HR Service Desk
+            Employee Portal
           </span>
           <span className="text-slate-300 font-normal mx-1 sm:mx-1.5">/</span>
           <span className="text-[14px] text-slate-500 font-medium">
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <div className="my-1 border-t border-white/60"></div>
 
-              <div className="px-3 py-2 text-[11px] text-slate-400">
+              <div className="px-3 py-2 text-[11px] text-[#64748B]">
                 Department: {CURRENT_USER.department}
               </div>
             </div>
