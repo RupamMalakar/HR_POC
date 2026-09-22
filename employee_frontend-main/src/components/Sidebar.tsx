@@ -122,18 +122,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Logo Header */}
-      <div className="h-14 px-3 flex items-center justify-between border-b border-white/60">
+      <div className="h-14 px-3 flex items-center justify-between border-b border-slate-200/60">
         <button
           onClick={() => handleNavClick('dashboard')}
-          className="flex items-center gap-3 text-left focus:outline-none"
+          className="flex items-center gap-3 text-left focus:outline-none group"
         >
           <img
-            alt="HR Service Desk Logo"
-            className="h-8 w-auto object-contain drop-shadow-sm rounded-md"
+            alt="Employee Portal Logo"
+            className="h-8 w-auto object-contain drop-shadow-sm rounded-md transition-transform group-hover:scale-105"
             src={ASSETS.logo}
           />
           <span className="font-semibold text-[17px] text-[#0F172A] tracking-tight">
-            HR Service Desk
+            Employee Portal
           </span>
         </button>
         {isDrawerOpen && (
@@ -158,13 +158,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => handleNavClick(item.id)}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-left text-[14px] ${
                 isActive
-                  ? 'bg-white/90 text-[#0F172A] font-semibold shadow-sm border-l-4 border-[#0D9488] backdrop-blur-md'
-                  : 'text-[#334155] hover:bg-white/60 hover:text-[#0F172A] font-medium'
+                  ? 'bg-teal-50 text-teal-800 font-semibold shadow-sm border-l-4 border-teal-500 backdrop-blur-md'
+                  : 'text-slate-600 hover:bg-white/60 hover:text-slate-900 font-medium'
               }`}
             >
               <Icon
-                className={`w-5 h-5 flex-shrink-0 ${
-                  isActive ? 'text-[#0D9488]' : 'text-slate-500'
+                className={`w-5 h-5 flex-shrink-0 transition-colors ${
+                  isActive ? 'text-teal-600' : 'text-slate-500 group-hover:text-slate-700'
                 }`}
               />
               <span className="flex-1 truncate">{item.label}</span>
@@ -179,37 +179,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Quick Links Glass Sub-panel */}
-      <div className="p-3 crystal-glass-subtle rounded-xl mt-2">
-        <div className="px-2 pb-2 text-[11px] uppercase tracking-wider text-[#64748B] font-bold">
+      <div className="p-3 crystal-glass-subtle rounded-xl mt-2 border border-slate-200/50">
+        <div className="px-2 pb-2 text-[11px] uppercase tracking-wider text-slate-500 font-bold">
           Quick Links
         </div>
         <nav className="space-y-0.5">
           <button
             onClick={() => handleQuickLink('leave')}
-            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-[#334155] hover:bg-white/70 hover:text-[#0F172A] transition-colors text-left"
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-white/70 hover:text-slate-900 transition-colors text-left group"
           >
-            <CalendarCheck className="w-4 h-4 text-[#0D9488] flex-shrink-0" />
+            <CalendarCheck className="w-4 h-4 text-teal-600 flex-shrink-0 transition-transform group-hover:scale-110" />
             <span>Leave Balance</span>
           </button>
           <button
             onClick={() => handleQuickLink('payslip')}
-            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-[#334155] hover:bg-white/70 hover:text-[#0F172A] transition-colors text-left"
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-white/70 hover:text-slate-900 transition-colors text-left group"
           >
-            <CreditCard className="w-4 h-4 text-[#0D9488] flex-shrink-0" />
+            <CreditCard className="w-4 h-4 text-teal-600 flex-shrink-0 transition-transform group-hover:scale-110" />
             <span>Payslip</span>
           </button>
           <button
             onClick={() => handleQuickLink('policies')}
-            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-[#334155] hover:bg-white/70 hover:text-[#0F172A] transition-colors text-left"
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-white/70 hover:text-slate-900 transition-colors text-left group"
           >
-            <ShieldCheck className="w-4 h-4 text-[#0D9488] flex-shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-teal-600 flex-shrink-0 transition-transform group-hover:scale-110" />
             <span>HR Policies</span>
           </button>
           <button
             onClick={() => handleQuickLink('forms')}
-            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-[#334155] hover:bg-white/70 hover:text-[#0F172A] transition-colors text-left"
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] text-slate-600 hover:bg-white/70 hover:text-slate-900 transition-colors text-left group"
           >
-            <FileText className="w-4 h-4 text-[#0D9488] flex-shrink-0" />
+            <FileText className="w-4 h-4 text-teal-600 flex-shrink-0 transition-transform group-hover:scale-110" />
             <span>Forms & Templates</span>
           </button>
         </nav>
