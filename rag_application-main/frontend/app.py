@@ -1,4 +1,4 @@
-﻿import os
+import os
 import requests
 import streamlit as st
 
@@ -25,10 +25,15 @@ def check_backend_health(base_url: str) -> dict | None:
     return None
 
 
-def query_policy_api(base_url: str, question: str) -> dict:
-    """Sends a question to the FastAPI /api/chat endpoint."""
+def query_policy_api(base_url: str, question: str, history: list = None) -> dict:
+    """Sends a question and conversation history to the FastAPI /api/chat endpoint."""
     endpoint = f"{base_url.rstrip('/')}/api/chat"
-    payload = {"question": question}
+    clean_history = [
+        {"role": m.get("role", "user"), "content": m.get("content", "")}
+        for m in (history or [])
+        if m.get("content") and not m.get("content", "").startswith("⚠️ *Error")
+    ]
+    payload = {"question": question, "history": clean_history}
 
     try:
         response = requests.post(
@@ -145,10 +150,14 @@ if user_prompt:
     with st.chat_message("user"):
         st.markdown(user_prompt)
 
-    # Query Backend API
+    # Query Backend API with conversation history
     with st.chat_message("assistant"):
         with st.spinner("Searching policies and consulting Azure OpenAI..."):
-            api_result = query_policy_api(backend_url, user_prompt)
+            api_result = query_policy_api(
+                backend_url,
+                user_prompt,
+                history=st.session_state.messages[:-1]
+            )
 
         if api_result.get("error"):
             status_code = api_result.get("status_code", 500)
