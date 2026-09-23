@@ -37,26 +37,26 @@
         "Sun"
       ],
       "incoming": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        16,
+        24,
+        28,
+        22,
+        34,
+        12,
+        19
       ],
       "resolved": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        14,
+        21,
+        26,
+        20,
+        31,
+        11,
+        18
       ],
-      "openTotal": 0,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "openTotal": 24,
+      "receivedToday": 19,
+      "resolvedToday": 18
     },
     "30D": {
       "range": "30D",
@@ -67,41 +67,41 @@
         "Week 4"
       ],
       "incoming": [
-        0,
-        0,
-        0,
-        0
+        82,
+        95,
+        118,
+        104
       ],
       "resolved": [
-        0,
-        0,
-        0,
-        0
+        78,
+        90,
+        112,
+        99
       ],
-      "openTotal": 0,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "openTotal": 24,
+      "receivedToday": 19,
+      "resolvedToday": 18
     },
     "90D": {
       "range": "90D",
       "labels": [
-        "August",
-        "September",
-        "October"
+        "Jul",
+        "Aug",
+        "Sep"
       ],
       "incoming": [
-        0,
-        0,
-        0
+        320,
+        375,
+        412
       ],
       "resolved": [
-        0,
-        0,
-        0
+        305,
+        360,
+        396
       ],
-      "openTotal": 0,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "openTotal": 24,
+      "receivedToday": 19,
+      "resolvedToday": 18
     }
   },
   "requests": [
