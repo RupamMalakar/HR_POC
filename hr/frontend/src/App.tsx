@@ -225,6 +225,29 @@ function HROperationsPortal() {
     if (updatedVel) setVelocity(updatedVel);
   };
 
+  // Add comment / reply to request thread
+  const handleAddComment = async (id: string, text: string) => {
+    const newComment = await hrService.addComment(id, text, 'Sarah Jenkins (HR Ops)', true);
+    setRequests(prev => {
+      const next = prev.map(r => {
+        if (r.id === id || (r.id && id && r.id.toLowerCase() === id.toLowerCase())) {
+          const currentComments = Array.isArray(r.comments) ? r.comments : [];
+          if (!currentComments.some(c => c.id === newComment.id)) {
+            return {
+              ...r,
+              comments: [...currentComments, newComment],
+              lastUpdated: 'Just now'
+            };
+          }
+        }
+        return r;
+      });
+      try { localStorage.setItem('hr_admin_requests', JSON.stringify(next)); } catch {}
+      return next;
+    });
+    return newComment;
+  };
+
   // Approve deliverable
   const handleApproveDeliverable = async (id: string) => {
     await hrService.approveDeliverable(id);
@@ -413,9 +436,10 @@ function HROperationsPortal() {
       />
 
       <ReviewDrawer
-        item={selectedReviewItem}
+        item={requests.find(r => r.id === selectedReviewItem?.id) || selectedReviewItem}
         onClose={() => setSelectedReviewItem(null)}
         onResolve={handleResolveRequest}
+        onAddComment={handleAddComment}
       />
     </div>
   );

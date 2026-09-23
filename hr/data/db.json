@@ -145,7 +145,16 @@
           "actor": "Rupam Sharma"
         }
       ],
-      "comments": []
+      "comments": [
+        {
+          "id": "c-1790163505703",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "Verification test comment from HR AI Copilot workspace.",
+          "time": "Just now",
+          "isHr": true
+        }
+      ],
+      "lastUpdated": "Just now"
     },
     {
       "id": "REQ-1358",
@@ -293,6 +302,13 @@
           "text": "Thank you Sarah, verified the attendance update in ESS portal!",
           "time": "Just now",
           "isHr": false
+        },
+        {
+          "id": "c-1790163457680",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "okk",
+          "time": "Just now",
+          "isHr": true
         }
       ],
       "resolutionNotes": "Biometric logs verified against building security gate. Attendance regularized.",
@@ -335,7 +351,16 @@
           "actor": "Employee"
         }
       ],
-      "comments": []
+      "comments": [
+        {
+          "id": "c-1790164552564",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "Hi Rupam,\n\nThank you for reaching out to HR and for submitting case REQ-SSE-TEST regarding your leave.\n\nI’m not seeing specific details in your request description, so I’ll outline the key leave options available under our current policies. If I’ve misunderstood the type of leave you’re seeking, please reply with a brief clarification (e.g., “annual leave,” “sick leave,” “parental leave,” or “unpaid personal leave”), and I’ll adjust the guidance and processing accordingly.\n\nBased on our Company Leave and Time Off Policy (leave_policy.pdf):\n\n1. **Annual Paid Time Off (PTO)** – Page 1  \n   - Full-time permanent employees are entitled to **20 business days of paid annual leave per calendar year**, accruing monthly at **1.67 days per completed month of active service**.  \n   - If your request is for **planned annual leave exceeding 3 consecutive days**, it must be **submitted through the HR portal at least 2 weeks in advance** and approved by your direct manager.  \n   - Up to **5 unused leave days** can be carried forward into the next calendar year and must be used by **March 31**; any additional carryover is forfeited without monetary compensation.\n\n2. **Sick Leave and Medical Absences** – Page 2  \n   - Employees receive **10 paid sick days per calendar year** (allocated in full on January 1, or pro-rated from your start date).  \n   - If you are ill for **more than 3 consecutive working days**, you must provide an **official medical certificate** from a licensed healthcare provider to People Operations upon your return.\n\n3. **Parental and Family Caregiver Leave** – Page 3  \n   - **Primary caregivers** are eligible for **16 weeks of 100% paid parental leave** following birth, adoption, or foster placement.  \n   - **Secondary caregivers** are eligible for **6 weeks of fully paid leave**.  \n   - You must have completed **at least 6 consecutive months of employment** to be eligible for paid parental leave.\n\n4. **Unpaid Personal Leave** – Page 3  \n   - You may request **unpaid leave of absence** for personal emergencies or educational sabbaticals for up to **90 calendar days**.  \n   - This requires **approval from your Department Director and the Head of HR**.\n\n---\n\n**Next Steps**\n\nTo move your case forward quickly, please reply with the following (or update your case in the HR portal):\n\n1. **Type of leave requested** (annual PTO, sick leave, parental leave, unpaid personal leave, or other).  \n2. **Requested dates** (start date and end date).  \n3. **Whether this is planned in advance or due to an urgent/emergency situation.**\n\nOnce we have these details:\n\n- We will **review your eligibility** under the relevant policy.\n- We will **coordinate with your manager** (and, if needed, your Department Director and Head of HR) for approval.\n- For standard annual leave requests submitted with sufficient notice, you can typically expect an update or decision **within 2–3 business days** of providing complete information.\n\nIf your situation is urgent (e.g., sudden illness or family emergency), please indicate that clearly so we can prioritize and respond as quickly as possible.\n\nThank you again, Rupam. We’re here to support you and ensure your leave is handled smoothly and in line with company policy.\n\nBest regards,  \n**Sarah Jenkins**  \nHR Operations Lead  \nGlobalTech Enterprise",
+          "time": "Just now",
+          "isHr": true
+        }
+      ],
+      "lastUpdated": "Just now"
     },
     {
       "id": "REQ-9999",

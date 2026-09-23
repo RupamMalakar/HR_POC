@@ -677,6 +677,19 @@ const server = http.createServer((req, res) => {
       return sendJson(201, item);
     }
 
+    // Requests: Get Single Request
+    if (path.startsWith('/api/v1/requests/') && !path.endsWith('/comments') && req.method === 'GET') {
+      const targetId = decodeURIComponent(path.split('/')[4] || '');
+      const reqItem = state.requests.find(r =>
+        r.id === targetId ||
+        (r.id && targetId && r.id.toLowerCase() === targetId.toLowerCase())
+      );
+      if (reqItem) {
+        return sendJson(200, reqItem);
+      }
+      return sendJson(404, { error: `Request ${targetId} not found` });
+    }
+
     // Requests: Update status (HR Specialist resolves/approves ticket)
     if (path.startsWith('/api/v1/requests/') && req.method === 'PATCH') {
       const targetId = decodeURIComponent(path.split('/')[4] || '');

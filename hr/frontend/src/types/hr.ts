@@ -12,6 +12,22 @@ export interface Employee {
   tenure?: string;
 }
 
+export interface RequestComment {
+  id: string;
+  author: string;
+  avatar?: string;
+  text: string;
+  time: string;
+  isHr: boolean;
+}
+
+export interface TimelineEvent {
+  title: string;
+  desc: string;
+  date: string;
+  actor: string;
+}
+
 export interface RequestItem {
   id: string;
   title: string;
@@ -29,8 +45,8 @@ export interface RequestItem {
   description: string;
   resolutionNotes?: string;
   tags?: string[];
-  timeline?: any[];
-  comments?: any[];
+  timeline?: TimelineEvent[];
+  comments?: RequestComment[];
   statusUpper?: string;
   attachmentName?: string;
   subject?: string;

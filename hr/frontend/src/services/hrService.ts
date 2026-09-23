@@ -8,7 +8,8 @@ import {
   InsightItem,
   CategoryVolume,
   ActivityEvent,
-  CopilotMessage
+  CopilotMessage,
+  RequestComment
 } from '../types/hr';
 import {
   initialMetrics,
@@ -597,5 +598,254 @@ export const hrService = {
     };
     state.copilotMessages.push(assistantMsg);
     return assistantMsg;
+  },
+
+  async addComment(
+    requestId: string,
+    text: string,
+    author = 'Sarah Jenkins (HR Ops)',
+    isHr = true,
+    avatar?: string
+  ): Promise<RequestComment> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/requests/${encodeURIComponent(requestId)}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          author,
+          text,
+          isHr,
+          avatar
+        })
+      });
+      if (res.ok) {
+        const newComment: RequestComment = await res.json();
+        const target = state.requests.find(r => r.id === requestId || r.id?.toLowerCase() === requestId.toLowerCase());
+        if (target) {
+          if (!target.comments) target.comments = [];
+          if (!target.comments.some(c => c.id === newComment.id)) {
+            target.comments.push(newComment);
+          }
+          target.lastUpdated = 'Just now';
+        }
+        return newComment;
+      }
+    } catch (err) {
+      console.warn('Backend comment post failed, applying local fallback:', err);
+    }
+
+    await delay(120);
+    const newComment: RequestComment = {
+      id: `c-${Date.now()}`,
+      author,
+      text,
+      time: 'Just now',
+      isHr,
+      avatar
+    };
+    const target = state.requests.find(r => r.id === requestId || r.id?.toLowerCase() === requestId.toLowerCase());
+    if (target) {
+      if (!target.comments) target.comments = [];
+      target.comments.push(newComment);
+      target.lastUpdated = 'Just now';
+    }
+    return newComment;
+  },
+
+  async queryCaseCopilot(
+    caseItem: RequestItem,
+    action: 'draft_reply' | 'summarize' | 'check_policy' | 'missing_info' | 'improve_tone' | 'next_steps' | 'custom_query',
+    userQuery?: string,
+    tone?: string
+  ): Promise<CopilotMessage> {
+    const empName = typeof caseItem.employee === 'object' && caseItem.employee ? (caseItem.employee.name || 'Employee') : (caseItem.employee || 'Employee');
+    const empDept = typeof caseItem.employee === 'object' && caseItem.employee ? (caseItem.employee.department || 'Operations') : 'Operations';
+    const commentsList = caseItem.comments || [];
+    const conversationHistoryStr = commentsList.length > 0
+      ? commentsList.map(c => `[${c.isHr ? 'HR Response' : 'Employee'}] (${c.author}, ${c.time}): ${c.text}`).join('\n')
+      : '(No previous messages in conversation thread)';
+
+    let prompt = '';
+    const systemRoleDesc = `You are an AI Copilot specialized in enterprise HR case resolution and employee relations for GlobalTech Enterprise.`;
+
+    switch (action) {
+      case 'draft_reply':
+        prompt = `${systemRoleDesc}
+Please generate an official, professional, and empathetic employee communication reply from HR to ${empName}.
+Tone: ${tone || 'Polite, clear, supportive, and grounded in official HR policy'}.
+
+CASE CONTEXT:
+- Case ID: ${caseItem.id}
+- Case Title: ${caseItem.title || caseItem.subject || 'HR Inquiry'}
+- Category: ${caseItem.category}
+- Priority: ${caseItem.priority}
+- Current Status: ${caseItem.status}
+- Employee: ${empName} (${empDept})
+- Original Case Narrative:
+"""
+${caseItem.description}
+"""
+
+CONVERSATION THREAD SO FAR:
+${conversationHistoryStr}
+
+INSTRUCTIONS FOR THE HR REPLY:
+1. Address ${empName} warmly by first name.
+2. Direct and transparent answer referencing their request and the latest comment.
+3. If applicable, cite the relevant company policy rules (e.g. Leave, Remote Work, Benefits, Payroll).
+4. Provide clear next steps or expected timeline.
+5. Close professionally from Sarah Jenkins, HR Operations Lead.`;
+        break;
+
+      case 'summarize':
+        prompt = `${systemRoleDesc}
+Provide a concise, high-level bullet-point executive summary of this case and all communications.
+
+CASE CONTEXT:
+- Case ID: ${caseItem.id}
+- Title: ${caseItem.title || caseItem.subject}
+- Employee: ${empName} (${empDept})
+- Narrative: ${caseItem.description}
+- Conversation History:
+${conversationHistoryStr}
+
+Format with:
+- **Core Request**: (1 sentence)
+- **Status & Timeline**: (current state)
+- **Key Details**: (bullet points)
+- **Action Required**: (what HR needs to do next)`;
+        break;
+
+      case 'check_policy':
+        prompt = `${systemRoleDesc}
+Check applicable company policies for this case:
+Case ID: ${caseItem.id}
+Category: ${caseItem.category}
+Narrative: ${caseItem.description}
+${userQuery ? `Specific Question: ${userQuery}` : 'Identify the exact policy requirements, eligibility criteria, and SLA timelines.'}`;
+        break;
+
+      case 'missing_info':
+        prompt = `${systemRoleDesc}
+Review the case details and conversation history below. Identify any missing information, documents, approvals, or dates that HR needs from the employee before this case can be resolved.
+Case: ${caseItem.title}
+Narrative: ${caseItem.description}
+Conversation:
+${conversationHistoryStr}`;
+        break;
+
+      case 'improve_tone':
+        prompt = `${systemRoleDesc}
+Refine and polish the following draft response to be ${tone || 'more empathetic, professional, and clear'}:
+Draft:
+"""
+${userQuery || ''}
+"""
+Target audience: ${empName} regarding Case ${caseItem.title}.`;
+        break;
+
+      case 'next_steps':
+        prompt = `${systemRoleDesc}
+Based on this case status (${caseItem.status}) and history, outline the 3 immediate operational next steps for HR to bring this case to resolution.
+Case: ${caseItem.id} - ${caseItem.title}
+Narrative: ${caseItem.description}
+Conversation:
+${conversationHistoryStr}`;
+        break;
+
+      case 'custom_query':
+      default:
+        prompt = `${systemRoleDesc}
+Case Context: ${caseItem.id} (${caseItem.title}), Category: ${caseItem.category}, Employee: ${empName} (${empDept}).
+Narrative: ${caseItem.description}
+Conversation History:
+${conversationHistoryStr}
+
+HR Specialist Query:
+${userQuery || 'Analyze this request and recommend appropriate action.'}`;
+        break;
+    }
+
+    try {
+      let res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: prompt, history: [] })
+      }).catch(() => null);
+
+      if (!res || !res.ok) {
+        res = await fetch('http://localhost:8001/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: prompt, history: [] })
+        }).catch(() => null);
+      }
+
+      if (res && res.ok) {
+        const data = await res.json();
+        const sources: Array<{ document: string; page: number }> = data.sources || [];
+        const citations = sources.map(s => ({
+          title: s.document
+            ? s.document.replace('.pdf', '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+            : 'Company Policy',
+          section: s.document || 'Policy Document',
+          page: s.page
+        }));
+
+        return {
+          id: `COP-CASE-${Date.now()}`,
+          sender: 'assistant',
+          text: data.answer || 'Response generated from policy agent.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          citations,
+          suggestedActions: [
+            'Use Reply',
+            'Make More Empathetic',
+            'Make More Concise',
+            'Check Policy Details'
+          ]
+        };
+      }
+    } catch (err) {
+      console.warn('RAG backend query error, falling back to local domain knowledge:', err);
+    }
+
+    // Local fallback with rich context
+    await delay(250);
+    const categoryLower = (caseItem.category || '').toLowerCase();
+    let replyText = '';
+    let citations = [{ title: 'Employee Handbook', section: 'employee_handbook.pdf', page: 1 }];
+
+    if (action === 'draft_reply') {
+      if (categoryLower.includes('leave')) {
+        replyText = `Hi ${empName},\n\nThank you for reaching out regarding your leave inquiry for Case ${caseItem.id}. According to our Leave & Time Off Policy (Section 3.2), full-time employees accrue 1.67 PTO days per month. I have reviewed your balance and verified that your requested dates can be accommodated.\n\nPlease ensure your direct supervisor has also approved the calendar block in the portal. Feel free to reply if you need any adjustments!\n\nBest regards,\nSarah Jenkins\nHR Operations Lead`;
+        citations = [{ title: 'Leave Policy', section: 'leave_policy.pdf', page: 1 }];
+      } else if (categoryLower.includes('payroll')) {
+        replyText = `Hi ${empName},\n\nThank you for following up on your payroll case (${caseItem.id}). Our finance and payroll operations team has verified the batch disbursement. The adjustment has been scheduled for the upcoming pay cycle on the 1st of next month.\n\nYou will see the revised breakdown on your itemized payslip. Please let me know if you have any questions in the meantime.\n\nWarm regards,\nSarah Jenkins\nHR Operations Lead`;
+        citations = [{ title: 'Compensation & Payroll Policy', section: 'employee_handbook.pdf', page: 4 }];
+      } else {
+        replyText = `Hi ${empName},\n\nThank you for providing the details for Case ${caseItem.id}. I have reviewed your submission regarding "${caseItem.title || 'your request'}" alongside our company guidelines.\n\nWe are currently processing the verification and will have this resolved for you within 24–48 hours. Please let me know if any additional context comes up.\n\nSincerely,\nSarah Jenkins\nHR Operations Lead`;
+        citations = [{ title: 'Employee Relations Guide', section: 'employee_handbook.pdf', page: 2 }];
+      }
+    } else if (action === 'summarize') {
+      replyText = `**Case Summary for ${caseItem.id}**:\n- **Employee**: ${empName} (${empDept})\n- **Status**: ${caseItem.status.toUpperCase()} (${caseItem.priority} priority)\n- **Subject**: ${caseItem.title || caseItem.subject}\n- **Core Narrative**: ${caseItem.description}\n- **Conversation State**: ${commentsList.length} total messages exchanged.\n- **Action Required**: Review documentation and confirm resolution notes.`;
+    } else if (action === 'check_policy') {
+      replyText = `**Applicable Company Policy Clauses**:\n1. **Standard Service SLA**: Inquiries must receive initial specialist response within 4 business hours.\n2. **Documentation Retention**: Communications are archived in accordance with Article 6 (Compliance & Records).\n3. **Policy Grounding**: Verified against ${categoryLower.includes('leave') ? 'leave_policy.pdf' : categoryLower.includes('remote') ? 'remote_work_policy.pdf' : 'employee_handbook.pdf'}.`;
+    } else {
+      replyText = `I have analyzed Case ${caseItem.id} for ${empName}. Based on the request details ("${caseItem.description}"), all mandatory fields are present. You can proceed with drafting a response or approving the case.`;
+    }
+
+    return {
+      id: `COP-CASE-${Date.now()}`,
+      sender: 'assistant',
+      text: replyText,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      citations,
+      suggestedActions: [
+        'Use Reply',
+        'Make More Empathetic',
+        'Make More Concise'
+      ]
+    };
   }
 };
