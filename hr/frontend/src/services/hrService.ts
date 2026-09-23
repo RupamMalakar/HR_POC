@@ -43,41 +43,91 @@ const delay = (ms = 180) => new Promise(resolve => setTimeout(resolve, ms));
 type SyncListener = (event: { type: string; data: any }) => void;
 const syncListeners = new Set<SyncListener>();
 
-// Auto-connect to real-time Server-Sent Events stream on port 8000
+// Auto-connect to real-time Server-Sent Events stream on port 8000 with auto-reconnect
 if (typeof window !== 'undefined') {
-  try {
-    const es = new EventSource('http://localhost:8000/api/v1/stream');
-    es.addEventListener('REQUEST_CREATED', (e: MessageEvent) => {
-      try {
-        const payload = JSON.parse(e.data);
-        if (payload.request && !state.requests.some(r => r.id === payload.request.id)) {
-          state.requests.unshift(payload.request);
-        }
-        if (payload.activity && !state.activities.some(a => a.id === payload.activity.id)) {
-          state.activities.unshift(payload.activity);
-        }
-        if (payload.metrics) state.metrics = payload.metrics;
-        syncListeners.forEach(fn => fn({ type: 'REQUEST_CREATED', data: payload }));
-      } catch {}
-    });
+  let es: EventSource | null = null;
+  let reconnectTimer: any = null;
 
-    es.addEventListener('REQUEST_UPDATED', (e: MessageEvent) => {
-      try {
-        const payload = JSON.parse(e.data);
-        if (payload.request) {
-          const idx = state.requests.findIndex(r => r.id === payload.request.id);
-          if (idx >= 0) state.requests[idx] = payload.request;
+  const connectSSE = () => {
+    try {
+      if (es) {
+        try { es.close(); } catch {}
+      }
+      es = new EventSource('http://localhost:8000/api/v1/stream');
+
+      es.onopen = () => {
+        console.log('[HR Live Sync] Connected to SSE stream on http://localhost:8000/api/v1/stream');
+      };
+
+      es.addEventListener('REQUEST_CREATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.request) {
+            const req = payload.request;
+            if (!state.requests.some(r => r.id === req.id || (r.id && req.id && r.id.toLowerCase() === req.id.toLowerCase()))) {
+              state.requests.unshift(req);
+            }
+          }
+          if (payload.triageItem && !state.triageQueue.some(t => t.id === payload.triageItem.id)) {
+            state.triageQueue.unshift(payload.triageItem);
+          }
+          if (payload.activity && !state.activities.some(a => a.id === payload.activity.id)) {
+            state.activities.unshift(payload.activity);
+          }
+          if (payload.metrics) state.metrics = payload.metrics;
+          if (payload.categoryVolumes) state.categoryVolumes = payload.categoryVolumes;
+          syncListeners.forEach(fn => fn({ type: 'REQUEST_CREATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling REQUEST_CREATED:', err);
         }
-        if (payload.activity && !state.activities.some(a => a.id === payload.activity.id)) {
-          state.activities.unshift(payload.activity);
+      });
+
+      es.addEventListener('REQUEST_UPDATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.request) {
+            const req = payload.request;
+            const idx = state.requests.findIndex(r => r.id === req.id || (r.id && req.id && r.id.toLowerCase() === req.id.toLowerCase()));
+            if (idx >= 0) {
+              state.requests[idx] = { ...state.requests[idx], ...req };
+            } else {
+              state.requests.unshift(req);
+            }
+          }
+          if (payload.activity && !state.activities.some(a => a.id === payload.activity.id)) {
+            state.activities.unshift(payload.activity);
+          }
+          if (payload.metrics) state.metrics = payload.metrics;
+          if (payload.categoryVolumes) state.categoryVolumes = payload.categoryVolumes;
+          syncListeners.forEach(fn => fn({ type: 'REQUEST_UPDATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling REQUEST_UPDATED:', err);
         }
-        if (payload.metrics) state.metrics = payload.metrics;
-        syncListeners.forEach(fn => fn({ type: 'REQUEST_UPDATED', data: payload }));
-      } catch {}
-    });
-  } catch (err) {
-    console.warn('Real-time sync SSE info:', err);
-  }
+      });
+
+      es.onerror = () => {
+        if (es) {
+          try { es.close(); } catch {}
+          es = null;
+        }
+        if (!reconnectTimer) {
+          reconnectTimer = setTimeout(() => {
+            reconnectTimer = null;
+            connectSSE();
+          }, 3000);
+        }
+      };
+    } catch {
+      if (!reconnectTimer) {
+        reconnectTimer = setTimeout(() => {
+          reconnectTimer = null;
+          connectSSE();
+        }, 5000);
+      }
+    }
+  };
+
+  connectSSE();
 }
 
 export const hrService = {
@@ -272,119 +322,177 @@ export const hrService = {
   },
 
   async getTriageQueue(): Promise<AITriageItem[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.triageQueue];
-    }
-    return request<AITriageItem[]>('/ai/triage/queue');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/triage/queue');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          state.triageQueue = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.triageQueue];
   },
 
   async overrideTriage(triageId: string, newCategory: any): Promise<void> {
-    if (IS_MOCK_MODE) {
-      await delay(200);
-      const item = state.triageQueue.find(t => t.id === triageId);
-      if (item) {
-        item.predictedCategory = newCategory;
-        item.status = 'OVERRIDDEN';
-      }
-      return;
+    try {
+      await fetch('http://localhost:8000/api/v1/triage/override', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ triageId, newCategory })
+      });
+    } catch {}
+
+    const item = state.triageQueue.find(t => t.id === triageId);
+    if (item) {
+      item.predictedCategory = newCategory;
+      item.status = 'OVERRIDDEN';
     }
-    return request<void>('/ai/triage/override', {
-      method: 'POST',
-      body: JSON.stringify({ triageId, newCategory })
-    });
   },
 
   async getDeliverables(): Promise<DeliverableItem[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.deliverables];
-    }
-    return request<DeliverableItem[]>('/deliverables');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/deliverables');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.deliverables = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.deliverables];
   },
 
   async approveDeliverable(id: string): Promise<DeliverableItem> {
-    if (IS_MOCK_MODE) {
-      await delay(200);
-      const item = state.deliverables.find(d => d.id === id);
-      if (item) {
-        item.status = 'approved';
-        state.activities.unshift({
-          id: `ACT-${Date.now()}`,
-          actorType: 'user',
-          actorName: 'Sarah',
-          actionText: `Sarah approved ${id}`,
-          timeAgo: 'Just now',
-          subText: item.title,
-          tag: { text: 'Approved', color: 'emerald' }
-        });
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/deliverables/${encodeURIComponent(id)}/approve`, { method: 'POST' });
+      if (res.ok) {
+        const updated = await res.json();
+        const idx = state.deliverables.findIndex(d => d.id === id);
+        if (idx >= 0) state.deliverables[idx] = updated;
+        return updated;
       }
-      return item!;
+    } catch {}
+
+    const item = state.deliverables.find(d => d.id === id);
+    if (item) {
+      item.status = 'approved';
+      state.activities.unshift({
+        id: `ACT-${Date.now()}`,
+        actorType: 'user',
+        actorName: 'Sarah',
+        actionText: `Sarah approved ${id}`,
+        timeAgo: 'Just now',
+        subText: item.title,
+        tag: { text: 'Approved', color: 'emerald' }
+      });
     }
-    return request<DeliverableItem>(`/deliverables/${id}/approve`, { method: 'POST' });
+    return item!;
   },
 
   async getHRActions(): Promise<HRActionItem[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.hrActions];
-    }
-    return request<HRActionItem[]>('/actions');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/actions');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.hrActions = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.hrActions];
   },
 
   async executeHRAction(id: string): Promise<HRActionItem> {
-    if (IS_MOCK_MODE) {
-      await delay(250);
-      const item = state.hrActions.find(a => a.id === id);
-      if (item) {
-        item.status = 'completed';
-        state.metrics.pendingHRActions.count = Math.max(0, state.metrics.pendingHRActions.count - 1);
-        state.activities.unshift({
-          id: `ACT-${Date.now()}`,
-          actorType: 'user',
-          actorName: 'Sarah',
-          actionText: `Executed Action ${id}: ${item.title}`,
-          timeAgo: 'Just now',
-          subText: item.employeeName,
-          tag: { text: 'Executed', color: 'cyan' }
-        });
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/actions/${encodeURIComponent(id)}/execute`, { method: 'POST' });
+      if (res.ok) {
+        const updated = await res.json();
+        const idx = state.hrActions.findIndex(a => a.id === id);
+        if (idx >= 0) state.hrActions[idx] = updated;
+        return updated;
       }
-      return item!;
+    } catch {}
+
+    const item = state.hrActions.find(a => a.id === id);
+    if (item) {
+      item.status = 'completed';
+      state.metrics.pendingHRActions.count = Math.max(0, state.metrics.pendingHRActions.count - 1);
+      state.activities.unshift({
+        id: `ACT-${Date.now()}`,
+        actorType: 'user',
+        actorName: 'Sarah',
+        actionText: `Executed Action ${id}: ${item.title}`,
+        timeAgo: 'Just now',
+        subText: item.employeeName,
+        tag: { text: 'Executed', color: 'cyan' }
+      });
     }
-    return request<HRActionItem>(`/actions/${id}/execute`, { method: 'POST' });
+    return item!;
   },
 
   async getInsights(): Promise<InsightItem[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.insights];
-    }
-    return request<InsightItem[]>('/insights/trends');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/insights');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.insights = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.insights];
   },
 
   async getCategoryVolumes(): Promise<CategoryVolume[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.categoryVolumes];
-    }
-    return request<CategoryVolume[]>('/insights/categories');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/category-volumes');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.categoryVolumes = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.categoryVolumes];
   },
 
   async getActivities(): Promise<ActivityEvent[]> {
-    if (IS_MOCK_MODE) {
-      await delay();
-      return [...state.activities];
-    }
-    return request<ActivityEvent[]>('/dashboard/recent-activity');
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/activities');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          state.activities = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.activities];
   },
 
-  async queryCopilot(prompt: string): Promise<CopilotMessage> {
+  async getRagHealth(): Promise<{ status: string; azure_configured: boolean; vector_store_ready: boolean; knowledge_base_files: number } | null> {
+    try {
+      const res = await fetch('/health');
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {}
+    return null;
+  },
+
+  async queryCopilot(prompt: string, history: Array<{ role: string; content: string }> = []): Promise<CopilotMessage> {
     try {
       // 1. Query the RAG agent backend (port 8001 direct or port 8000 proxy)
       let res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: prompt })
+        body: JSON.stringify({ question: prompt, history })
       }).catch((e) => {
         console.warn('Primary fetch failed:', e);
         return null;
@@ -394,7 +502,7 @@ export const hrService = {
         res = await fetch('/api/v1/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: prompt })
+          body: JSON.stringify({ question: prompt, history })
         }).catch((e) => {
           console.warn('Fallback fetch failed:', e);
           return null;
@@ -412,30 +520,36 @@ export const hrService = {
           page: s.page
         }));
 
-        // Contextual suggested actions based on policy topic
+        // Contextual suggested actions for HR Operations
         const lower = prompt.toLowerCase();
         let suggestedActions = [
-          "Generate Official Resolution Addendum",
-          "Notify Employee via Email",
-          "Log HR Action"
+          "Verify Policy Eligibility Checklist",
+          "Draft Official HR Response to Employee",
+          "Log HR Policy Audit Action"
         ];
         if (lower.includes('leave') || lower.includes('pto') || lower.includes('vacation')) {
           suggestedActions = [
-            "Check Employee PTO Balance",
-            "Generate Leave Signoff Document",
-            "Notify Department Manager"
+            "Audit Leave Eligibility Requirements",
+            "Draft Policy Clarification to Employee",
+            "Verify Medical Documentation Rules"
           ];
         } else if (lower.includes('remote') || lower.includes('home') || lower.includes('stipend')) {
           suggestedActions = [
-            "Initiate $500 Home Office Stipend Reimbursement",
-            "Verify Hybrid Agreement Status",
-            "Notify IT Hardware Procurement"
+            "Verify Hybrid Agreement Requirements",
+            "Check $500 Stipend 90-Day Eligibility Rule",
+            "Review IT Equipment Compliance Terms"
           ];
         } else if (lower.includes('travel') || lower.includes('expense') || lower.includes('per diem')) {
           suggestedActions = [
-            "Review Travel Authorization Claim",
-            "Approve Per Diem Expense",
-            "Route to Finance for Reimbursement"
+            "Audit Expense Claim Against Policy Limits",
+            "Verify 45-Day Receipt Submission Window",
+            "Draft Incomplete Claim Clarification Notice"
+          ];
+        } else if (lower.includes('parental') || lower.includes('maternity') || lower.includes('paternity')) {
+          suggestedActions = [
+            "Verify 6-Month Tenure Eligibility Requirement",
+            "Audit Primary vs Secondary Caregiver Criteria",
+            "Draft Official Parental Leave Signoff"
           ];
         }
 

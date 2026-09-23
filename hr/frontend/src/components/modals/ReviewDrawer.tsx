@@ -68,17 +68,23 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
           <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img
-                src={item.employee.avatar}
-                alt={item.employee.name}
+                src={item.employee?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}
+                alt={typeof item.employee === 'object' && item.employee ? (item.employee.name || 'Employee') : 'Employee'}
                 className="w-12 h-12 rounded-xl object-cover ring-1 ring-white/20"
               />
               <div>
-                <h4 className="text-sm font-semibold text-white">{item.employee.name}</h4>
-                <p className="text-xs text-white/50">{item.employee.title || item.employee.department}</p>
-                <span className="text-[11px] font-mono text-cyan-300/70">{item.employee.email}</span>
+                <h4 className="text-sm font-semibold text-white">
+                  {typeof item.employee === 'object' && item.employee ? (item.employee.name || 'Employee') : (item.employee || 'Employee')}
+                </h4>
+                <p className="text-xs text-white/50">
+                  {item.employee?.title || item.employee?.department || 'Operations'}
+                </p>
+                <span className="text-[11px] font-mono text-cyan-300/70">
+                  {item.employee?.email || 'employee@enterprise.internal'}
+                </span>
               </div>
             </div>
-            {item.employee.tenure && (
+            {item.employee?.tenure && (
               <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-white/70">
                 Tenure: {item.employee.tenure}
               </span>

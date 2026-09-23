@@ -27,6 +27,96 @@ function broadcastEvent(type, data) {
   }
 }
 
+// Keep-alive heartbeat ping every 15 seconds to prevent browser/proxy connection dropouts
+setInterval(() => {
+  for (const client of sseClients) {
+    try {
+      client.write(': ping\n\n');
+    } catch {
+      sseClients.delete(client);
+    }
+  }
+}, 15000);
+
+// Robust Data Normalization across Portals
+function normalizeCategory(cat) {
+  if (!cat) return 'other';
+  const c = String(cat).toLowerCase().trim();
+  if (c.includes('leave') || c.includes('time') || c.includes('vacation') || c.includes('attendance') || c.includes('absence')) return 'leave';
+  if (c.includes('pay') || c.includes('salary') || c.includes('tax') || c.includes('bonus') || c.includes('compensation')) return 'payroll';
+  if (c.includes('benefit') || c.includes('health') || c.includes('insurance') || c.includes('info') || c.includes('bank')) return 'benefits';
+  if (c.includes('doc') || c.includes('letter') || c.includes('certificate') || c.includes('verification')) return 'documents';
+  if (c.includes('polic') || c.includes('compliance') || c.includes('conduct') || c.includes('rule')) return 'compliance';
+  return 'other';
+}
+
+function getCategoryDisplay(cat) {
+  const norm = normalizeCategory(cat);
+  switch (norm) {
+    case 'leave': return 'Leave & Time';
+    case 'payroll': return 'Payroll';
+    case 'benefits': return 'Benefits & Info';
+    case 'documents': return 'Documents';
+    case 'compliance': return 'HR Policies';
+    default: return 'General Inquiry';
+  }
+}
+
+function normalizePriority(prio) {
+  if (!prio) return 'medium';
+  const p = String(prio).toLowerCase().trim();
+  if (p === 'urgent' || p === 'high') return 'high';
+  if (p === 'low') return 'low';
+  return 'medium';
+}
+
+function getPriorityDisplay(prio) {
+  const norm = normalizePriority(prio);
+  if (norm === 'high') return 'High';
+  if (norm === 'low') return 'Low';
+  return 'Medium';
+}
+
+function normalizeStatus(st) {
+  if (!st) return { status: 'open', statusUpper: 'SUBMITTED' };
+  const s = String(st).toLowerCase().trim();
+  if (s === 'resolved' || s === 'completed' || s === 'approved') {
+    return { status: 'resolved', statusUpper: 'RESOLVED' };
+  }
+  if (s === 'in_review' || s === 'in progress' || s === 'in-progress' || s === 'escalated') {
+    return { status: 'in_review', statusUpper: 'IN PROGRESS' };
+  }
+  return { status: 'open', statusUpper: 'SUBMITTED' };
+}
+
+function recalculateCategoryVolumes() {
+  const counts = { payroll: 0, benefits: 0, leave: 0, documents: 0, compliance: 0, other: 0 };
+  for (const r of state.requests) {
+    const c = r.category in counts ? r.category : 'other';
+    counts[c]++;
+  }
+  const total = Math.max(1, state.requests.length);
+  state.categoryVolumes = [
+    { category: "payroll", name: "Payroll & Compensation", count: counts.payroll, percentage: Math.round((counts.payroll / total) * 100) },
+    { category: "benefits", name: "Health & Benefits", count: counts.benefits, percentage: Math.round((counts.benefits / total) * 100) },
+    { category: "leave", name: "Leave & Attendance", count: counts.leave, percentage: Math.round((counts.leave / total) * 100) },
+    { category: "documents", name: "Letters & Verification", count: counts.documents, percentage: Math.round((counts.documents / total) * 100) },
+    { category: "compliance", name: "HR Policies", count: counts.compliance, percentage: Math.round((counts.compliance / total) * 100) }
+  ];
+}
+
+function recalculateMetrics() {
+  const openCount = state.requests.filter(r => r.status !== 'resolved').length;
+  const highCount = state.requests.filter(r => r.status !== 'resolved' && (r.priority === 'high' || r.priority === 'Urgent')).length;
+  const resolvedCount = state.requests.filter(r => r.status === 'resolved').length;
+  state.metrics.openRequests.count = openCount;
+  state.metrics.openRequests.comparisonText = `${openCount} active`;
+  state.metrics.highPriority.count = highCount;
+  state.metrics.highPriority.requiresAttention = highCount;
+  state.metrics.resolvedOvernight = resolvedCount;
+  state.metrics.aiTriagedToday = state.triageQueue.length;
+}
+
 // Clean Default State Template
 const defaultState = {
   metrics: {
@@ -179,10 +269,13 @@ const server = http.createServer((req, res) => {
   if (path === '/api/v1/stream') {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
       'Access-Control-Allow-Origin': '*'
     });
+    if (typeof res.flushHeaders === 'function') {
+      res.flushHeaders();
+    }
     res.write(`data: ${JSON.stringify({ type: 'CONNECTED', time: new Date().toISOString() })}\n\n`);
     sseClients.add(res);
 
@@ -272,6 +365,7 @@ const server = http.createServer((req, res) => {
 
     // Dashboard: Metrics
     if (path === '/api/v1/dashboard/metrics' && req.method === 'GET') {
+      recalculateMetrics();
       return sendJson(200, state.metrics);
     }
 
@@ -282,18 +376,24 @@ const server = http.createServer((req, res) => {
       return sendJson(200, dataset);
     }
 
-    // Requests: List (Support Search & Filter)
+    // Requests: List (Support Search & Filter with flexible categories)
     if (path === '/api/v1/requests' && req.method === 'GET') {
       const { category, priority, search, status } = parsed.query;
       let filtered = [...state.requests];
       if (category && category !== 'all') {
-        filtered = filtered.filter(r => r.category === category);
+        const normFilterCat = normalizeCategory(category);
+        filtered = filtered.filter(r => normalizeCategory(r.category) === normFilterCat);
       }
       if (priority && priority !== 'all') {
-        filtered = filtered.filter(r => r.priority === priority);
+        const normFilterPrio = normalizePriority(priority);
+        filtered = filtered.filter(r => normalizePriority(r.priority) === normFilterPrio);
       }
       if (status && status !== 'all') {
-        filtered = filtered.filter(r => r.status === status || (r.statusUpper && r.statusUpper === status));
+        const normFilterStat = normalizeStatus(status).status;
+        filtered = filtered.filter(r => {
+          const s = normalizeStatus(r.status || r.statusUpper).status;
+          return s === normFilterStat;
+        });
       }
       if (search) {
         const q = String(search).toLowerCase();
@@ -301,6 +401,7 @@ const server = http.createServer((req, res) => {
           (r.title && r.title.toLowerCase().includes(q)) ||
           (r.subject && r.subject.toLowerCase().includes(q)) ||
           (r.employee?.name && r.employee.name.toLowerCase().includes(q)) ||
+          (r.employee?.department && r.employee.department.toLowerCase().includes(q)) ||
           (r.id && r.id.toLowerCase().includes(q))
         );
       }
@@ -312,31 +413,49 @@ const server = http.createServer((req, res) => {
       const clientGivenId = json.id || json.requestId;
       const newId = clientGivenId || `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
 
+      const normCat = normalizeCategory(json.category);
+      const normPrio = normalizePriority(json.priority);
+      const normStat = normalizeStatus(json.status || json.statusUpper);
+
+      const emp = json.employee || state.users.employee;
+      const enrichedEmployee = {
+        id: emp.id || 'usr_emp_3',
+        name: emp.name || 'Rupam Sharma',
+        department: emp.department || 'Product Engineering - Cloud Platform',
+        email: emp.email || 'rupam.sharma@enterprise.org',
+        avatar: emp.avatar || emp.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+        avatarUrl: emp.avatarUrl || emp.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+        role: emp.role || 'EMPLOYEE',
+        title: emp.title || 'Lead Full-Stack Engineer'
+      };
+
       const item = {
         id: newId,
         title: json.title || json.subject || 'New HR Request',
         subject: json.subject || json.title || 'New HR Request',
-        employee: json.employee || state.users.employee,
-        category: json.category || 'other',
-        priority: json.priority || 'medium',
-        status: 'open',
-        statusUpper: 'SUBMITTED',
+        employee: enrichedEmployee,
+        category: normCat,
+        categoryDisplay: getCategoryDisplay(normCat),
+        priority: normPrio,
+        priorityDisplay: getPriorityDisplay(normPrio),
+        status: normStat.status,
+        statusUpper: normStat.statusUpper,
         waitingTime: 'Just now',
         createdAt: json.createdAt || new Date().toISOString(),
         createdDate: json.createdDate || new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
-        aiTriage: json.aiTriage || {
-          confidence: 0.96,
-          classification: json.category ? `${String(json.category).toUpperCase()} Inquiry` : 'Autonomous Intake',
+        aiTriage: {
+          confidence: json.aiTriage?.confidence || 0.96,
+          classification: `${normCat.toUpperCase()} Inquiry`,
           autoRouted: true
         },
         description: json.description || '',
-        tags: [json.category || 'General'],
+        tags: [normCat],
         timeline: Array.isArray(json.timeline) && json.timeline.length ? json.timeline : [
           {
             date: new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
             title: 'Request Created',
             desc: 'Submitted through HR Self-Service Portal',
-            actor: json.employee?.name || 'Employee'
+            actor: enrichedEmployee.name
           }
         ],
         comments: Array.isArray(json.comments) ? json.comments : [],
@@ -345,27 +464,52 @@ const server = http.createServer((req, res) => {
 
       // Add to front of requests array
       state.requests.unshift(item);
-      state.metrics.openRequests.count += 1;
-      if (item.priority === 'high' || item.priority === 'Urgent') {
-        state.metrics.highPriority.count += 1;
-      }
 
+      // Create an AI Triage Queue item for the HR Triage View
+      const triageItem = {
+        id: `TRG-${Date.now()}`,
+        requestId: item.id,
+        title: item.title,
+        employeeName: item.employee.name,
+        predictedCategory: normCat,
+        confidenceScore: 0.96,
+        urgencyScore: normPrio === 'high' ? 'HIGH' : normPrio === 'low' ? 'LOW' : 'MEDIUM',
+        reasoning: `Matched enterprise knowledge base vocabulary and policy grounding for ${item.categoryDisplay}.`,
+        suggestedAction: `Route to ${item.categoryDisplay} specialist queue.`,
+        status: 'AUTO_ROUTED',
+        timestamp: 'Just now'
+      };
+      state.triageQueue.unshift(triageItem);
+
+      // Add activity
       const activity = {
         id: `ACT-${Date.now()}`,
         actorType: 'user',
         actorName: item.employee.name,
-        actionText: `${item.employee.name} submitted ${item.id} (${item.category})`,
+        actionText: `${item.employee.name} submitted ${item.id} (${item.categoryDisplay})`,
         timeAgo: 'Just now',
         subText: item.title,
         tag: { text: 'New Ticket', color: 'cyan' }
       };
       state.activities.unshift(activity);
 
+      // Recalculate metrics & category volume distribution
+      recalculateMetrics();
+      recalculateCategoryVolumes();
+
       // Persist to disk database
       persistState();
 
+      console.log(`[HR Sync Server] Request created: ${item.id} (${item.category} / ${item.priority}) by ${item.employee.name}`);
+
       // Broadcast to both portals in real-time!
-      broadcastEvent('REQUEST_CREATED', { request: item, activity, metrics: state.metrics });
+      broadcastEvent('REQUEST_CREATED', {
+        request: item,
+        activity,
+        triageItem,
+        metrics: state.metrics,
+        categoryVolumes: state.categoryVolumes
+      });
 
       return sendJson(201, item);
     }
@@ -380,12 +524,11 @@ const server = http.createServer((req, res) => {
 
       if (reqIndex >= 0) {
         const current = state.requests[reqIndex];
-        const newStatus = (json.status || current.status).toLowerCase();
-        const newStatusUpper = json.statusUpper || (newStatus === 'resolved' ? 'RESOLVED' : newStatus === 'in_review' ? 'IN PROGRESS' : current.statusUpper || 'SUBMITTED');
+        const normStat = normalizeStatus(json.status || json.statusUpper || current.status);
         
         // Add timeline event
         const newTimeline = [...(current.timeline || [])];
-        if (newStatus === 'resolved' && current.status !== 'resolved') {
+        if (normStat.status === 'resolved' && current.status !== 'resolved') {
           newTimeline.push({
             date: new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
             title: 'Approved & Resolved',
@@ -397,8 +540,8 @@ const server = http.createServer((req, res) => {
         const updated = {
           ...current,
           ...json,
-          status: newStatus,
-          statusUpper: newStatusUpper,
+          status: normStat.status,
+          statusUpper: normStat.statusUpper,
           resolutionNotes: json.resolutionNotes || current.resolutionNotes || '',
           timeline: newTimeline,
           lastUpdated: 'Just now'
@@ -406,29 +549,30 @@ const server = http.createServer((req, res) => {
 
         state.requests[reqIndex] = updated;
 
-        if (newStatus === 'resolved' && current.status !== 'resolved') {
-          state.metrics.openRequests.count = Math.max(0, state.metrics.openRequests.count - 1);
-          state.metrics.resolvedOvernight += 1;
-          if (updated.priority === 'high' || updated.priority === 'Urgent') {
-            state.metrics.highPriority.count = Math.max(0, state.metrics.highPriority.count - 1);
-          }
-        }
+        // Recalculate metrics
+        recalculateMetrics();
+        recalculateCategoryVolumes();
 
         const activity = {
           id: `ACT-${Date.now()}`,
           actorType: 'user',
           actorName: 'HR Operations',
-          actionText: `HR approved & resolved case ${updated.id}`,
+          actionText: `HR updated case ${updated.id} to ${updated.statusUpper}`,
           timeAgo: 'Just now',
           subText: updated.resolutionNotes || updated.title,
-          tag: { text: updated.statusUpper, color: 'emerald' }
+          tag: { text: updated.statusUpper, color: updated.status === 'resolved' ? 'emerald' : 'cyan' }
         };
         state.activities.unshift(activity);
 
         // Persist to disk database
         persistState();
 
-        broadcastEvent('REQUEST_UPDATED', { request: updated, activity, metrics: state.metrics });
+        broadcastEvent('REQUEST_UPDATED', {
+          request: updated,
+          activity,
+          metrics: state.metrics,
+          categoryVolumes: state.categoryVolumes
+        });
         return sendJson(200, updated);
       }
       return sendJson(404, { error: `Request ${targetId} not found` });
@@ -450,6 +594,7 @@ const server = http.createServer((req, res) => {
           isHr: !!json.isHr
         };
         current.comments = [...(current.comments || []), newComment];
+        current.lastUpdated = 'Just now';
         persistState();
         broadcastEvent('REQUEST_UPDATED', { request: current, metrics: state.metrics });
         return sendJson(201, newComment);
@@ -457,9 +602,22 @@ const server = http.createServer((req, res) => {
       return sendJson(404, { error: 'Request not found' });
     }
 
-    // Triage Queue
-    if (path === '/api/v1/triage/queue' && req.method === 'GET') {
+    // Triage Queue (Support both /api/v1/triage/queue and /api/v1/ai/triage/queue)
+    if ((path === '/api/v1/triage/queue' || path === '/api/v1/ai/triage/queue') && req.method === 'GET') {
       return sendJson(200, state.triageQueue);
+    }
+
+    // Triage Override
+    if ((path === '/api/v1/triage/override' || path === '/api/v1/ai/triage/override') && req.method === 'POST') {
+      const { triageId, newCategory } = json;
+      const item = state.triageQueue.find(t => t.id === triageId);
+      if (item) {
+        item.predictedCategory = normalizeCategory(newCategory);
+        item.status = 'OVERRIDDEN';
+        persistState();
+        return sendJson(200, item);
+      }
+      return sendJson(404, { error: 'Triage item not found' });
     }
 
     // Deliverables
@@ -467,9 +625,34 @@ const server = http.createServer((req, res) => {
       return sendJson(200, state.deliverables);
     }
 
+    // Deliverables: Approve
+    if (path.startsWith('/api/v1/deliverables/') && path.endsWith('/approve') && req.method === 'POST') {
+      const delivId = decodeURIComponent(path.split('/')[4] || '');
+      const item = state.deliverables.find(d => d.id === delivId);
+      if (item) {
+        item.status = 'approved';
+        persistState();
+        return sendJson(200, item);
+      }
+      return sendJson(404, { error: 'Deliverable not found' });
+    }
+
     // HR Actions
     if (path === '/api/v1/actions' && req.method === 'GET') {
       return sendJson(200, state.hrActions);
+    }
+
+    // HR Actions: Execute
+    if (path.startsWith('/api/v1/actions/') && path.endsWith('/execute') && req.method === 'POST') {
+      const actId = decodeURIComponent(path.split('/')[4] || '');
+      const item = state.hrActions.find(a => a.id === actId);
+      if (item) {
+        item.status = 'completed';
+        state.metrics.pendingHRActions.count = Math.max(0, state.metrics.pendingHRActions.count - 1);
+        persistState();
+        return sendJson(200, item);
+      }
+      return sendJson(404, { error: 'Action not found' });
     }
 
     // Insights
@@ -479,6 +662,7 @@ const server = http.createServer((req, res) => {
 
     // Category Volumes
     if (path === '/api/v1/category-volumes' && req.method === 'GET') {
+      recalculateCategoryVolumes();
       return sendJson(200, state.categoryVolumes);
     }
 

@@ -1,13 +1,13 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 0,
+      "count": 2,
       "changePercent": 0,
-      "comparisonText": "0 open"
+      "comparisonText": "2 active"
     },
     "highPriority": {
-      "count": 0,
-      "requiresAttention": 0
+      "count": 1,
+      "requiresAttention": 1
     },
     "pendingHRActions": {
       "count": 0,
@@ -19,8 +19,8 @@
       "targetPercent": 92
     },
     "avgSla": "0m",
-    "resolvedOvernight": 3,
-    "aiTriagedToday": 0,
+    "resolvedOvernight": 5,
+    "aiTriagedToday": 2,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -105,6 +105,191 @@
     }
   },
   "requests": [
+    {
+      "id": "REQ-1062",
+      "title": "Casual Leave application for family event",
+      "subject": "Casual Leave application for family event",
+      "employee": {
+        "id": "EMP-20491",
+        "name": "Rupam Sharma",
+        "department": "Core Platform & AI Systems",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://lh3.googleusercontent.com/aida/AEtjO1We_fGu7ivsnlA9Sip2HUdvK_UW0DrH_HdC3JT5FMLT30mc7YMTBRoA6RZejOoDa-L9qu0bw0bVGaJ_KvvrYxKdIyccNkh1o0xBzT3gFiK7CeBRkAaH4a0U9ru2r6JsBB1APj0Ttd5eo5asFCWTCCXcdFtpYkHJOoK6UI5wKWjnHatdZyMQai7HlV53rP81t6-CuBcvlflzjLdw3CIxpZkZ-JJ06fPeSAinW0kCAO6Q1TUoyR19MEm581Y",
+        "avatarUrl": "https://lh3.googleusercontent.com/aida/AEtjO1We_fGu7ivsnlA9Sip2HUdvK_UW0DrH_HdC3JT5FMLT30mc7YMTBRoA6RZejOoDa-L9qu0bw0bVGaJ_KvvrYxKdIyccNkh1o0xBzT3gFiK7CeBRkAaH4a0U9ru2r6JsBB1APj0Ttd5eo5asFCWTCCXcdFtpYkHJOoK6UI5wKWjnHatdZyMQai7HlV53rP81t6-CuBcvlflzjLdw3CIxpZkZ-JJ06fPeSAinW0kCAO6Q1TUoyR19MEm581Y",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T09:54:49.180Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "description": "testing",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 23, 2026, 9:54 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Sep 23, 2026, 9:55 AM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-SYNC-9850",
+      "title": "Urgent Biometric Missed Punch Correction",
+      "subject": "Urgent Biometric Missed Punch Correction",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "department": "Core Platform & AI Systems",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "high",
+      "priorityDisplay": "High",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T09:35:47.271Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "description": "Fingerprint scanner did not register clock-in on Monday 9 AM.",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 23, 2026, 9:35 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Sep 23, 2026, 9:35 AM",
+          "title": "Approved & Resolved",
+          "desc": "Biometric logs verified against building security gate. Attendance regularized.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c-1790156148564",
+          "author": "Rupam Sharma",
+          "text": "Thank you Sarah, verified the attendance update in ESS portal!",
+          "time": "Just now",
+          "isHr": false
+        }
+      ],
+      "resolutionNotes": "Biometric logs verified against building security gate. Attendance regularized.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-SSE-TEST",
+      "title": "SSE Test Request",
+      "subject": "SSE Test Request",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "email": "rupam.sharma@enterprise.org",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+      },
+      "category": "leave",
+      "priority": "high",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T09:15:52.769Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 23, 2026, 9:15 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Employee"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "REQ-9999",
+      "title": "Test Ticket from Node",
+      "subject": "Test Ticket from Node",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam@test.com",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+      },
+      "category": "Leave & Time",
+      "priority": "High",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T08:48:54.465Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE & TIME Inquiry",
+        "autoRouted": true
+      },
+      "description": "Testing ticket sync",
+      "tags": [
+        "Leave & Time"
+      ],
+      "timeline": [
+        {
+          "date": "Today",
+          "title": "Created",
+          "desc": "Test",
+          "actor": "Employee"
+        }
+      ],
+      "comments": []
+    },
     {
       "id": "REQ-1124",
       "title": "Attendance regularization for biometric missed punch",
@@ -261,7 +446,34 @@
       "lastUpdated": "Just now"
     }
   ],
-  "triageQueue": [],
+  "triageQueue": [
+    {
+      "id": "TRG-1790157289181",
+      "requestId": "REQ-1062",
+      "title": "Casual Leave application for family event",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Matched enterprise knowledge base vocabulary and policy grounding for Leave & Time.",
+      "suggestedAction": "Route to Leave & Time specialist queue.",
+      "status": "AUTO_ROUTED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1790156147301",
+      "requestId": "REQ-SYNC-9850",
+      "title": "Urgent Biometric Missed Punch Correction",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "HIGH",
+      "reasoning": "Matched enterprise knowledge base vocabulary and policy grounding for Leave & Time.",
+      "suggestedAction": "Route to Leave & Time specialist queue.",
+      "status": "AUTO_ROUTED",
+      "timestamp": "Just now"
+    }
+  ],
   "deliverables": [],
   "hrActions": [],
   "insights": [],
@@ -275,14 +487,14 @@
     {
       "category": "benefits",
       "name": "Health & Benefits",
-      "count": 0,
-      "percentage": 0
+      "count": 1,
+      "percentage": 14
     },
     {
       "category": "leave",
       "name": "Leave & Attendance",
-      "count": 0,
-      "percentage": 0
+      "count": 4,
+      "percentage": 57
     },
     {
       "category": "documents",
@@ -298,6 +510,78 @@
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1790157307940",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-1062 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1790157289181",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-1062 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Casual Leave application for family event",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1790156147952",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-SYNC-9850 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Biometric logs verified against building security gate. Attendance regularized.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1790156147301",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-SYNC-9850 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Urgent Biometric Missed Punch Correction",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1790154952770",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-SSE-TEST (leave)",
+      "timeAgo": "Just now",
+      "subText": "SSE Test Request",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1790153334486",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-9999 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Test Ticket from Node",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
     {
       "id": "ACT-1789647540911",
       "actorType": "user",

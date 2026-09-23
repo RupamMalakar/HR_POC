@@ -40,6 +40,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const storedToken = localStorage.getItem('hr_auth_token');
       if (!storedToken) {
+        if (isEmployeePort) {
+          setUser({
+            id: 'EMP-410',
+            name: 'Alex Johnson',
+            email: 'alex.johnson@enterprise.internal',
+            role: 'EMPLOYEE',
+            title: 'Senior Staff Engineer',
+            avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80'
+          });
+        } else {
+          setUser({
+            id: "usr_9410",
+            name: "Sarah Jenkins",
+            email: "sarah.jenkins@enterprise.internal",
+            role: "HR_ADMIN",
+            title: "HR Operations Lead",
+            avatarUrl: "https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0"
+          });
+        }
         setIsLoading(false);
         return;
       }

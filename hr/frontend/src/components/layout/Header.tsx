@@ -66,7 +66,9 @@ export const Header: React.FC<HeaderProps> = ({
   const current = tabTitles[activeTab] || tabTitles.dashboard;
 
   return (
-    <header className="sticky top-0 z-40 rounded-2xl bg-[#060814]/85 backdrop-blur-2xl border border-white/15 shadow-glass px-4 md:px-6 py-3 flex items-center justify-between specular-border mb-6 transition-all duration-200">
+    <header className={`sticky top-0 z-40 rounded-2xl bg-[#060814]/85 backdrop-blur-2xl border border-white/15 shadow-glass px-4 md:px-5 flex items-center justify-between specular-border transition-all duration-200 flex-shrink-0 ${
+      activeTab === 'ai-assistance' ? 'py-2 mb-2' : 'py-3 mb-5'
+    }`}>
       <div className="flex items-center gap-4">
         {onToggleMobileMenu && (
           <button

@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
   body {
     background-color: #060814;
     color: #e2e8f0;
-    overflow-x: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 

@@ -71,9 +71,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const displayedRequests = requests.slice((page - 1) * pageSize, page * pageSize);
 
   // Quick prompt submission
-  const handleAiSubmit = async (e?: React.FormEvent) => {
+  const handleAiSubmit = async (e?: React.FormEvent, overrideQuery?: string) => {
     if (e) e.preventDefault();
-    const q = aiQuery.trim();
+    const q = (overrideQuery !== undefined ? overrideQuery : aiQuery).trim();
     if (!q) return;
 
     setIsAsking(true);
@@ -109,17 +109,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const handlePromptClick = (text: string) => {
     setAiQuery(text);
-    // Use timeout to allow state to update before submitting
-    setTimeout(() => {
-      // Create a synthetic event
-      const syntheticEvent = { preventDefault: () => {} } as React.FormEvent;
-      // Temporarily set aiQuery to the text so the submit function uses it
-      const currentQuery = aiQuery;
-      aiQuery = text; 
-      handleAiSubmit(syntheticEvent).then(() => {
-        aiQuery = currentQuery; // Restore state just in case
-      });
-    }, 50);
+    handleAiSubmit(undefined, text);
   };
 
   // Find policies for the featured cards

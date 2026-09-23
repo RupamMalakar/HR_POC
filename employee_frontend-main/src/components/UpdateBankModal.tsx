@@ -3,19 +3,32 @@ import { X, Building2, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-rea
 import { CURRENT_USER } from '../data/mockData';
 import { HrRequest } from '../types';
 
-interface UpdateBankModalProps {
+export interface UpdateBankModalProps {
+  currentBank?: string;
+  currentAccountMasked?: string;
+  currentIfsc?: string;
   onClose: () => void;
-  onSubmitBankUpdate: (newRequest: Partial<HrRequest>) => void;
+  onSubmitBankUpdate?: (newRequest: Partial<HrRequest>) => void;
+  onSubmit?: (bankData: {
+    accountNumber: string;
+    ifsc: string;
+    bankName: string;
+    cancelledChequeName?: string;
+  }) => void;
 }
 
 export const UpdateBankModal: React.FC<UpdateBankModalProps> = ({
+  currentBank,
+  currentAccountMasked,
+  currentIfsc,
   onClose,
   onSubmitBankUpdate,
+  onSubmit,
 }) => {
-  const [bankName, setBankName] = useState('HDFC Bank Ltd');
+  const [bankName, setBankName] = useState(currentBank || 'HDFC Bank Ltd');
   const [accountNumber, setAccountNumber] = useState('');
   const [confirmAccount, setConfirmAccount] = useState('');
-  const [ifsc, setIfsc] = useState('HDFC0001245');
+  const [ifsc, setIfsc] = useState(currentIfsc || 'HDFC0001245');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
@@ -29,13 +42,21 @@ export const UpdateBankModal: React.FC<UpdateBankModalProps> = ({
 
     const masked = '•••• •••• •••• ' + accountNumber.slice(-4);
 
-    onSubmitBankUpdate({
-      subject: `Update salary account to ${bankName} (${masked})`,
-      category: 'Employee Info',
-      status: 'SUBMITTED',
-      description: `Employee initiated salary bank account change to ${bankName}. Account ending in ${accountNumber.slice(-4)}, IFSC: ${ifsc.toUpperCase()}. Penny-drop validation initiated.`,
-      priority: 'Medium',
-    });
+    if (onSubmit) {
+      onSubmit({
+        bankName,
+        accountNumber,
+        ifsc,
+      });
+    } else if (onSubmitBankUpdate) {
+      onSubmitBankUpdate({
+        subject: `Update salary account to ${bankName} (${masked})`,
+        category: 'Employee Info',
+        status: 'SUBMITTED',
+        description: `Employee initiated salary bank account change to ${bankName}. Account ending in ${accountNumber.slice(-4)}, IFSC: ${ifsc.toUpperCase()}. Penny-drop validation initiated.`,
+        priority: 'Medium',
+      });
+    }
 
     setSubmitted(true);
     setTimeout(() => {

@@ -153,4 +153,10 @@ export interface CopilotMessage {
     page?: number;
   }[];
   suggestedActions?: string[];
+  isError?: boolean;
+  feedback?: 'up' | 'down';
+  keyDetails?: {
+    label: string;
+    value: string;
+  }[];
 }

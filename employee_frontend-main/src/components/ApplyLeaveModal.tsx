@@ -2,17 +2,33 @@ import React, { useState } from 'react';
 import { X, Calendar, CheckCircle, Info } from 'lucide-react';
 import { LeaveBalance, HrRequest } from '../types';
 
-interface ApplyLeaveModalProps {
-  balance: LeaveBalance;
+export interface ApplyLeaveModalProps {
+  balance?: LeaveBalance;
+  leaveBalance?: LeaveBalance;
   onClose: () => void;
-  onSubmitLeave: (newRequest: Partial<HrRequest>, daysCount: number, leaveType: 'casual' | 'sick' | 'earned') => void;
+  onSubmitLeave?: (newRequest: Partial<HrRequest>, daysCount: number, leaveType: 'casual' | 'sick' | 'earned') => void;
+  onSubmit?: (leaveData: {
+    type: 'casual' | 'sick' | 'earned';
+    startDate: string;
+    endDate: string;
+    daysCount: number;
+    reason: string;
+  }) => void;
 }
 
 export const ApplyLeaveModal: React.FC<ApplyLeaveModalProps> = ({
   balance,
+  leaveBalance,
   onClose,
   onSubmitLeave,
+  onSubmit,
 }) => {
+  const effBalance: LeaveBalance = leaveBalance || balance || {
+    casual: { remaining: 12, total: 14 },
+    sick: { remaining: 5, total: 7 },
+    earned: { remaining: 18, total: 20 },
+  };
+
   const [leaveType, setLeaveType] = useState<'casual' | 'sick' | 'earned'>('casual');
   const [fromDate, setFromDate] = useState('2026-09-28');
   const [toDate, setToDate] = useState('2026-09-29');
@@ -30,7 +46,7 @@ export const ApplyLeaveModal: React.FC<ApplyLeaveModalProps> = ({
   };
 
   const days = calculateDays();
-  const currentRemaining = balance[leaveType].remaining;
+  const currentRemaining = effBalance[leaveType]?.remaining ?? 10;
   const isExceeded = days > currentRemaining;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,17 +60,27 @@ export const ApplyLeaveModal: React.FC<ApplyLeaveModalProps> = ({
         ? 'Sick Leave'
         : 'Earned Leave';
 
-    onSubmitLeave(
-      {
-        subject: `${leaveTypeLabel} application (${days} ${days === 1 ? 'day' : 'days'})`,
-        category: 'Leave & Time',
-        status: 'SUBMITTED',
-        description: `Applied for ${days} days of ${leaveTypeLabel} from ${fromDate} to ${toDate}. Reason: ${reason}`,
-        priority: 'Medium',
-      },
-      days,
-      leaveType
-    );
+    if (onSubmit) {
+      onSubmit({
+        type: leaveType,
+        startDate: fromDate,
+        endDate: toDate,
+        daysCount: days,
+        reason,
+      });
+    } else if (onSubmitLeave) {
+      onSubmitLeave(
+        {
+          subject: `${leaveTypeLabel} application (${days} ${days === 1 ? 'day' : 'days'})`,
+          category: 'Leave & Time',
+          status: 'SUBMITTED',
+          description: `Applied for ${days} days of ${leaveTypeLabel} from ${fromDate} to ${toDate}. Reason: ${reason}`,
+          priority: 'Medium',
+        },
+        days,
+        leaveType
+      );
+    }
 
     setSubmittedSuccess(true);
     setTimeout(() => {

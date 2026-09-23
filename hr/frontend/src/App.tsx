@@ -18,6 +18,7 @@ import { NewActionModal } from './components/modals/NewActionModal';
 import { ReviewDrawer } from './components/modals/ReviewDrawer';
 import { LoginView } from './components/auth/LoginView';
 import { EmployeePortal } from './components/views/EmployeePortal';
+import { SplitWorkflowView } from './components/views/SplitWorkflowView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { hrService } from './services/hrService';
 import {
@@ -49,17 +50,45 @@ function HROperationsPortal() {
   const [metrics, setMetrics] = useState<DashboardMetrics>(initialMetrics);
   const [velocity, setVelocity] = useState<VelocityData>(velocityDataset['7D']);
   const [activeVelocityRange, setActiveVelocityRange] = useState<'7D' | '30D' | '90D'>('7D');
+  const sanitizeRequestItem = (r: any): RequestItem => {
+    if (!r) return r;
+    const emp = typeof r.employee === 'object' && r.employee !== null ? r.employee : {
+      name: typeof r.employee === 'string' ? r.employee : (r.employeeName || 'Alex Johnson'),
+      email: r.employeeEmail || 'alex.johnson@enterprise.internal',
+      department: r.department || 'Engineering',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+      tenure: '2.5 yrs'
+    };
+    return {
+      ...r,
+      employee: {
+        name: emp.name || 'Alex Johnson',
+        email: emp.email || 'alex.johnson@enterprise.internal',
+        department: emp.department || 'Engineering',
+        avatar: emp.avatar || emp.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+        tenure: emp.tenure || '2.5 yrs'
+      },
+      priority: (r.priority || 'medium').toLowerCase(),
+      status: (r.status || 'open').toLowerCase(),
+      category: (r.category || 'general').toLowerCase(),
+      waitingTime: r.waitingTime || '12m',
+      createdAt: r.createdAt || new Date().toISOString()
+    };
+  };
+
   const [requests, setRequests] = useState<RequestItem[]>(() => {
     if (typeof window !== 'undefined') {
       try {
         const cached = localStorage.getItem('hr_admin_requests');
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed.map(sanitizeRequestItem);
+          }
         }
       } catch {}
     }
-    return initialRequests;
+    return initialRequests.map(sanitizeRequestItem);
   });
   const [triageQueue, setTriageQueue] = useState<AITriageItem[]>(initialTriageQueue);
   const [deliverables, setDeliverables] = useState<DeliverableItem[]>(initialDeliverables);
@@ -90,8 +119,9 @@ function HROperationsPortal() {
         ]);
         setMetrics(m);
         if (Array.isArray(reqs)) {
-          setRequests(reqs);
-          try { localStorage.setItem('hr_admin_requests', JSON.stringify(reqs)); } catch {}
+          const sanitized = reqs.map(sanitizeRequestItem);
+          setRequests(sanitized);
+          try { localStorage.setItem('hr_admin_requests', JSON.stringify(sanitized)); } catch {}
         }
         setTriageQueue(tQ);
         setDeliverables(delivs);
@@ -108,20 +138,27 @@ function HROperationsPortal() {
 
   // Real-time live synchronization across dual portals
   useEffect(() => {
-    const unsubscribe = hrService.subscribe(async () => {
+    const unsubscribe = hrService.subscribe(async (event) => {
       try {
-        const [m, reqs, actLogs] = await Promise.all([
+        const [m, reqs, tQ, actLogs, cats] = await Promise.all([
           hrService.getMetrics(),
           hrService.getRequests(),
-          hrService.getActivities()
+          hrService.getTriageQueue(),
+          hrService.getActivities(),
+          hrService.getCategoryVolumes()
         ]);
         setMetrics(m);
         if (Array.isArray(reqs)) {
-          setRequests(reqs);
-          try { localStorage.setItem('hr_admin_requests', JSON.stringify(reqs)); } catch {}
+          const sanitized = reqs.map(sanitizeRequestItem);
+          setRequests(sanitized);
+          try { localStorage.setItem('hr_admin_requests', JSON.stringify(sanitized)); } catch {}
         }
-        setActivities(actLogs);
-      } catch {}
+        if (Array.isArray(tQ)) setTriageQueue(tQ);
+        if (Array.isArray(actLogs)) setActivities(actLogs);
+        if (Array.isArray(cats)) setCategories(cats);
+      } catch (err) {
+        console.warn('Real-time sync refresh error:', err);
+      }
     });
     return unsubscribe;
   }, []);
@@ -205,7 +242,11 @@ function HROperationsPortal() {
   };
 
   // Urgent items for Dashboard attention queue
-  const urgentRequests = requests.filter(r => r.priority === 'high' || r.status === 'in_review').slice(0, 3);
+  const urgentRequests = requests.filter(r => {
+    const p = (r.priority || '').toLowerCase();
+    const s = (r.status || '').toLowerCase();
+    return (p === 'high' || p === 'urgent' || s === 'in_review') && s !== 'resolved';
+  }).slice(0, 5);
 
   return (
     <div className="h-screen w-screen overflow-hidden relative font-sans text-slate-200 selection:bg-cyan-500/20 selection:text-neon-cyan flex">
@@ -249,7 +290,11 @@ function HROperationsPortal() {
         )}
 
         {/* Main Viewport */}
-        <div className="flex-1 min-w-0 h-full flex flex-col overflow-y-auto overflow-x-hidden pr-1.5 scroll-smooth">
+        <div className={`flex-1 min-w-0 h-full flex flex-col ${
+          activeTab === 'ai-assistance'
+            ? 'overflow-hidden'
+            : 'overflow-y-auto overflow-x-hidden pr-1.5 scroll-smooth'
+        }`}>
           {/* Top Sticky Header */}
           <Header
             activeTab={activeTab}
@@ -259,7 +304,9 @@ function HROperationsPortal() {
           />
 
           {/* Active View Router */}
-          <div className="flex-1 flex flex-col">
+          <div className={`flex-1 min-h-0 flex flex-col ${
+            activeTab === 'ai-assistance' ? 'overflow-hidden' : ''
+          }`}>
             {activeTab === 'dashboard' && (
               <DashboardView
                 metrics={metrics}
@@ -337,10 +384,12 @@ function HROperationsPortal() {
           </div>
 
           {/* Spatial Glass Footer */}
-          <Footer
-            onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-            onQuickTriage={() => setActiveTab('ai-triage')}
-          />
+          {activeTab !== 'ai-assistance' && (
+            <Footer
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              onQuickTriage={() => setActiveTab('ai-triage')}
+            />
+          )}
         </div>
       </div>
 
@@ -367,8 +416,6 @@ function HROperationsPortal() {
     </div>
   );
 }
-
-import { SplitWorkflowView } from './components/views/SplitWorkflowView';
 
 function PortalRouter() {
   const { user, isLoading } = useAuth();
