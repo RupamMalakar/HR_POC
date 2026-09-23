@@ -22,45 +22,24 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
   const paddingTop = 28;
   const paddingBottom = 28;
 
-  // Fallback operational datasets when incoming telemetry has not accumulated non-zero points yet
-  const defaultByRange = {
-    '7D': {
-      incoming: [16, 24, 28, 22, 34, 12, 19],
-      resolved: [14, 21, 26, 20, 31, 11, 18],
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    '30D': {
-      incoming: [82, 95, 118, 104],
-      resolved: [78, 90, 112, 99],
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4']
-    },
-    '90D': {
-      incoming: [320, 375, 412],
-      resolved: [305, 360, 396],
-      labels: ['Jul', 'Aug', 'Sep']
-    }
-  };
+  const safeIncoming = Array.isArray(velocity?.incoming) && velocity.incoming.length > 0 
+    ? velocity.incoming 
+    : [0, 0, 0, 0, 0, 0, 0];
+  const safeResolved = Array.isArray(velocity?.resolved) && velocity.resolved.length > 0 
+    ? velocity.resolved 
+    : [0, 0, 0, 0, 0, 0, 0];
+  const safeLabels = Array.isArray(velocity?.labels) && velocity.labels.length > 0 
+    ? velocity.labels 
+    : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  const rangeFallback = defaultByRange[activeRange] || defaultByRange['7D'];
-
-  const rawIncoming = Array.isArray(velocity?.incoming) && velocity.incoming.length > 0 ? velocity.incoming : rangeFallback.incoming;
-  const rawResolved = Array.isArray(velocity?.resolved) && velocity.resolved.length > 0 ? velocity.resolved : rangeFallback.resolved;
-  const safeLabels = Array.isArray(velocity?.labels) && velocity.labels.length > 0 ? velocity.labels : rangeFallback.labels;
-
-  // If telemetry is entirely zeros, gracefully fallback to the realistic enterprise baseline to prevent flatline rendering
-  const hasIncomingData = rawIncoming.some(v => v > 0);
-  const safeIncoming = hasIncomingData ? rawIncoming : rangeFallback.incoming;
-
-  const hasResolvedData = rawResolved.some(v => v > 0);
-  const safeResolved = hasResolvedData ? rawResolved : rangeFallback.resolved;
-
-  // Dynamic vertical scaling: adapt dynamically to the peak value with 20% headroom
-  const peakVal = Math.max(...safeIncoming, ...safeResolved, 1);
-  const maxVal = Math.max(Math.ceil(peakVal * 1.25), 10);
+  // Dynamic vertical scaling: adapt directly to real operational data peaks
+  const peakVal = Math.max(...safeIncoming, ...safeResolved, 0);
+  const maxVal = peakVal === 0 ? 4 : Math.max(peakVal + 1, Math.ceil(peakVal * 1.25));
   const minVal = 0;
 
   const chartWidth = width - paddingLeft - paddingRight;
   const chartHeight = height - paddingTop - paddingBottom;
+  const baselineY = height - paddingBottom;
 
   const getX = (index: number) => {
     const denom = Math.max(safeLabels.length - 1, 1);
@@ -68,16 +47,16 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
   };
 
   const getY = (val: number) => {
-    return height - paddingBottom - (val / (maxVal || 1)) * chartHeight;
+    const rawY = height - paddingBottom - (val / (maxVal || 1)) * chartHeight;
+    return Math.min(baselineY, Math.max(paddingTop, rawY));
   };
 
   // Convert to coordinate pairs
   const incomingCoords: [number, number][] = safeIncoming.map((val, i) => [getX(i), getY(val)]);
   const resolvedCoords: [number, number][] = safeResolved.map((val, i) => [getX(i), getY(val)]);
-  const baselineY = height - paddingBottom;
 
-  // Smooth cubic bezier spline generator for futuristic neon waves
-  const createSmoothPath = (pts: [number, number][], isClosed = false, baseline = 0) => {
+  // Smooth cubic bezier spline generator for futuristic neon waves with baseline bounds
+  const createSmoothPath = (pts: [number, number][], isClosed = false, baseline = baselineY) => {
     if (pts.length === 0) return '';
     if (pts.length === 1) return `M ${pts[0][0]},${pts[0][1]}`;
 
@@ -89,9 +68,13 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
       const p3 = pts[i + 2 >= pts.length ? pts.length - 1 : i + 2];
 
       const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
-      const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+      let cp1y = p1[1] + (p2[1] - p0[1]) / 6;
       const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
-      const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+      let cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+
+      // Ensure control points do not dip below the baseline
+      cp1y = Math.min(baseline, Math.max(paddingTop, cp1y));
+      cp2y = Math.min(baseline, Math.max(paddingTop, cp2y));
 
       path += ` C ${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0].toFixed(2)},${p2[1].toFixed(2)}`;
     }
@@ -174,7 +157,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
         </div>
 
         {/* Glowing Spatial SVG Chart Canvas */}
-        <div className="w-full relative h-64 sm:h-72">
+        <div className="w-full relative h-56 sm:h-64">
           <svg
             aria-label={`Request trend over ${activeRange}`}
             className="w-full h-full overflow-visible"
@@ -332,54 +315,54 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
               );
             })}
           </svg>
+        </div>
 
-          {/* Perfectly Aligned X-Axis Day Labels */}
-          <div className="relative w-full h-7 mt-3 pt-2 border-t border-white/10 font-mono text-[11px]">
-            {safeLabels.map((lbl, idx) => {
-              const percentX = (getX(idx) / width) * 100;
-              const isLast = idx === safeLabels.length - 1;
-              const isHovered = hoveredIndex === idx;
+        {/* Dedicated X-Axis Day Labels Row */}
+        <div className="relative w-full h-8 mt-2 pt-2 border-t border-white/10 font-mono text-[11px]">
+          {safeLabels.map((lbl, idx) => {
+            const percentX = (getX(idx) / width) * 100;
+            const isLast = idx === safeLabels.length - 1;
+            const isHovered = hoveredIndex === idx;
 
-              return (
-                <button
-                  key={lbl}
-                  type="button"
-                  onMouseEnter={() => setHoveredIndex(idx)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                  style={{ left: `${percentX}%` }}
-                  className={`absolute -translate-x-1/2 top-2 transition-all cursor-pointer whitespace-nowrap ${
-                    isHovered
-                      ? 'text-white font-bold scale-110'
-                      : isLast
-                      ? 'text-neon-cyan font-bold'
-                      : 'text-white/40 hover:text-white/80'
-                  }`}
-                >
-                  {lbl}
-                </button>
-              );
-            })}
-          </div>
+            return (
+              <button
+                key={`${lbl}-${idx}`}
+                type="button"
+                onMouseEnter={() => setHoveredIndex(idx)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                style={{ left: `${percentX}%` }}
+                className={`absolute -translate-x-1/2 top-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                  isHovered
+                    ? 'text-white font-bold scale-110'
+                    : isLast
+                    ? 'text-neon-cyan font-bold'
+                    : 'text-white/40 hover:text-white/80'
+                }`}
+              >
+                {lbl}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Chart Bottom Stat Capsule */}
-      <div className="mt-8 p-3.5 bg-black/40 border border-white/10 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className="mt-6 p-3.5 bg-black/40 border border-white/10 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-neon-cyan shadow-[0_0_8px_#00f0ff]" />
-          <span className="text-white font-bold">{velocity?.openTotal || rangeFallback.incoming.reduce((a, b) => a + b, 0)}</span>
+          <span className="text-white font-bold">{velocity?.openTotal ?? 0}</span>
           <span className="text-white/50">open total</span>
         </div>
         <span className="text-white/20">|</span>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-blue-400" />
-          <span className="text-white font-bold">{velocity?.receivedToday || safeIncoming[safeIncoming.length - 1]}</span>
+          <span className="text-white font-bold">{velocity?.receivedToday ?? 0}</span>
           <span className="text-white/50">received today</span>
         </div>
         <span className="text-white/20">|</span>
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-neon-emerald shadow-[0_0_8px_#10b981]" />
-          <span className="text-white font-bold">{velocity?.resolvedToday || safeResolved[safeResolved.length - 1]}</span>
+          <span className="text-white font-bold">{velocity?.resolvedToday ?? 0}</span>
           <span className="text-white/50">resolved today</span>
         </div>
       </div>

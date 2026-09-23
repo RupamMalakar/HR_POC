@@ -135,27 +135,102 @@ html.light .border-white\/5 {
   border-color: rgba(226, 232, 240, 0.85) !important;
 }
 
-/* Text Hierarchy */
-html.light .text-white {
+/* Text Hierarchy: Only target general text, never buttons, badges, pills, or dark surfaces */
+html.light .text-white:not(button):not(button *):not(.btn):not(.btn *):not([class*="bg-[#"]):not([class*="bg-[#"] *):not([class*="bg-slate-9"]):not([class*="bg-slate-9"] *):not([class*="bg-slate-8"]):not([class*="bg-slate-8"] *):not([class*="bg-teal-"]):not([class*="bg-teal-"] *):not([class*="bg-blue-"]):not([class*="bg-blue-"] *):not([class*="bg-indigo-"]):not([class*="bg-indigo-"] *):not([class*="bg-cyan-"]):not([class*="bg-cyan-"] *):not([class*="bg-emerald-"]):not([class*="bg-emerald-"] *):not([class*="bg-red-"]):not([class*="bg-red-"] *):not([class*="bg-gradient-"]):not([class*="bg-gradient-"] *):not(.crystal-glass-dark):not(.crystal-glass-dark *) {
   color: #0f172a !important;
 }
 
-html.light .text-white\/90,
-html.light .text-white\/80 {
+html.light .text-white\/90:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
+html.light .text-white\/80:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
   color: #1e293b !important;
 }
 
-html.light .text-white\/70,
-html.light .text-white\/60,
-html.light .text-white\/50 {
+html.light .text-white\/70:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
+html.light .text-white\/60:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
+html.light .text-white\/50:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
   color: #475569 !important;
 }
 
-html.light .text-white\/40,
-html.light .text-white\/30,
-html.light .text-white\/20 {
+html.light .text-white\/40:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
+html.light .text-white\/30:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
+html.light .text-white\/20:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
   color: #64748b !important;
 }
+
+/* =========================================================
+   Light Theme: High-Contrast White Text on Action Buttons & Dark Surfaces
+   Guarantees that all primary buttons, pills, badges, and dark cards
+   ALWAYS have crisp, high-contrast, perfectly visible white text.
+   ========================================================= */
+
+html.light button.bg-\[\#0F172A\],
+html.light button.bg-\[\#0F172A\] *,
+html.light .bg-\[\#0F172A\],
+html.light .bg-\[\#0F172A\] *,
+html.light button.bg-slate-900,
+html.light button.bg-slate-900 *,
+html.light .bg-slate-900,
+html.light .bg-slate-900 *,
+html.light button.bg-slate-800,
+html.light button.bg-slate-800 *,
+html.light .bg-slate-800,
+html.light .bg-slate-800 *,
+html.light button.bg-\[\#0D9488\],
+html.light button.bg-\[\#0D9488\] *,
+html.light .bg-\[\#0D9488\],
+html.light .bg-\[\#0D9488\] *,
+html.light button.bg-teal-600,
+html.light button.bg-teal-600 *,
+html.light .bg-teal-600,
+html.light .bg-teal-600 *,
+html.light button.bg-teal-700,
+html.light button.bg-teal-700 *,
+html.light .bg-teal-700,
+html.light .bg-teal-700 *,
+html.light button.bg-blue-600,
+html.light button.bg-blue-600 *,
+html.light .bg-blue-600,
+html.light .bg-blue-600 *,
+html.light button.bg-indigo-600,
+html.light button.bg-indigo-600 *,
+html.light .bg-indigo-600,
+html.light .bg-indigo-600 *,
+html.light button.bg-cyan-600,
+html.light button.bg-cyan-600 *,
+html.light .bg-cyan-600,
+html.light .bg-cyan-600 *,
+html.light button.bg-emerald-600,
+html.light button.bg-emerald-600 *,
+html.light .bg-emerald-600,
+html.light .bg-emerald-600 *,
+html.light button.bg-red-500,
+html.light button.bg-red-500 *,
+html.light .bg-red-500,
+html.light .bg-red-500 *,
+html.light button[class*="bg-gradient-to-"],
+html.light button[class*="bg-gradient-to-"] *,
+html.light .crystal-glass-dark,
+html.light .crystal-glass-dark * {
+  color: #ffffff !important;
+}
+
+/* Ensure SVG icons inside dark buttons and badges are also crisp white */
+html.light button.bg-\[\#0F172A\] svg,
+html.light .bg-\[\#0F172A\] svg,
+html.light button.bg-slate-900 svg,
+html.light button.bg-slate-800 svg,
+html.light button.bg-\[\#0D9488\] svg,
+html.light .bg-\[\#0D9488\] svg,
+html.light button.bg-teal-600 svg,
+html.light button.bg-blue-600 svg,
+html.light button.bg-indigo-600 svg,
+html.light button.bg-cyan-600 svg,
+html.light button[class*="bg-gradient-to-"] svg,
+html.light .crystal-glass-dark svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
+
 
 /* Secondary dark capsules & inputs */
 html.light .bg-black\/40,

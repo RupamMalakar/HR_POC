@@ -88,3 +88,29 @@
     background-position: 200% center;
   }
 }
+
+/* High-contrast action button text guarantee */
+button.bg-\[\#0F172A\],
+button.bg-\[\#0F172A\] *,
+.bg-\[\#0F172A\],
+.bg-\[\#0F172A\] *,
+button.bg-slate-900,
+button.bg-slate-900 *,
+button.bg-slate-800,
+button.bg-slate-800 *,
+button.bg-\[\#0D9488\],
+button.bg-\[\#0D9488\] *,
+.crystal-glass-dark,
+.crystal-glass-dark * {
+  color: #ffffff !important;
+}
+
+button.bg-\[\#0F172A\] svg,
+.bg-\[\#0F172A\] svg,
+button.bg-slate-900 svg,
+button.bg-slate-800 svg,
+button.bg-\[\#0D9488\] svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
+

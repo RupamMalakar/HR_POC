@@ -1,13 +1,13 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 2,
+      "count": 4,
       "changePercent": 0,
-      "comparisonText": "2 active"
+      "comparisonText": "4 active"
     },
     "highPriority": {
-      "count": 1,
-      "requiresAttention": 1
+      "count": 2,
+      "requiresAttention": 2
     },
     "pendingHRActions": {
       "count": 0,
@@ -20,7 +20,7 @@
     },
     "avgSla": "0m",
     "resolvedOvernight": 5,
-    "aiTriagedToday": 2,
+    "aiTriagedToday": 4,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -28,35 +28,35 @@
     "7D": {
       "range": "7D",
       "labels": [
-        "Mon",
-        "Tue",
-        "Wed",
         "Thu",
         "Fri",
         "Sat",
-        "Sun"
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed"
       ],
       "incoming": [
-        16,
-        24,
-        28,
-        22,
-        34,
-        12,
-        19
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        6
       ],
       "resolved": [
-        14,
-        21,
-        26,
-        20,
-        31,
-        11,
-        18
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2
       ],
-      "openTotal": 24,
-      "receivedToday": 19,
-      "resolvedToday": 18
+      "openTotal": 4,
+      "receivedToday": 6,
+      "resolvedToday": 2
     },
     "30D": {
       "range": "30D",
@@ -67,20 +67,20 @@
         "Week 4"
       ],
       "incoming": [
-        82,
-        95,
-        118,
-        104
+        0,
+        0,
+        0,
+        9
       ],
       "resolved": [
-        78,
-        90,
-        112,
-        99
+        0,
+        0,
+        0,
+        5
       ],
-      "openTotal": 24,
-      "receivedToday": 19,
-      "resolvedToday": 18
+      "openTotal": 4,
+      "receivedToday": 6,
+      "resolvedToday": 2
     },
     "90D": {
       "range": "90D",
@@ -90,21 +90,105 @@
         "Sep"
       ],
       "incoming": [
-        320,
-        375,
-        412
+        0,
+        0,
+        9
       ],
       "resolved": [
-        305,
-        360,
-        396
+        0,
+        0,
+        5
       ],
-      "openTotal": 24,
-      "receivedToday": 19,
-      "resolvedToday": 18
+      "openTotal": 4,
+      "receivedToday": 6,
+      "resolvedToday": 2
     }
   },
   "requests": [
+    {
+      "id": "REQ-1058",
+      "title": "Experience letter and tenure certificate",
+      "subject": "Experience letter and tenure certificate",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering - Cloud Platform",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "documents",
+      "categoryDisplay": "Documents",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T10:33:41.122Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "DOCUMENTS Inquiry",
+        "autoRouted": true
+      },
+      "description": "wdwewew",
+      "tags": [
+        "documents"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 23, 2026, 10:33 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "REQ-1358",
+      "title": "Maternity / Parental leave return schedule",
+      "subject": "Maternity / Parental leave return schedule",
+      "employee": {
+        "id": "usr_emp_3",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering - Cloud Platform",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+        "role": "EMPLOYEE",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "other",
+      "categoryDisplay": "General Inquiry",
+      "priority": "high",
+      "priorityDisplay": "High",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-23T10:33:15.932Z",
+      "createdDate": "Sep 23, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "OTHER Inquiry",
+        "autoRouted": true
+      },
+      "description": "asdfghjkl;",
+      "tags": [
+        "other"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 23, 2026, 10:33 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        }
+      ],
+      "comments": []
+    },
     {
       "id": "REQ-1062",
       "title": "Casual Leave application for family event",
@@ -448,6 +532,32 @@
   ],
   "triageQueue": [
     {
+      "id": "TRG-1790159621123",
+      "requestId": "REQ-1058",
+      "title": "Experience letter and tenure certificate",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "documents",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Matched enterprise knowledge base vocabulary and policy grounding for Documents.",
+      "suggestedAction": "Route to Documents specialist queue.",
+      "status": "AUTO_ROUTED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1790159595957",
+      "requestId": "REQ-1358",
+      "title": "Maternity / Parental leave return schedule",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "other",
+      "confidenceScore": 0.96,
+      "urgencyScore": "HIGH",
+      "reasoning": "Matched enterprise knowledge base vocabulary and policy grounding for General Inquiry.",
+      "suggestedAction": "Route to General Inquiry specialist queue.",
+      "status": "AUTO_ROUTED",
+      "timestamp": "Just now"
+    },
+    {
       "id": "TRG-1790157289181",
       "requestId": "REQ-1062",
       "title": "Casual Leave application for family event",
@@ -488,19 +598,19 @@
       "category": "benefits",
       "name": "Health & Benefits",
       "count": 1,
-      "percentage": 14
+      "percentage": 11
     },
     {
       "category": "leave",
       "name": "Leave & Attendance",
       "count": 4,
-      "percentage": 57
+      "percentage": 44
     },
     {
       "category": "documents",
       "name": "Letters & Verification",
-      "count": 0,
-      "percentage": 0
+      "count": 1,
+      "percentage": 11
     },
     {
       "category": "compliance",
@@ -510,6 +620,30 @@
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1790159621123",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-1058 (Documents)",
+      "timeAgo": "Just now",
+      "subText": "Experience letter and tenure certificate",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1790159595957",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-1358 (General Inquiry)",
+      "timeAgo": "Just now",
+      "subText": "Maternity / Parental leave return schedule",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
     {
       "id": "ACT-1790157307940",
       "actorType": "user",

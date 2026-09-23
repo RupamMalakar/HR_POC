@@ -120,63 +120,161 @@ function recalculateMetrics() {
 function recalculateVelocity() {
   if (!state.velocity) state.velocity = {};
 
-  const baseline7D = {
+  const requests = Array.isArray(state.requests) ? state.requests : [];
+  const openCount = requests.filter(r => r.status !== 'resolved').length;
+
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  const receivedToday = requests.filter(r => {
+    if (!r.createdAt) return false;
+    try {
+      return new Date(r.createdAt).toISOString().split('T')[0] === todayStr;
+    } catch { return false; }
+  }).length;
+
+  const getResolvedDateStr = (r) => {
+    if (r.status !== 'resolved') return null;
+    if (r.resolvedAt) {
+      try {
+        const d = new Date(r.resolvedAt);
+        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+      } catch {}
+    }
+    if (Array.isArray(r.timeline)) {
+      for (const ev of r.timeline) {
+        const t = (ev.title || '').toLowerCase();
+        const d = (ev.desc || '').toLowerCase();
+        if (t.includes('resolved') || t.includes('approved') || d.includes('resolved') || d.includes('approved')) {
+          if (ev.date) {
+            try {
+              const dt = new Date(ev.date);
+              if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
+            } catch {}
+          }
+        }
+      }
+    }
+    if (r.lastUpdated && r.lastUpdated !== 'Just now') {
+      try {
+        const dt = new Date(r.lastUpdated);
+        if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
+      } catch {}
+    }
+    if (r.createdAt) {
+      try {
+        const dt = new Date(r.createdAt);
+        if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
+      } catch {}
+    }
+    return null;
+  };
+
+  const resolvedToday = requests.filter(r => getResolvedDateStr(r) === todayStr).length;
+
+  // 1. --- 7D Range: Rolling 7 days ending Today ---
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const labels7 = [];
+  const incoming7 = [];
+  const resolved7 = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const dStr = d.toISOString().split('T')[0];
+    labels7.push(dayNames[d.getDay()]);
+
+    const inc = requests.filter(r => {
+      if (!r.createdAt) return false;
+      try { return new Date(r.createdAt).toISOString().split('T')[0] === dStr; } catch { return false; }
+    }).length;
+
+    const res = requests.filter(r => getResolvedDateStr(r) === dStr).length;
+
+    incoming7.push(inc);
+    resolved7.push(res);
+  }
+
+  state.velocity['7D'] = {
     range: '7D',
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    incoming: [16, 24, 28, 22, 34, 12, 19],
-    resolved: [14, 21, 26, 20, 31, 11, 18],
-    openTotal: 24,
-    receivedToday: 19,
-    resolvedToday: 18
+    labels: labels7,
+    incoming: incoming7,
+    resolved: resolved7,
+    openTotal: openCount,
+    receivedToday,
+    resolvedToday
   };
 
-  const baseline30D = {
+  // 2. --- 30D Range: 4 Weekly Windows ending Today ---
+  const labels30 = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+  const incoming30 = [0, 0, 0, 0];
+  const resolved30 = [0, 0, 0, 0];
+
+  for (const r of requests) {
+    if (!r.createdAt) continue;
+    try {
+      const createdDate = new Date(r.createdAt);
+      const diffDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays >= 0 && diffDays < 28) {
+        const weekIdx = 3 - Math.floor(diffDays / 7);
+        if (weekIdx >= 0 && weekIdx < 4) {
+          incoming30[weekIdx]++;
+          if (r.status === 'resolved') {
+            resolved30[weekIdx]++;
+          }
+        }
+      }
+    } catch {}
+  }
+
+  state.velocity['30D'] = {
     range: '30D',
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-    incoming: [82, 95, 118, 104],
-    resolved: [78, 90, 112, 99],
-    openTotal: 24,
-    receivedToday: 19,
-    resolvedToday: 18
+    labels: labels30,
+    incoming: incoming30,
+    resolved: resolved30,
+    openTotal: openCount,
+    receivedToday,
+    resolvedToday
   };
 
-  const baseline90D = {
+  // 3. --- 90D Range: Last 3 Calendar Months ending with Current Month ---
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const labels90 = [];
+  const monthKeys = [];
+  for (let i = 2; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    labels90.push(monthNames[d.getMonth()]);
+    monthKeys.push({ year: d.getFullYear(), month: d.getMonth() });
+  }
+
+  const incoming90 = [0, 0, 0];
+  const resolved90 = [0, 0, 0];
+
+  for (const r of requests) {
+    if (!r.createdAt) continue;
+    try {
+      const createdDate = new Date(r.createdAt);
+      const yr = createdDate.getFullYear();
+      const m = createdDate.getMonth();
+      const idx = monthKeys.findIndex(k => k.year === yr && k.month === m);
+      if (idx !== -1) {
+        incoming90[idx]++;
+        if (r.status === 'resolved') {
+          resolved90[idx]++;
+        }
+      }
+    } catch {}
+  }
+
+  state.velocity['90D'] = {
     range: '90D',
-    labels: ['Jul', 'Aug', 'Sep'],
-    incoming: [320, 375, 412],
-    resolved: [305, 360, 396],
-    openTotal: 24,
-    receivedToday: 19,
-    resolvedToday: 18
+    labels: labels90,
+    incoming: incoming90,
+    resolved: resolved90,
+    openTotal: openCount,
+    receivedToday,
+    resolvedToday
   };
-
-  if (!state.velocity['7D'] || !state.velocity['7D'].incoming || state.velocity['7D'].incoming.every(v => v === 0)) {
-    state.velocity['7D'] = JSON.parse(JSON.stringify(baseline7D));
-  }
-  if (!state.velocity['30D'] || !state.velocity['30D'].incoming || state.velocity['30D'].incoming.every(v => v === 0)) {
-    state.velocity['30D'] = JSON.parse(JSON.stringify(baseline30D));
-  }
-  if (!state.velocity['90D'] || !state.velocity['90D'].incoming || state.velocity['90D'].incoming.every(v => v === 0)) {
-    state.velocity['90D'] = JSON.parse(JSON.stringify(baseline90D));
-  }
-
-  const openCount = state.requests.filter(r => r.status !== 'resolved').length;
-  const resolvedCount = state.requests.filter(r => r.status === 'resolved').length;
-
-  const nowDay = (new Date().getDay() + 6) % 7; // 0=Mon ... 6=Sun
-  state.velocity['7D'].openTotal = openCount + 18;
-  state.velocity['7D'].receivedToday = openCount + resolvedCount + 12;
-  state.velocity['7D'].resolvedToday = resolvedCount + 14;
-  state.velocity['7D'].incoming[nowDay] = Math.max(state.velocity['7D'].incoming[nowDay], 18 + openCount);
-  state.velocity['7D'].resolved[nowDay] = Math.max(state.velocity['7D'].resolved[nowDay], 15 + resolvedCount);
-
-  state.velocity['30D'].openTotal = state.velocity['7D'].openTotal;
-  state.velocity['30D'].receivedToday = state.velocity['7D'].receivedToday;
-  state.velocity['30D'].resolvedToday = state.velocity['7D'].resolvedToday;
-
-  state.velocity['90D'].openTotal = state.velocity['7D'].openTotal;
-  state.velocity['90D'].receivedToday = state.velocity['7D'].receivedToday;
-  state.velocity['90D'].resolvedToday = state.velocity['7D'].resolvedToday;
 }
 
 // Clean Default State Template
@@ -196,29 +294,29 @@ const defaultState = {
     '7D': {
       range: '7D',
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      incoming: [16, 24, 28, 22, 34, 12, 19],
-      resolved: [14, 21, 26, 20, 31, 11, 18],
-      openTotal: 24,
-      receivedToday: 19,
-      resolvedToday: 18
+      incoming: [0, 0, 0, 0, 0, 0, 0],
+      resolved: [0, 0, 0, 0, 0, 0, 0],
+      openTotal: 0,
+      receivedToday: 0,
+      resolvedToday: 0
     },
     '30D': {
       range: '30D',
       labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      incoming: [82, 95, 118, 104],
-      resolved: [78, 90, 112, 99],
-      openTotal: 24,
-      receivedToday: 19,
-      resolvedToday: 18
+      incoming: [0, 0, 0, 0],
+      resolved: [0, 0, 0, 0],
+      openTotal: 0,
+      receivedToday: 0,
+      resolvedToday: 0
     },
     '90D': {
       range: '90D',
       labels: ['Jul', 'Aug', 'Sep'],
-      incoming: [320, 375, 412],
-      resolved: [305, 360, 396],
-      openTotal: 24,
-      receivedToday: 19,
-      resolvedToday: 18
+      incoming: [0, 0, 0],
+      resolved: [0, 0, 0],
+      openTotal: 0,
+      receivedToday: 0,
+      resolvedToday: 0
     }
   },
   requests: [],
@@ -607,6 +705,7 @@ const server = http.createServer((req, res) => {
           ...json,
           status: normStat.status,
           statusUpper: normStat.statusUpper,
+          resolvedAt: normStat.status === 'resolved' ? (current.resolvedAt || new Date().toISOString()) : undefined,
           resolutionNotes: json.resolutionNotes || current.resolutionNotes || '',
           timeline: newTimeline,
           lastUpdated: 'Just now'

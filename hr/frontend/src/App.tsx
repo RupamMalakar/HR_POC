@@ -19,6 +19,7 @@ import { LoginView } from './components/auth/LoginView';
 import { EmployeePortal } from './components/views/EmployeePortal';
 import { SplitWorkflowView } from './components/views/SplitWorkflowView';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
 import { hrService } from './services/hrService';
 import {
   DashboardMetrics,
@@ -106,7 +107,7 @@ function HROperationsPortal() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [m, reqs, tQ, delivs, acts, ins, cats, actLogs] = await Promise.all([
+        const [m, reqs, tQ, delivs, acts, ins, cats, actLogs, vel] = await Promise.all([
           hrService.getMetrics(),
           hrService.getRequests(),
           hrService.getTriageQueue(),
@@ -114,7 +115,8 @@ function HROperationsPortal() {
           hrService.getHRActions(),
           hrService.getInsights(),
           hrService.getCategoryVolumes(),
-          hrService.getActivities()
+          hrService.getActivities(),
+          hrService.getVelocity(activeVelocityRange)
         ]);
         setMetrics(m);
         if (Array.isArray(reqs)) {
@@ -128,23 +130,25 @@ function HROperationsPortal() {
         setInsights(ins);
         setCategories(cats);
         setActivities(actLogs);
+        if (vel) setVelocity(vel);
       } catch (err) {
         console.warn('Using local fallback state:', err);
       }
     }
     loadData();
-  }, []);
+  }, [activeVelocityRange]);
 
   // Real-time live synchronization across dual portals
   useEffect(() => {
     const unsubscribe = hrService.subscribe(async (event) => {
       try {
-        const [m, reqs, tQ, actLogs, cats] = await Promise.all([
+        const [m, reqs, tQ, actLogs, cats, vel] = await Promise.all([
           hrService.getMetrics(),
           hrService.getRequests(),
           hrService.getTriageQueue(),
           hrService.getActivities(),
-          hrService.getCategoryVolumes()
+          hrService.getCategoryVolumes(),
+          hrService.getVelocity(activeVelocityRange)
         ]);
         setMetrics(m);
         if (Array.isArray(reqs)) {
@@ -155,12 +159,13 @@ function HROperationsPortal() {
         if (Array.isArray(tQ)) setTriageQueue(tQ);
         if (Array.isArray(actLogs)) setActivities(actLogs);
         if (Array.isArray(cats)) setCategories(cats);
+        if (vel) setVelocity(vel);
       } catch (err) {
         console.warn('Real-time sync refresh error:', err);
       }
     });
     return unsubscribe;
-  }, []);
+  }, [activeVelocityRange]);
 
   // Keyboard shortcut listener for Alt+T (Quick Triage) and Cmd+K
   useEffect(() => {
@@ -196,6 +201,8 @@ function HROperationsPortal() {
     setMetrics(updatedMetrics);
     const updatedActivities = await hrService.getActivities();
     setActivities(updatedActivities);
+    const updatedVel = await hrService.getVelocity(activeVelocityRange);
+    if (updatedVel) setVelocity(updatedVel);
   };
 
   // Resolve / Review request
@@ -214,6 +221,8 @@ function HROperationsPortal() {
     setMetrics(updatedMetrics);
     const updatedActivities = await hrService.getActivities();
     setActivities(updatedActivities);
+    const updatedVel = await hrService.getVelocity(activeVelocityRange);
+    if (updatedVel) setVelocity(updatedVel);
   };
 
   // Approve deliverable
@@ -414,11 +423,26 @@ function HROperationsPortal() {
 
 function PortalRouter() {
   const { user, isLoading } = useAuth();
+  const { setPortalMode } = useTheme();
 
   const isSplitView = typeof window !== 'undefined' && (
     new URLSearchParams(window.location.search).get('view') === 'split' ||
     window.location.pathname === '/split'
   );
+
+  const urlPortal = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('portal') : null;
+  const isEmployeePort = typeof window !== 'undefined' && (
+    window.location.port === '5174' ||
+    window.location.port === '3000'
+  );
+
+  const isEmployee = user?.role === 'EMPLOYEE' || urlPortal === 'employee' || (isEmployeePort && user?.role === 'EMPLOYEE');
+
+  useEffect(() => {
+    if (user) {
+      setPortalMode(isEmployee ? 'employee' : 'hr');
+    }
+  }, [isEmployee, user?.role, setPortalMode]);
 
   if (isSplitView) {
     return <SplitWorkflowView />;
@@ -437,12 +461,6 @@ function PortalRouter() {
   if (!user) {
     return <LoginView />;
   }
-
-  const urlPortal = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('portal') : null;
-  const isEmployeePort = typeof window !== 'undefined' && (
-    window.location.port === '5174' ||
-    window.location.port === '3000'
-  );
 
   if (urlPortal === 'employee' || (isEmployeePort && user.role === 'EMPLOYEE')) {
     return <EmployeePortal />;
