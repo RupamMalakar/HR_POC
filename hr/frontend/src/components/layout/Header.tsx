@@ -50,10 +50,6 @@ const tabTitles: Record<NavTab, { title: string; subtitle: string }> = {
   'hr-profile': {
     title: "HR Operations Profile",
     subtitle: "Specialist credentials, assigned jurisdictions, and shift schedule"
-  },
-  'backend-docs': {
-    title: "Backend API Integration Specification",
-    subtitle: "REST endpoints, WebSocket events, and live backend connection guide"
   }
 };
 

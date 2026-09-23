@@ -45,7 +45,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { id: 'deliverables', label: 'Review Deliverables & Docs', icon: 'assignment_turned_in', category: 'Navigation' },
     { id: 'hr-actions', label: 'Execute HR Actions', icon: 'bolt', category: 'Navigation' },
     { id: 'insights', label: 'Inspect Process Insights', icon: 'insights', category: 'Navigation' },
-    { id: 'backend-docs', label: 'Backend API Blueprint & Docs', icon: 'api', category: 'System' },
     { id: 'settings', label: 'System Settings', icon: 'settings', category: 'System' }
   ];
 

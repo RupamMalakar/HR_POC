@@ -10,7 +10,6 @@ import { AIAssistanceView } from './components/views/AIAssistanceView';
 import { DeliverablesView } from './components/views/DeliverablesView';
 import { HRActionsView } from './components/views/HRActionsView';
 import { InsightsView } from './components/views/InsightsView';
-import { BackendDocsView } from './components/views/BackendDocsView';
 import { SettingsView } from './components/views/SettingsView';
 import { ReportsView, HRProfileView } from './components/views/HRProfileAndReports';
 import { CommandPalette } from './components/modals/CommandPalette';
@@ -364,10 +363,6 @@ function HROperationsPortal() {
                 insights={insights}
                 categories={categories}
               />
-            )}
-
-            {activeTab === 'backend-docs' && (
-              <BackendDocsView />
             )}
 
             {activeTab === 'reports' && (

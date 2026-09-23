@@ -15,8 +15,7 @@ export type NavTab =
   | 'insights'
   | 'reports'
   | 'settings'
-  | 'hr-profile'
-  | 'backend-docs';
+  | 'hr-profile';
 
 interface SidebarProps {
   activeTab: NavTab;
@@ -328,38 +327,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {isCollapsed && (
                 <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#0c1024] border border-white/15 rounded-lg text-xs text-white whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
                   Reports
-                </div>
-              )}
-            </button>
-
-            {/* Backend Integration Blueprint */}
-            <button
-              onClick={() => onSelectTab('backend-docs')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
-              } ${
-                activeTab === 'backend-docs'
-                  ? 'bg-cyan-500/20 text-cyan-300 font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
-                  : 'text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/10 border border-transparent'
-              }`}
-            >
-              {activeTab === 'backend-docs' && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-cyan-400 shadow-[0_0_10px_#00f0ff]" />
-              )}
-              <span className="material-symbols-outlined text-[20px] text-cyan-400">
-                api
-              </span>
-              {!isCollapsed && (
-                <>
-                  <span className="text-sm font-semibold">Backend API Docs</span>
-                  <span className="ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
-                    SPEC
-                  </span>
-                </>
-              )}
-              {isCollapsed && (
-                <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#0c1024] border border-cyan-400/30 rounded-lg text-xs text-cyan-300 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-                  Backend API Specs
                 </div>
               )}
             </button>
