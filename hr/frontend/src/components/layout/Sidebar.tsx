@@ -36,22 +36,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`transition-all duration-300 ease-in-out flex-shrink-0 h-full rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col justify-between p-3 z-30 specular-border hidden md:flex ${
-        isCollapsed ? 'w-20' : 'w-64'
+      className={`transition-all duration-300 ease-in-out flex-shrink-0 h-full rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col justify-between z-30 specular-border hidden md:flex overflow-x-hidden ${
+        isCollapsed ? 'w-20 p-2 overflow-hidden' : 'w-64 p-3'
       }`}
     >
-      <div className="flex flex-col gap-4 overflow-y-auto pr-1 no-scrollbar">
+      <div className={`flex flex-col ${isCollapsed ? 'gap-2 overflow-hidden' : 'gap-4 overflow-y-auto pr-1 no-scrollbar'}`}>
         {/* Brand & Logo Container with Collapse Toggle */}
-        <div className="flex items-center justify-between gap-2">
+        <div className={`flex items-center ${isCollapsed ? 'flex-col gap-2 pb-2 border-b border-white/10' : 'justify-between gap-2 pb-1'}`}>
           <div 
             onClick={() => onSelectTab('dashboard')} 
-            className={`flex items-center gap-3 p-2 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md cursor-pointer hover:bg-white/[0.08] transition-all flex-1 ${
-              isCollapsed ? 'justify-center px-2' : 'px-3 py-2.5'
+            className={`flex items-center rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md cursor-pointer hover:bg-white/[0.08] transition-all ${
+              isCollapsed ? 'w-10 h-10 justify-center p-0 mx-auto' : 'gap-3 p-2.5 flex-1'
             }`}
             title="HR AI Desk"
           >
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden p-1 bg-gradient-to-tr from-blue-600/40 via-indigo-500/30 to-cyan-400/30 border border-white/20 shadow-inner flex-shrink-0 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[22px] text-cyan-300 drop-shadow-[0_0_8px_rgba(0,240,255,0.6)]">
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden p-1 bg-gradient-to-tr from-blue-600/40 via-indigo-500/30 to-cyan-400/30 border border-white/20 shadow-inner flex-shrink-0 flex items-center justify-center">
+              <span className="material-symbols-outlined text-[20px] text-cyan-300 drop-shadow-[0_0_8px_rgba(0,240,255,0.6)]">
                 token
               </span>
             </div>
@@ -72,7 +72,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={() => setIsCollapsed(prev => !prev)}
-            className="p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.1] border border-white/10 text-white/60 hover:text-white transition-all cursor-pointer flex-shrink-0"
+            className={`rounded-xl bg-white/[0.03] hover:bg-white/[0.1] border border-white/10 text-white/60 hover:text-white transition-all cursor-pointer flex items-center justify-center flex-shrink-0 ${
+              isCollapsed ? 'w-10 h-7 mx-auto' : 'p-2'
+            }`}
             title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {isCollapsed ? (
@@ -84,21 +86,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Operations Navigation */}
-        <div>
+        <div className="flex flex-col">
           {!isCollapsed && (
-            <p className="px-3 mb-2 font-mono text-[10px] text-white/40 uppercase tracking-widest font-semibold">
+            <p className="px-3 mb-1.5 font-mono text-[10px] text-white/40 uppercase tracking-widest font-semibold">
               Operations
             </p>
           )}
-          <nav className="flex flex-col gap-1.5">
+          <nav className={`flex flex-col ${isCollapsed ? 'gap-1' : 'gap-1.5'}`}>
             {/* Dashboard */}
             <button
               onClick={() => onSelectTab('dashboard')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'dashboard'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -121,11 +125,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Requests */}
             <button
               onClick={() => onSelectTab('requests')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'requests'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -154,11 +160,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* AI Triage */}
             <button
               onClick={() => onSelectTab('ai-triage')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'ai-triage'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -184,8 +192,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* AI Assistance / Copilot */}
             <button
               onClick={() => onSelectTab('ai-assistance')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'ai-assistance'
                   ? 'bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-indigo-500/20 text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] border border-cyan-400/40 shadow-[0_0_16px_rgba(0,240,255,0.25)]'
@@ -217,11 +227,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Deliverables */}
             <button
               onClick={() => onSelectTab('deliverables')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'deliverables'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -242,11 +254,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* HR Actions */}
             <button
               onClick={() => onSelectTab('hr-actions')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'hr-actions'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -274,21 +288,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Intelligence & Analytics */}
-        <div>
+        <div className="flex flex-col">
           {!isCollapsed && (
-            <p className="px-3 mb-2 font-mono text-[10px] text-white/40 uppercase tracking-widest font-semibold">
+            <p className="px-3 mb-1.5 font-mono text-[10px] text-white/40 uppercase tracking-widest font-semibold">
               Intelligence
             </p>
           )}
-          <nav className="flex flex-col gap-1.5">
+          <nav className={`flex flex-col ${isCollapsed ? 'gap-1' : 'gap-1.5'}`}>
             {/* Insights */}
             <button
               onClick={() => onSelectTab('insights')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'insights'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -309,11 +325,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Reports */}
             <button
               onClick={() => onSelectTab('reports')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed ? 'justify-center' : ''
+              className={`rounded-xl transition-all duration-200 text-left relative group ${
+                isCollapsed 
+                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                  : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'reports'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/15'
+                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
@@ -335,19 +353,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* System & Telemetry Capsule */}
-      <div className="flex flex-col gap-2 pt-3 border-t border-white/10">
+      <div className={`flex flex-col ${isCollapsed ? 'gap-1 pt-2 border-t border-white/10' : 'gap-2 pt-3 border-t border-white/10'}`}>
         {!isCollapsed && (
           <p className="px-3 font-mono text-[10px] text-white/40 uppercase tracking-widest font-semibold">
             System
           </p>
         )}
-        <nav className="flex flex-col gap-1">
+        <nav className={`flex flex-col ${isCollapsed ? 'gap-1' : 'gap-1'}`}>
           <button
             onClick={() => onSelectTab('settings')}
-            className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors text-left group relative ${
-              isCollapsed ? 'justify-center' : ''
+            className={`rounded-xl transition-colors text-left group relative ${
+              isCollapsed 
+                ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                : 'w-full flex items-center gap-3 px-3 py-2'
             } ${
-              activeTab === 'settings' ? 'bg-white/10 text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
+              activeTab === 'settings' ? 'bg-white/10 text-white font-medium border border-cyan-400/40' : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
             }`}
           >
             <span className="material-symbols-outlined text-[19px]">settings</span>
@@ -360,10 +380,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
           <button
             onClick={() => onSelectTab('hr-profile')}
-            className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors text-left group relative ${
-              isCollapsed ? 'justify-center' : ''
+            className={`rounded-xl transition-colors text-left group relative ${
+              isCollapsed 
+                ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
+                : 'w-full flex items-center gap-3 px-3 py-2'
             } ${
-              activeTab === 'hr-profile' ? 'bg-white/10 text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
+              activeTab === 'hr-profile' ? 'bg-white/10 text-white font-medium border border-cyan-400/40' : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
             }`}
           >
             <span className="material-symbols-outlined text-[19px]">account_box</span>
@@ -377,9 +399,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* Live Node Status Capsule */}
-        <div className={`mt-1 p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center ${
-          isCollapsed ? 'justify-center' : 'justify-between'
-        }`}>
+        <div 
+          className={`mt-1 rounded-xl bg-black/40 border border-white/10 flex items-center ${
+            isCollapsed ? 'w-10 h-10 justify-center mx-auto p-0' : 'p-2.5 justify-between'
+          }`}
+          title={isCollapsed ? "Neural Core OK • 99.8% SLA" : undefined}
+        >
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
