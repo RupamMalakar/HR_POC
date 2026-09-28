@@ -99,7 +99,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
   ];
 
   return (
-    <section className="lg:col-span-7 xl:col-span-8 rounded-3xl p-6 bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col justify-between specular-border relative">
+    <section className="lg:col-span-7 xl:col-span-8 h-fit self-start rounded-3xl p-6 bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col specular-border relative">
       <div>
         {/* Header with Title and Range Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
@@ -155,7 +155,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
         </div>
 
         {/* Glowing Spatial SVG Chart Canvas */}
-        <div className="w-full relative h-56 sm:h-64">
+        <div className="w-full relative h-52 sm:h-56">
           <svg
             aria-label={`Request trend over ${activeRange}`}
             className="w-full h-full overflow-visible"
