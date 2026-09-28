@@ -1,9 +1,9 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 8,
+      "count": 9,
       "changePercent": 0,
-      "comparisonText": "8 active"
+      "comparisonText": "9 active"
     },
     "highPriority": {
       "count": 5,
@@ -20,7 +20,7 @@
     },
     "avgSla": "0m",
     "resolvedOvernight": 5,
-    "aiTriagedToday": 8,
+    "aiTriagedToday": 9,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -43,7 +43,7 @@
         3,
         0,
         0,
-        1
+        2
       ],
       "resolved": [
         0,
@@ -54,8 +54,8 @@
         0,
         0
       ],
-      "openTotal": 8,
-      "receivedToday": 1,
+      "openTotal": 9,
+      "receivedToday": 2,
       "resolvedToday": 0
     },
     "30D": {
@@ -70,7 +70,7 @@
         0,
         0,
         3,
-        10
+        11
       ],
       "resolved": [
         0,
@@ -78,8 +78,8 @@
         3,
         2
       ],
-      "openTotal": 8,
-      "receivedToday": 1,
+      "openTotal": 9,
+      "receivedToday": 2,
       "resolvedToday": 0
     },
     "90D": {
@@ -92,19 +92,99 @@
       "incoming": [
         0,
         0,
-        13
+        14
       ],
       "resolved": [
         0,
         0,
         5
       ],
-      "openTotal": 8,
-      "receivedToday": 1,
+      "openTotal": 9,
+      "receivedToday": 2,
       "resolvedToday": 0
     }
   },
   "requests": [
+    {
+      "id": "REQ-3847",
+      "title": "Casual Leave application (2 days)",
+      "subject": "Casual Leave application (2 days)",
+      "employeeId": "EMP001",
+      "employee": {
+        "id": "EMP001",
+        "name": "Alex Johnson",
+        "department": "Engineering",
+        "email": "alex.johnson@enterprise.internal",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "role": "Senior Staff Engineer",
+        "title": "Senior Staff Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-28T09:46:59.522Z",
+      "createdDate": "Sep 28, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:46:59.522Z"
+      },
+      "description": "Applied for 2 days of Casual Leave from 2026-09-28 to 2026-09-29. Reason: jj",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 28, 2026, 9:46 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Alex Johnson"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c-1790588869685",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "Subject: REQ-3847 – Casual Leave Application (2 days)\n\nHi Alex,\n\nThank you for submitting your casual leave request for 2 days from 2026-09-28 to 2026-09-29.\n\nBased on the Company Leave and Time Off Policy (leave_policy.pdf, Page 1), annual paid time off (PTO) is available to full-time permanent employees and:\n- Accrues monthly at a rate of 1.67 days per completed month of active service  \n- Must be requested and approved in advance, with all planned annual leave requests exceeding 3 consecutive days requiring at least 2 weeks’ notice via the HR portal\n\nSince your request is for 2 consecutive days, it falls within the standard PTO framework and does not require the 2-week advance notice rule that applies to longer leave periods. Your leave will be processed as annual paid time off (PTO), subject to confirmation that you have sufficient accrued leave balance and approval from your direct manager.\n\nNext steps:\n1. We will verify your current PTO balance in the HR system.\n2. Your manager will review and approve or adjust the request based on team and project needs.\n3. You will receive a confirmation update on this case (REQ-3847) via the HR portal within 2 business days.\n\nIf you need to update the reason for your leave or adjust the dates, please add a comment to this case in the HR portal, and we’ll incorporate the changes into the review.\n\nBest regards,  \nSarah Jenkins  \nHR Operations Lead  \nGlobalTech Enterprise",
+          "time": "Just now",
+          "isHr": true
+        },
+        {
+          "id": "c-1790589073867",
+          "author": "Alex Johnson",
+          "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+          "text": "REQ-3847",
+          "time": "Just now",
+          "isHr": false
+        },
+        {
+          "id": "c-1790589073872",
+          "author": "Alex Johnson",
+          "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+          "text": "REQ-3847",
+          "time": "Just now",
+          "isHr": false
+        }
+      ],
+      "lastUpdated": "Just now"
+    },
     {
       "id": "REQ-8967",
       "title": "Formal complaint regarding workplace harassment during offsite",
@@ -941,6 +1021,19 @@
   ],
   "triageQueue": [
     {
+      "id": "TRG-1790588819523",
+      "requestId": "REQ-3847",
+      "title": "Casual Leave application (2 days)",
+      "employeeName": "Alex Johnson",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
       "id": "TRG-1790588017888",
       "requestId": "REQ-8967",
       "title": "Formal complaint regarding workplace harassment during offsite",
@@ -1169,28 +1262,40 @@
       "category": "benefits",
       "name": "Health & Benefits",
       "count": 2,
-      "percentage": 15
+      "percentage": 14
     },
     {
       "category": "leave",
       "name": "Leave & Attendance",
-      "count": 4,
-      "percentage": 31
+      "count": 5,
+      "percentage": 36
     },
     {
       "category": "documents",
       "name": "Letters & Verification",
       "count": 2,
-      "percentage": 15
+      "percentage": 14
     },
     {
       "category": "compliance",
       "name": "HR Policies",
       "count": 1,
-      "percentage": 8
+      "percentage": 7
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1790588819523",
+      "actorType": "user",
+      "actorName": "Alex Johnson",
+      "actionText": "Alex Johnson submitted REQ-3847 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Casual Leave application (2 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
     {
       "id": "ACT-1790588017888",
       "actorType": "user",
