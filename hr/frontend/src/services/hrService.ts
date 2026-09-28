@@ -624,6 +624,50 @@ export const hrService = {
     return [...state.insights];
   },
 
+  async exportInsightsCsv(): Promise<void> {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/insights/export');
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hr-insights-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend CSV export failed, generating from client state:', e);
+    }
+
+    // Client-side fallback if server is unreachable
+    const items = state.insights || [];
+    const rows = [
+      ['ID', 'Title', 'Impact', 'Type', 'Description', 'Suggested Remediation', 'Related Category', 'Change Text'],
+      ...items.map(i => [
+        i.id,
+        `"${(i.title || '').replace(/"/g, '""')}"`,
+        i.impact || 'MEDIUM',
+        i.type || 'info',
+        `"${(i.description || '').replace(/"/g, '""')}"`,
+        `"${(i.suggestedRemediation || '').replace(/"/g, '""')}"`,
+        i.relatedCategory || '',
+        i.changeText || ''
+      ])
+    ];
+    const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `hr-insights-${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  },
+
   async getCategoryVolumes(): Promise<CategoryVolume[]> {
     try {
       const res = await fetch('http://localhost:8000/api/v1/category-volumes');

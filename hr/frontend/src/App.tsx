@@ -142,14 +142,15 @@ function HROperationsPortal() {
   useEffect(() => {
     const unsubscribe = hrService.subscribe(async (event) => {
       try {
-        const [m, reqs, tQ, delivs, actLogs, cats, vel] = await Promise.all([
+        const [m, reqs, tQ, delivs, actLogs, cats, vel, ins] = await Promise.all([
           hrService.getMetrics(),
           hrService.getRequests(),
           hrService.getTriageQueue(),
           hrService.getDeliverables(),
           hrService.getActivities(),
           hrService.getCategoryVolumes(),
-          hrService.getVelocity(activeVelocityRange)
+          hrService.getVelocity(activeVelocityRange),
+          hrService.getInsights()
         ]);
         setMetrics(m);
         if (Array.isArray(reqs)) {
@@ -161,6 +162,7 @@ function HROperationsPortal() {
         if (Array.isArray(delivs)) setDeliverables(delivs);
         if (Array.isArray(actLogs)) setActivities(actLogs);
         if (Array.isArray(cats)) setCategories(cats);
+        if (Array.isArray(ins)) setInsights(ins);
         if (vel) setVelocity(vel);
       } catch (err) {
         console.warn('Real-time sync refresh error:', err);
@@ -322,6 +324,20 @@ function HROperationsPortal() {
     setRequests(updatedReqs.map(sanitizeRequestItem));
   };
 
+  // Refresh dynamic insights and categorical distribution
+  const handleRefreshInsights = async () => {
+    try {
+      const [ins, cats] = await Promise.all([
+        hrService.getInsights(),
+        hrService.getCategoryVolumes()
+      ]);
+      if (Array.isArray(ins)) setInsights(ins);
+      if (Array.isArray(cats)) setCategories(cats);
+    } catch (err) {
+      console.warn('Failed to refresh insights:', err);
+    }
+  };
+
   // Urgent items for Dashboard attention queue
   const urgentRequests = requests.filter(r => {
     const p = (r.priority || '').toLowerCase();
@@ -454,6 +470,8 @@ function HROperationsPortal() {
               <InsightsView
                 insights={insights}
                 categories={categories}
+                onRefresh={handleRefreshInsights}
+                onNavigateTab={(tab) => setActiveTab(tab)}
               />
             )}
 

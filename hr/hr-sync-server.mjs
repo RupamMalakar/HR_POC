@@ -312,6 +312,177 @@ function recalculateCategoryVolumes() {
   ];
 }
 
+function recalculateInsights() {
+  const requests = Array.isArray(state.requests) ? state.requests : [];
+  const total = Math.max(1, requests.length);
+  const now = Date.now();
+  const SLA_THRESHOLD_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+  const dynamicInsights = [];
+
+  // --- 1. Category Volume Imbalances (>25% share) ---
+  const catCounts = { payroll: 0, leave: 0, benefits: 0, documents: 0, compliance: 0, employee_relations: 0, reimbursement: 0, remote_work: 0, other: 0 };
+  for (const r of requests) {
+    const c = r.category && r.category in catCounts ? r.category : 'other';
+    catCounts[c]++;
+  }
+  const catLabels = {
+    payroll: 'Payroll & Compensation',
+    leave: 'Leave & Attendance',
+    benefits: 'Benefits',
+    documents: 'Documents & Verification',
+    compliance: 'Compliance',
+    employee_relations: 'Employee Relations',
+    reimbursement: 'Reimbursement',
+    remote_work: 'Remote Work',
+    other: 'General HR'
+  };
+  const catPolicies = {
+    payroll: 'Compensation & Withholding Policy',
+    leave: 'Leave & Attendance Policy (Art. 6)',
+    benefits: 'Group Medical Insurance Policy',
+    documents: 'Employment Verification Standards',
+    compliance: 'Code of Business Conduct',
+    employee_relations: 'Anti-Harassment & Workplace Respect Policy',
+    reimbursement: 'Business Travel & Corporate Expense Policy',
+    remote_work: 'Global Hybrid & Remote Working Policy',
+    other: 'Employee Handbook'
+  };
+  for (const [cat, count] of Object.entries(catCounts)) {
+    const pct = Math.round((count / total) * 100);
+    if (pct > 25 && count > 1) {
+      dynamicInsights.push({
+        id: `INS-CAT-${cat.toUpperCase()}`,
+        type: 'warning',
+        icon: 'trending_up',
+        title: `${catLabels[cat]} Volume Spike`,
+        description: `${catLabels[cat]} tickets represent ${pct}% of total case volume (${count} of ${total} cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.`,
+        changeText: `${pct}% of volume`,
+        impact: 'HIGH',
+        suggestedRemediation: `Review ${catLabels[cat]} SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new ${catLabels[cat]} submissions.`,
+        relatedCategory: cat,
+        relatedPolicy: catPolicies[cat]
+      });
+    }
+  }
+
+  // --- 2. Resolution SLA Anomalies: tickets open > 24h ---
+  const slaBreaches = requests.filter(r => {
+    if (r.status === 'resolved') return false;
+    if (!r.createdAt) return false;
+    try {
+      return (now - new Date(r.createdAt).getTime()) > SLA_THRESHOLD_MS;
+    } catch { return false; }
+  });
+  if (slaBreaches.length > 0) {
+    const highPriBreaches = slaBreaches.filter(r => r.priority === 'high' || r.priority === 'Urgent').length;
+    const avgHours = slaBreaches.reduce((sum, r) => {
+      try { return sum + Math.round((now - new Date(r.createdAt).getTime()) / 3600000); } catch { return sum; }
+    }, 0) / slaBreaches.length;
+    dynamicInsights.push({
+      id: 'INS-SLA-BREACH',
+      type: 'warning',
+      icon: 'alarm',
+      title: 'Resolution SLA Bottleneck Detected',
+      description: `${slaBreaches.length} ticket${slaBreaches.length > 1 ? 's' : ''} have exceeded the standard 24-hour response SLA. ${highPriBreaches > 0 ? `${highPriBreaches} are high priority.` : ''} Average wait time is ~${Math.round(avgHours)} hours.`,
+      changeText: `${slaBreaches.length} overdue (>24h)`,
+      impact: highPriBreaches > 0 ? 'CRITICAL' : 'HIGH',
+      suggestedRemediation: 'Assign dedicated HR specialists to overdue tickets immediately. Enable automated SLA escalation alerts in the request intake pipeline.',
+      relatedCategory: 'leave',
+      relatedPolicy: 'HR Operations Service Level Agreement (SLA) Standards'
+    });
+  }
+
+  // --- 3. Recurring Inquiry Clustering ---
+  const CLUSTER_PAIRS = [
+    { cats: ['leave'], keywords: ['parental', 'maternity', 'paternity', 'carryover', 'paternal'], label: 'Parental Leave Policy Ambiguity', policy: 'Global Parental & Caregiver Leave Guidelines', remediation: 'Publish an updated FAQ on parental leave eligibility and carryover rules. Consider a self-service policy chatbot for common leave queries.' },
+    { cats: ['leave'], keywords: ['medical', 'sick', 'doctor', 'clinic', 'certificate', 'slip'], label: 'Medical Leave Documentation Lag', policy: 'Medical & Statutory Sick Leave Policy (Art. 6)', remediation: 'Automate a medical documentation checklist deliverable sent during case intake to eliminate manual practitioner follow-ups.' },
+    { cats: ['payroll'], keywords: ['bonus', 'incentive', 'variable', 'performance', 'payout'], label: 'Variable Compensation Inquiries', policy: 'Performance Incentive Framework', remediation: 'Send a proactive bonus payout schedule notification before the payout cycle closes to reduce repetitive inquiries.' },
+    { cats: ['remote_work', 'other'], keywords: ['abroad', 'international', 'overseas', 'travel', 'visa', 'spain'], label: 'International Remote Work Policy Gap', policy: 'Global Hybrid & International Remote Working Policy (Sec. 3.2)', remediation: 'Publish a clear decision tree for overseas remote working requests with tax and legal risk guidance.' }
+  ];
+  for (const cluster of CLUSTER_PAIRS) {
+    const clusterMatches = requests.filter(r => {
+      const catMatch = !cluster.cats.length || cluster.cats.includes(r.category);
+      const text = `${r.title || ''} ${r.description || ''} ${r.subject || ''}`.toLowerCase();
+      const keywordMatch = cluster.keywords.some(kw => text.includes(kw));
+      return catMatch && keywordMatch;
+    });
+    if (clusterMatches.length >= 2) {
+      dynamicInsights.push({
+        id: `INS-CLUSTER-${cluster.label.replace(/[^A-Za-z0-9]+/g, '-').toUpperCase().slice(0, 24)}`,
+        type: 'cyan',
+        icon: 'trending_up',
+        title: cluster.label,
+        description: `${clusterMatches.length} recurring inquiries detected around "${cluster.keywords.slice(0, 2).join('", "')}". Repetitive questions signal an ambiguous employee policy or documentation gap.`,
+        changeText: `${clusterMatches.length} recurring cases`,
+        impact: 'MEDIUM',
+        suggestedRemediation: cluster.remediation,
+        relatedCategory: cluster.cats[0] || 'other',
+        relatedPolicy: cluster.policy
+      });
+    }
+  }
+
+  // --- 4. Policy Grounding Gaps ---
+  const ungroundedItems = requests.filter(r => {
+    if (r.status === 'resolved') return false;
+    if (!r.triage) return true;
+    const sources = r.triage.policySources || r.triage.groundingSources || [];
+    return !Array.isArray(sources) || sources.length === 0;
+  });
+  if (ungroundedItems.length >= 2) {
+    dynamicInsights.push({
+      id: 'INS-POLICY-GAP',
+      type: 'warning',
+      icon: 'rule',
+      title: 'Policy Grounding & Coverage Gaps',
+      description: `${ungroundedItems.length} active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.`,
+      changeText: `${ungroundedItems.length} ungrounded`,
+      impact: 'HIGH',
+      suggestedRemediation: 'Trigger an AI re-triage pass across unclassified tickets. Ensure every specialist response cites an authoritative section in the Employee Handbook.',
+      relatedCategory: 'compliance',
+      relatedPolicy: 'Code of Business Conduct & Knowledge Base Governance'
+    });
+  }
+
+  // --- 5. High Resolution Velocity Signal ---
+  const resolvedCount = requests.filter(r => r.status === 'resolved').length;
+  const resolutionRate = total > 1 ? Math.round((resolvedCount / total) * 100) : 0;
+  if (resolutionRate >= 60) {
+    dynamicInsights.push({
+      id: 'INS-RESOLVE-RATE',
+      type: 'emerald',
+      icon: 'speed',
+      title: 'High Resolution Velocity',
+      description: `${resolutionRate}% of all received cases (${resolvedCount}/${total}) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.`,
+      changeText: `${resolutionRate}% throughput`,
+      impact: 'LOW',
+      suggestedRemediation: 'Standardize successful resolution workflows into automated response templates to lock in velocity gains.',
+      relatedCategory: 'other',
+      relatedPolicy: 'HR Operations Standard Operating Procedures'
+    });
+  }
+
+  // Default fallback if no conditions matched
+  if (dynamicInsights.length === 0) {
+    dynamicInsights.push({
+      id: 'INS-SYSTEM-HEALTH',
+      type: 'emerald',
+      icon: 'check_circle',
+      title: 'Operational Equilibrium Maintained',
+      description: 'Zero critical bottlenecks or SLA anomalies detected. Case queue is operating within normal parameters.',
+      changeText: 'Healthy cadence',
+      impact: 'LOW',
+      suggestedRemediation: 'Continue regular triage queue monitoring and maintain SLA response cadence.',
+      relatedCategory: 'other',
+      relatedPolicy: 'HR Operations Service Level Agreement (SLA) Standards'
+    });
+  }
+
+  state.insights = dynamicInsights;
+  return dynamicInsights;
+}
+
 function recalculateMetrics() {
   const openCount = state.requests.filter(r => r.status !== 'resolved').length;
   const highCount = state.requests.filter(r => r.status !== 'resolved' && (r.priority === 'high' || r.priority === 'Urgent')).length;
@@ -698,6 +869,8 @@ function loadState() {
 
 let state = loadState();
 recalculateVelocity();
+recalculateCategoryVolumes();
+recalculateInsights();
 
 function persistState() {
   try {
@@ -1099,10 +1272,11 @@ const server = http.createServer((req, res) => {
       };
       state.activities.unshift(activity);
 
-      // Recalculate metrics & category volume distribution
+      // Recalculate metrics, category volume distribution, and insights
       recalculateMetrics();
       recalculateVelocity();
       recalculateCategoryVolumes();
+      recalculateInsights();
 
       // Persist to disk database
       persistState();
@@ -1115,7 +1289,8 @@ const server = http.createServer((req, res) => {
         activity,
         triageItem,
         metrics: state.metrics,
-        categoryVolumes: state.categoryVolumes
+        categoryVolumes: state.categoryVolumes,
+        insights: state.insights
       });
 
       return sendJson(201, item);
@@ -1181,10 +1356,11 @@ const server = http.createServer((req, res) => {
 
         state.requests[reqIndex] = updated;
 
-        // Recalculate metrics
+        // Recalculate metrics and insights
         recalculateMetrics();
         recalculateVelocity();
         recalculateCategoryVolumes();
+        recalculateInsights();
 
         const activity = {
           id: `ACT-${Date.now()}`,
@@ -1204,7 +1380,8 @@ const server = http.createServer((req, res) => {
           request: updated,
           activity,
           metrics: state.metrics,
-          categoryVolumes: state.categoryVolumes
+          categoryVolumes: state.categoryVolumes,
+          insights: state.insights
         });
         return sendJson(200, updated);
       }
@@ -1320,10 +1497,12 @@ const server = http.createServer((req, res) => {
 
       recalculateMetrics();
       recalculateCategoryVolumes();
+      recalculateInsights();
       persistState();
 
       broadcastEvent('REQUEST_UPDATED', { request: reqItem, metrics: state.metrics });
       broadcastEvent('TRIAGE_UPDATED', { requestId: reqItem.id, triage: reqItem.triage });
+      broadcastEvent('INSIGHTS_UPDATED', state.insights);
       return sendJson(200, reqItem.triage);
     }
 
@@ -1500,9 +1679,35 @@ const server = http.createServer((req, res) => {
       return sendJson(404, { error: 'Action not found' });
     }
 
-    // Insights
+    // Insights — dynamically computed from live ticket data
     if (path === '/api/v1/insights' && req.method === 'GET') {
+      recalculateInsights();
       return sendJson(200, state.insights);
+    }
+
+    // Insights CSV Export
+    if (path === '/api/v1/insights/export' && req.method === 'GET') {
+      recalculateInsights();
+      const rows = [
+        ['ID', 'Title', 'Impact', 'Type', 'Description', 'Suggested Remediation', 'Related Category', 'Change Text'],
+        ...state.insights.map(i => [
+          i.id,
+          `"${(i.title || '').replace(/"/g, '""')}"`,
+          i.impact || '',
+          i.type || '',
+          `"${(i.description || '').replace(/"/g, '""')}"`,
+          `"${(i.suggestedRemediation || '').replace(/"/g, '""')}"`,
+          i.relatedCategory || '',
+          i.changeText || ''
+        ])
+      ];
+      const csv = rows.map(r => r.join(',')).join('\r\n');
+      res.writeHead(200, {
+        'Content-Type': 'text/csv',
+        'Content-Disposition': `attachment; filename="hr-insights-${new Date().toISOString().split('T')[0]}.csv"`,
+        'Access-Control-Allow-Origin': '*'
+      });
+      return res.end(csv);
     }
 
     // Category Volumes
