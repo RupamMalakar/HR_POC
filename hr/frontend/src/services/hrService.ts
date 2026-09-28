@@ -106,6 +106,54 @@ if (typeof window !== 'undefined') {
         }
       });
 
+      es.addEventListener('DELIVERABLE_CREATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.deliverable) {
+            const deliv = payload.deliverable;
+            if (!state.deliverables.some(d => d.id === deliv.id)) {
+              state.deliverables.unshift(deliv);
+            }
+          }
+          syncListeners.forEach(fn => fn({ type: 'DELIVERABLE_CREATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling DELIVERABLE_CREATED:', err);
+        }
+      });
+
+      es.addEventListener('DELIVERABLE_UPDATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.deliverable) {
+            const deliv = payload.deliverable;
+            const idx = state.deliverables.findIndex(d => d.id === deliv.id);
+            if (idx >= 0) {
+              state.deliverables[idx] = { ...state.deliverables[idx], ...deliv };
+            } else {
+              state.deliverables.unshift(deliv);
+            }
+          }
+          syncListeners.forEach(fn => fn({ type: 'DELIVERABLE_UPDATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling DELIVERABLE_UPDATED:', err);
+        }
+      });
+
+      es.addEventListener('TRIAGE_UPDATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.requestId && payload.triage) {
+            const idx = state.requests.findIndex(r => r.id === payload.requestId);
+            if (idx >= 0) {
+              state.requests[idx].triage = payload.triage;
+            }
+          }
+          syncListeners.forEach(fn => fn({ type: 'TRIAGE_UPDATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling TRIAGE_UPDATED:', err);
+        }
+      });
+
       es.onerror = () => {
         if (es) {
           try { es.close(); } catch {}
@@ -352,18 +400,145 @@ export const hrService = {
     }
   },
 
-  async getDeliverables(): Promise<DeliverableItem[]> {
+  async getTriagedRequests(): Promise<RequestItem[]> {
     try {
-      const res = await fetch('http://localhost:8000/api/v1/deliverables');
+      const res = await fetch('http://localhost:8000/api/v1/triage');
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
+          state.requests = data;
+          return data;
+        }
+      }
+    } catch {}
+    return [...state.requests];
+  },
+
+  async overrideRequestTriage(
+    requestId: string,
+    humanPriority?: string,
+    humanCategory?: string,
+    overrideNotes?: string
+  ): Promise<any> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/triage/${encodeURIComponent(requestId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ humanPriority, humanCategory, overrideNotes })
+      });
+      if (res.ok) {
+        const updatedTriage = await res.json();
+        const reqIdx = state.requests.findIndex(r => r.id === requestId);
+        if (reqIdx >= 0) {
+          state.requests[reqIdx].triage = updatedTriage;
+        }
+        return updatedTriage;
+      }
+    } catch (err) {
+      console.warn('overrideRequestTriage error:', err);
+    }
+    return null;
+  },
+
+  async retryRequestTriage(requestId: string): Promise<any> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/triage/${encodeURIComponent(requestId)}/retry`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        const updatedTriage = await res.json();
+        const reqIdx = state.requests.findIndex(r => r.id === requestId);
+        if (reqIdx >= 0) {
+          state.requests[reqIdx].triage = updatedTriage;
+        }
+        return updatedTriage;
+      }
+    } catch (err) {
+      console.warn('retryRequestTriage error:', err);
+    }
+    return null;
+  },
+
+  async getDeliverables(status?: string, requestId?: string): Promise<DeliverableItem[]> {
+    try {
+      const params = new URLSearchParams();
+      if (status && status !== 'all') params.append('status', status);
+      if (requestId) params.append('requestId', requestId);
+      const url = `http://localhost:8000/api/v1/deliverables?${params.toString()}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
           state.deliverables = data;
           return data;
         }
       }
     } catch {}
     return [...state.deliverables];
+  },
+
+  async getDeliverable(id: string): Promise<DeliverableItem | null> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/deliverables/${encodeURIComponent(id)}`);
+      if (res.ok) return await res.json();
+    } catch {}
+    return state.deliverables.find(d => d.id === id) || null;
+  },
+
+  async createDeliverable(deliv: Partial<DeliverableItem>): Promise<DeliverableItem | null> {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/deliverables', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(deliv)
+      });
+      if (res.ok) {
+        const created = await res.json();
+        if (!state.deliverables.some(d => d.id === created.id)) {
+          state.deliverables.unshift(created);
+        }
+        return created;
+      }
+    } catch (err) {
+      console.warn('createDeliverable error:', err);
+    }
+    return null;
+  },
+
+  async updateDeliverable(id: string, updates: Partial<DeliverableItem>): Promise<DeliverableItem | null> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/deliverables/${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        const idx = state.deliverables.findIndex(d => d.id === id);
+        if (idx >= 0) state.deliverables[idx] = updated;
+        return updated;
+      }
+    } catch (err) {
+      console.warn('updateDeliverable error:', err);
+    }
+    return null;
+  },
+
+  async sendDeliverable(id: string): Promise<DeliverableItem | null> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/deliverables/${encodeURIComponent(id)}/send`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        const sent = await res.json();
+        const idx = state.deliverables.findIndex(d => d.id === id);
+        if (idx >= 0) state.deliverables[idx] = sent;
+        return sent;
+      }
+    } catch (err) {
+      console.warn('sendDeliverable error:', err);
+    }
+    return null;
   },
 
   async approveDeliverable(id: string): Promise<DeliverableItem> {
@@ -379,15 +554,15 @@ export const hrService = {
 
     const item = state.deliverables.find(d => d.id === id);
     if (item) {
-      item.status = 'approved';
+      item.status = 'READY';
       state.activities.unshift({
         id: `ACT-${Date.now()}`,
         actorType: 'user',
         actorName: 'Sarah',
-        actionText: `Sarah approved ${id}`,
+        actionText: `Sarah marked ${id} as ready`,
         timeAgo: 'Just now',
         subText: item.title,
-        tag: { text: 'Approved', color: 'emerald' }
+        tag: { text: 'Ready', color: 'emerald' }
       });
     }
     return item!;

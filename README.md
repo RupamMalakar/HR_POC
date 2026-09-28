@@ -10,6 +10,7 @@ Each major component of the ecosystem is documented in detail. Click on any comp
 
 | Component | Description | Document Link |
 | :--- | :--- | :--- |
+| 🧠 **AI Operations & Components** | Complete breakdown of each component (AI Triage, HR Deliverables, Copilot, Case Console), differences, and benefits. | [**View Operations Guide**](docs/AI_OPERATIONS_AND_COMPONENTS.md) |
 | 📊 **HR Operations Dashboard** | Real-time KPI metrics, dynamic velocity overview charts (7D/30D/90D), attention queues, and workload analytics. | [**View Dashboard Docs**](docs/DASHBOARD.md) |
 | 📋 **Requests & Case Console** | Service requests queue, case investigation console, prominent problem statements, conversation threads, and resolution workflows. | [**View Requests Docs**](docs/REQUESTS.md) |
 | ✨ **AI Copilot System** | Case Copilot badge, prompt engineering with full case context, 1-click reply drafts, policy RAG engine, and Markdown rendering. | [**View AI Copilot Docs**](docs/AI_COPILOT.md) |

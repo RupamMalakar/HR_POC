@@ -1,13 +1,13 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 7,
+      "count": 8,
       "changePercent": 0,
-      "comparisonText": "7 active"
+      "comparisonText": "8 active"
     },
     "highPriority": {
-      "count": 4,
-      "requiresAttention": 4
+      "count": 5,
+      "requiresAttention": 5
     },
     "pendingHRActions": {
       "count": 0,
@@ -20,7 +20,7 @@
     },
     "avgSla": "0m",
     "resolvedOvernight": 5,
-    "aiTriagedToday": 7,
+    "aiTriagedToday": 8,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -28,34 +28,34 @@
     "7D": {
       "range": "7D",
       "labels": [
-        "Sat",
-        "Sun",
-        "Mon",
         "Tue",
         "Wed",
         "Thu",
-        "Fri"
+        "Fri",
+        "Sat",
+        "Sun",
+        "Mon"
       ],
       "incoming": [
         0,
-        0,
-        0,
-        0,
         6,
         0,
-        3
+        3,
+        0,
+        0,
+        1
       ],
       "resolved": [
         0,
-        0,
-        0,
-        0,
         2,
+        0,
+        0,
+        0,
         0,
         0
       ],
-      "openTotal": 7,
-      "receivedToday": 3,
+      "openTotal": 8,
+      "receivedToday": 1,
       "resolvedToday": 0
     },
     "30D": {
@@ -70,7 +70,7 @@
         0,
         0,
         3,
-        9
+        10
       ],
       "resolved": [
         0,
@@ -78,8 +78,8 @@
         3,
         2
       ],
-      "openTotal": 7,
-      "receivedToday": 3,
+      "openTotal": 8,
+      "receivedToday": 1,
       "resolvedToday": 0
     },
     "90D": {
@@ -92,19 +92,83 @@
       "incoming": [
         0,
         0,
-        12
+        13
       ],
       "resolved": [
         0,
         0,
         5
       ],
-      "openTotal": 7,
-      "receivedToday": 3,
+      "openTotal": 8,
+      "receivedToday": 1,
       "resolvedToday": 0
     }
   },
   "requests": [
+    {
+      "id": "REQ-8967",
+      "title": "Formal complaint regarding workplace harassment during offsite",
+      "subject": "Formal complaint regarding workplace harassment during offsite",
+      "employeeId": "EMP001",
+      "employee": {
+        "id": "EMP001",
+        "name": "Alex Johnson",
+        "department": "Engineering",
+        "email": "alex.johnson@enterprise.internal",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "role": "Senior Staff Engineer",
+        "title": "Senior Staff Engineer"
+      },
+      "category": "other",
+      "categoryDisplay": "General Inquiry",
+      "priority": "high",
+      "priorityDisplay": "High",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-09-28T09:33:37.887Z",
+      "createdDate": "Sep 28, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "OTHER Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "employee_relations",
+        "categoryDisplay": "Employee Relations",
+        "priority": "CRITICAL",
+        "sensitivity": "HIGHLY_SENSITIVE",
+        "confidence": 0.97,
+        "relevantPolicy": "Anti-Harassment & Workplace Respect Policy (Sec. 2.1)",
+        "suggestedAction": "Human Review Required — Initiate Confidential People Partner Triage",
+        "reason": "Lexical matches for workplace conduct, workload disparity, and grievance resolution guidelines.",
+        "status": "NEEDS_REVIEW",
+        "analyzedAt": "2026-09-28T09:33:37.888Z"
+      },
+      "description": "I would like to report repeated hostile remarks and harassment during the team dinner.",
+      "tags": [
+        "other"
+      ],
+      "timeline": [
+        {
+          "date": "Sep 28, 2026, 9:33 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Alex Johnson"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c-1790588177077",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "Hi Alex,\n\nThank you for reaching out and for formally reporting the hostile remarks and harassment you experienced during the team dinner. I’m very sorry that you went through this, and I appreciate you taking the step to bring it to our attention.\n\nOur company is committed to maintaining a diverse, inclusive, and harassment-free workplace, and we have zero tolerance for any form of discrimination or harassment in all business dealings and work-related activities, including offsites and team events. As stated in our Employee Handbook and Code of Conduct (employee_handbook.pdf, p.1), any such behavior may result in disciplinary action up to and including termination.\n\nHere are the next steps and what you can expect:\n\n1. **Formal Review of Your Complaint**  \n   - We will open a formal review of Case ID REQ-8967 and gather more information about what occurred during the team dinner.  \n   - This may include speaking with you to better understand the details, reviewing any documentation you may have (messages, emails, notes), and, where appropriate, speaking with other attendees.\n\n2. **Confidentiality and Support**  \n   - We will handle your complaint as confidentially as possible and share details only with those who need to be involved in the review and resolution process.  \n   - You are encouraged to reach out to your manager or directly to People Operations if you have additional concerns, in line with our grievance and conflict escalation process (employee_handbook.pdf, p.3). If you prefer not to involve your manager, HR will continue to handle this directly.\n\n3. **Timeline**  \n   - Given the seriousness of your report, we are treating this as a high-priority matter.  \n   - You can expect an initial follow-up from HR within **2 business days** to schedule a time to speak with you and gather more detailed information.  \n   - After that conversation, we will provide you with an estimated timeline for the completion of the review and will keep you updated on progress.\n\n4. **Your Well-Being**  \n   - If this situation is impacting your ability to work or participate in team activities, please let us know. We can discuss options and any support you may need while the review is ongoing.\n\nIf you are comfortable, please reply with your availability over the next few days so we can speak with you directly and ensure we fully understand what happened and how best to support you.\n\nThank you again for bringing this forward, Alex. We take your concerns very seriously and are committed to addressing them promptly and appropriately.\n\nBest regards,  \nSarah Jenkins  \nHR Operations Lead  \nGlobalTech Enterprise",
+          "time": "Just now",
+          "isHr": true
+        }
+      ],
+      "lastUpdated": "Just now"
+    },
     {
       "id": "REQ-7282",
       "title": "David Chen Fiscal Audit Verification",
@@ -120,8 +184,8 @@
         "role": "Financial Analyst",
         "title": "Financial Analyst"
       },
-      "category": "documents",
-      "categoryDisplay": "Documents",
+      "category": "compliance",
+      "categoryDisplay": "HR Policies",
       "priority": "high",
       "priorityDisplay": "High",
       "status": "open",
@@ -144,13 +208,45 @@
           "title": "Request Created",
           "desc": "Submitted through HR Self-Service Portal",
           "actor": "David Chen"
+        },
+        {
+          "date": "Sep 28, 2026, 9:33 AM",
+          "title": "Deliverable Dispatched: HR Communication",
+          "desc": "Sent \"Parental Leave Entitlement Schedule Notice\" to david.chen@enterprise.internal",
+          "actor": "HR Operations"
         }
       ],
-      "comments": [],
+      "comments": [
+        {
+          "id": "c-1790588017871",
+          "author": "HR Operations",
+          "authorId": "HR001",
+          "avatar": "https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0",
+          "text": "[Official HR Deliverable Sent]\n**Subject:** Parental Leave Confirmation & Absence Schedule\n\nDear Colleague,\n\nWe have reviewed your parental leave request under Global Parental & Caregiver Leave Guidelines. You are entitled to 16 weeks of paid parental leave.\n\nWarm regards,\nHR Operations\n\nNote: Flexible return cadence option is available on request.",
+          "time": "Just now",
+          "isHr": true
+        }
+      ],
       "assignedToId": "HR003",
       "assignedTo": "Elena Rostova",
       "resolutionNotes": "",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "documents",
+        "categoryDisplay": "HR Documentation",
+        "priority": "HIGH",
+        "sensitivity": "SENSITIVE",
+        "confidence": 0.97,
+        "relevantPolicy": "Corporate Document Certification & Employment Verification Standards",
+        "suggestedAction": "Generate Official Employment Verification Deliverable",
+        "reason": "Direct match for employment verification letter templates and background verification.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z",
+        "humanPriority": "HIGH",
+        "humanCategory": "compliance",
+        "overrideNotes": "Escalated by HR Operations Specialist for statutory policy compliance audit",
+        "overriddenAt": "2026-09-28T09:33:37.815Z"
+      }
     },
     {
       "id": "REQ-7248",
@@ -193,7 +289,19 @@
           "actor": "Rupam Sharma"
         }
       ],
-      "comments": []
+      "comments": [],
+      "triage": {
+        "category": "documents",
+        "categoryDisplay": "HR Documentation",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.97,
+        "relevantPolicy": "Corporate Document Certification & Employment Verification Standards",
+        "suggestedAction": "Generate Official Employment Verification Deliverable",
+        "reason": "Direct match for employment verification letter templates and background verification.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z"
+      }
     },
     {
       "id": "REQ-3724",
@@ -259,7 +367,19 @@
       "lastUpdated": "Just now",
       "assignedToId": "HR002",
       "assignedTo": "Marcus Vance",
-      "resolutionNotes": ""
+      "resolutionNotes": "",
+      "triage": {
+        "category": "general_hr",
+        "categoryDisplay": "General HR",
+        "priority": "HIGH",
+        "sensitivity": "NORMAL",
+        "confidence": 0.94,
+        "relevantPolicy": "Corporate Employee Handbook & Code of Conduct",
+        "suggestedAction": "Review request and route to appropriate People Partner",
+        "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z"
+      }
     },
     {
       "id": "REQ-1058",
@@ -310,7 +430,19 @@
           "isHr": true
         }
       ],
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "documents",
+        "categoryDisplay": "HR Documentation",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.97,
+        "relevantPolicy": "Corporate Document Certification & Employment Verification Standards",
+        "suggestedAction": "Generate Official Employment Verification Deliverable",
+        "reason": "Direct match for employment verification letter templates and background verification.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z"
+      }
     },
     {
       "id": "REQ-1358",
@@ -352,7 +484,19 @@
           "actor": "Rupam Sharma"
         }
       ],
-      "comments": []
+      "comments": [],
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "HIGH",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Global Parental & Caregiver Leave Guidelines",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z"
+      }
     },
     {
       "id": "REQ-1062",
@@ -403,7 +547,19 @@
       "comments": [],
       "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
       "resolverName": "Sarah Jenkins (HR Ops)",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.736Z"
+      }
     },
     {
       "id": "REQ-SYNC-9850",
@@ -469,7 +625,19 @@
       ],
       "resolutionNotes": "Biometric logs verified against building security gate. Attendance regularized.",
       "resolverName": "Sarah Jenkins (HR Ops)",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "compliance",
+        "categoryDisplay": "Compliance",
+        "priority": "CRITICAL",
+        "sensitivity": "NORMAL",
+        "confidence": 0.95,
+        "relevantPolicy": "Code of Business Conduct & Regulatory Compliance Standards",
+        "suggestedAction": "Execute Policy Compliance Review Checklist",
+        "reason": "Regulatory compliance term density triggers corporate oversight.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     },
     {
       "id": "REQ-SSE-TEST",
@@ -516,7 +684,19 @@
           "isHr": true
         }
       ],
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "general_hr",
+        "categoryDisplay": "General HR",
+        "priority": "HIGH",
+        "sensitivity": "NORMAL",
+        "confidence": 0.94,
+        "relevantPolicy": "Corporate Employee Handbook & Code of Conduct",
+        "suggestedAction": "Review request and route to appropriate People Partner",
+        "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     },
     {
       "id": "REQ-9999",
@@ -553,7 +733,19 @@
           "actor": "Employee"
         }
       ],
-      "comments": []
+      "comments": [],
+      "triage": {
+        "category": "general_hr",
+        "categoryDisplay": "General HR",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.94,
+        "relevantPolicy": "Corporate Employee Handbook & Code of Conduct",
+        "suggestedAction": "Review request and route to appropriate People Partner",
+        "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     },
     {
       "id": "REQ-1124",
@@ -599,7 +791,19 @@
       "comments": [],
       "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
       "resolverName": "Sarah Jenkins (HR Ops)",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "compliance",
+        "categoryDisplay": "Compliance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.95,
+        "relevantPolicy": "Code of Business Conduct & Regulatory Compliance Standards",
+        "suggestedAction": "Execute Policy Compliance Review Checklist",
+        "reason": "Regulatory compliance term density triggers corporate oversight.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     },
     {
       "id": "REQ-5325",
@@ -645,7 +849,19 @@
       ],
       "comments": [],
       "resolutionNotes": "Approved by HR Director",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "general_hr",
+        "categoryDisplay": "General HR",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.94,
+        "relevantPolicy": "Corporate Employee Handbook & Code of Conduct",
+        "suggestedAction": "Review request and route to appropriate People Partner",
+        "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     },
     {
       "id": "REQ-1051",
@@ -708,21 +924,46 @@
       ],
       "resolutionNotes": "okokokoko\n",
       "resolverName": "Sarah Jenkins (HR Ops)",
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "triage": {
+        "category": "general_hr",
+        "categoryDisplay": "General HR",
+        "priority": "HIGH",
+        "sensitivity": "NORMAL",
+        "confidence": 0.94,
+        "relevantPolicy": "Corporate Employee Handbook & Code of Conduct",
+        "suggestedAction": "Review request and route to appropriate People Partner",
+        "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-09-28T09:24:09.737Z"
+      }
     }
   ],
   "triageQueue": [
+    {
+      "id": "TRG-1790588017888",
+      "requestId": "REQ-8967",
+      "title": "Formal complaint regarding workplace harassment during offsite",
+      "employeeName": "Alex Johnson",
+      "predictedCategory": "employee_relations",
+      "confidenceScore": 0.97,
+      "urgencyScore": "CRITICAL",
+      "reasoning": "Lexical matches for workplace conduct, workload disparity, and grievance resolution guidelines.",
+      "suggestedAction": "Human Review Required — Initiate Confidential People Partner Triage",
+      "status": "NEEDS_REVIEW",
+      "timestamp": "Just now"
+    },
     {
       "id": "TRG-1790335900091",
       "requestId": "REQ-7282",
       "title": "David Chen Fiscal Audit Verification",
       "employeeName": "David Chen",
-      "predictedCategory": "documents",
+      "predictedCategory": "compliance",
       "confidenceScore": 0.96,
       "urgencyScore": "HIGH",
       "reasoning": "Matched enterprise knowledge base vocabulary and policy grounding for Documents.",
       "suggestedAction": "Route to Documents specialist queue.",
-      "status": "AUTO_ROUTED",
+      "status": "OVERRIDDEN",
       "timestamp": "Just now"
     },
     {
@@ -804,7 +1045,117 @@
       "timestamp": "Just now"
     }
   ],
-  "deliverables": [],
+  "deliverables": [
+    {
+      "id": "DELIV-1790588017820",
+      "title": "Parental Leave Entitlement Schedule Notice",
+      "type": "HR Communication",
+      "status": "SENT",
+      "requestId": "REQ-7282",
+      "employeeName": "David Chen",
+      "department": "Finance & Operations",
+      "recipient": "david.chen@enterprise.internal",
+      "subject": "Parental Leave Confirmation & Absence Schedule",
+      "content": "Dear Colleague,\n\nWe have reviewed your parental leave request under Global Parental & Caregiver Leave Guidelines. You are entitled to 16 weeks of paid parental leave.\n\nWarm regards,\nHR Operations\n\nNote: Flexible return cadence option is available on request.",
+      "contentPreview": "Dear Colleague,\n\nWe have reviewed your parental leave request under Global Parental & Caregiver Leave Guidelines. You are entitled to 16 wee...",
+      "policySources": [
+        {
+          "document": "employee_handbook.pdf",
+          "page": 18,
+          "excerpt": "16 weeks fully paid parental leave for primary caregivers."
+        }
+      ],
+      "createdBy": "Sarah Jenkins (HR Ops)",
+      "createdAt": "2026-09-28T09:33:37.820Z",
+      "updatedAt": "2026-09-28T09:33:37.842Z"
+    },
+    {
+      "id": "DELIV-101",
+      "title": "Medical Leave Documentation Request & Entitlement Notice",
+      "type": "HR Communication",
+      "status": "SENT",
+      "requestId": "REQ-1042",
+      "employeeName": "Maya Patel",
+      "department": "Design & Product",
+      "recipient": "maya.patel@enterprise.internal",
+      "subject": "Regarding Medical Leave & Dependent Documentation (REQ-1042)",
+      "content": "Dear Maya,\n\nThank you for reaching out regarding your medical leave request and dependent documentation. Under Article 6 of the Corporate Health & Leave Policy, medical absences exceeding three consecutive days require an authorized medical practitioner certificate.\n\nPlease upload the official certificate through the Employee Self-Service Portal within 5 business days so we can finalize your coverage.\n\nWarm regards,\nSarah Jenkins\nHR Operations Team",
+      "contentPreview": "Dear Maya, Thank you for reaching out regarding your medical leave request and dependent documentation...",
+      "policySources": [
+        {
+          "document": "employee_handbook.pdf",
+          "page": 14,
+          "excerpt": "Medical absence exceeding 3 days requires a certified practitioner notice."
+        }
+      ],
+      "createdBy": "Sarah Jenkins (HR Ops)",
+      "createdAt": "2026-09-28T07:24:09.733Z",
+      "updatedAt": "2026-09-28T09:38:23.847Z"
+    },
+    {
+      "id": "DELIV-102",
+      "title": "Remote Work Abroad & Cross-Border Compliance Analysis",
+      "type": "Policy Analysis",
+      "status": "READY",
+      "requestId": "REQ-1037",
+      "employeeName": "Alex Johnson",
+      "department": "Engineering",
+      "recipient": "alex.johnson@enterprise.internal",
+      "subject": "Compliance Assessment: Overseas Remote Work Schedule",
+      "content": "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\n**Case Overview:** Employee Alex Johnson requested 3 weeks of remote work from Spain during winter break.\n\n**Policy Evaluation:**\n- **Handbook Section 3.2 (International Remote Cadence):** Permits up to 20 business days per calendar year in eligible jurisdictions.\n- **Tax & Legal Risk:** Spain has a 30-day bilateral treaty grace period; 15 working days poses zero permanent establishment (PE) risk.\n- **Infrastructure Security:** Mandates hardware token VPN authentication.\n\n**Recommendation:** Approve remote work agreement with standard security stipulations.",
+      "contentPreview": "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\nCase Overview: Employee Alex Johnson requested 3 weeks of remote work from Spain...",
+      "policySources": [
+        {
+          "document": "employee_handbook.pdf",
+          "page": 22,
+          "excerpt": "Employees may work remotely abroad for up to 20 days annually upon manager and HR compliance sign-off."
+        }
+      ],
+      "createdBy": "Sarah Jenkins (HR Ops)",
+      "createdAt": "2026-09-28T04:24:09.734Z",
+      "updatedAt": "2026-09-28T05:24:09.734Z"
+    },
+    {
+      "id": "DELIV-103",
+      "title": "Salary Revision Verification Letter for Home Loan",
+      "type": "Employee Notice",
+      "status": "SENT",
+      "requestId": "REQ-1029",
+      "employeeName": "Rupam Sharma",
+      "department": "Product Engineering",
+      "recipient": "rupam.sharma@enterprise.org",
+      "subject": "Official Employment & Compensation Verification Letter (REQ-1029)",
+      "content": "To Whom It May Concern,\n\nThis letter certifies that Rupam Sharma is employed on a permanent, full-time basis as Lead Full-Stack Engineer at Enterprise Technologies. Current base compensation and active standing have been verified by HR Operations.\n\nSincerely,\nSarah Jenkins\nHR Operations Lead",
+      "contentPreview": "To Whom It May Concern, This letter certifies that Rupam Sharma is employed on a permanent, full-time basis...",
+      "policySources": [],
+      "createdBy": "Sarah Jenkins (HR Ops)",
+      "createdAt": "2026-09-27T09:24:09.734Z",
+      "updatedAt": "2026-09-27T13:24:09.734Z"
+    },
+    {
+      "id": "DELIV-104",
+      "title": "Overtime Allocation & Workload Disparity Investigation Summary",
+      "type": "Case Summary",
+      "status": "NEEDS_REVIEW",
+      "requestId": "REQ-1014",
+      "employeeName": "David Chen",
+      "department": "Finance & Operations",
+      "recipient": "david.chen@enterprise.internal",
+      "subject": "Internal HR Case Summary: Workload Disparity Grievance",
+      "content": "### Confidential Investigation Summary: REQ-1014\n\n**Grievance:** Employee reported unequal overtime allocation during fiscal quarter-end close.\n\n**Findings:**\n1. Overtime records across the financial analysis team for Q3 show a 28% variance between team members.\n2. Workload scheduling was managed ad-hoc without rotation logs.\n\n**Proposed Remediation:**\n- Establish formalized rotation roster for month-end close.\n- HR Specialist Marcus Vance to facilitate a 1-on-1 alignment session.",
+      "contentPreview": "### Confidential Investigation Summary: REQ-1014\n\nGrievance: Employee reported unequal overtime allocation during fiscal quarter-end close...",
+      "policySources": [
+        {
+          "document": "employee_handbook.pdf",
+          "page": 8,
+          "excerpt": "Overtime and on-call schedules must be distributed equitably across qualified team members."
+        }
+      ],
+      "createdBy": "Marcus Vance (HR Ops)",
+      "createdAt": "2026-09-27T03:24:09.734Z",
+      "updatedAt": "2026-09-27T05:24:09.734Z"
+    }
+  ],
   "hrActions": [],
   "insights": [],
   "categoryVolumes": [
@@ -818,28 +1169,40 @@
       "category": "benefits",
       "name": "Health & Benefits",
       "count": 2,
-      "percentage": 17
+      "percentage": 15
     },
     {
       "category": "leave",
       "name": "Leave & Attendance",
       "count": 4,
-      "percentage": 33
+      "percentage": 31
     },
     {
       "category": "documents",
       "name": "Letters & Verification",
-      "count": 3,
-      "percentage": 25
+      "count": 2,
+      "percentage": 15
     },
     {
       "category": "compliance",
       "name": "HR Policies",
-      "count": 0,
-      "percentage": 0
+      "count": 1,
+      "percentage": 8
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1790588017888",
+      "actorType": "user",
+      "actorName": "Alex Johnson",
+      "actionText": "Alex Johnson submitted REQ-8967 (General Inquiry)",
+      "timeAgo": "Just now",
+      "subText": "Formal complaint regarding workplace harassment during offsite",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
     {
       "id": "ACT-1790335900201",
       "actorType": "user",

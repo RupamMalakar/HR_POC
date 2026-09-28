@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Copy, Check, ThumbsUp, ThumbsDown, Sparkles, ArrowRight } from 'lucide-react';
+import { Copy, Check, ThumbsUp, ThumbsDown, Sparkles, ArrowRight, FileText } from 'lucide-react';
+import { hrService } from '../../services/hrService';
 
 interface ResponseActionsProps {
   answerText: string;
@@ -17,6 +18,8 @@ export const ResponseActions: React.FC<ResponseActionsProps> = ({
   initialFeedback
 }) => {
   const [copied, setCopied] = useState(false);
+  const [savedDeliverable, setSavedDeliverable] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(initialFeedback || null);
 
   const isEmailDraft = /(?:subject:|dear\s+[a-z]+|hi\s+[a-z]+)/i.test(answerText);
@@ -46,6 +49,35 @@ export const ResponseActions: React.FC<ResponseActionsProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {}
+  };
+
+  const handleSaveDeliverable = async () => {
+    if (!answerText.trim() || isSaving) return;
+    setIsSaving(true);
+    try {
+      const isDraft = /(?:subject:|dear\s+[a-z]+|hi\s+[a-z]+)/i.test(answerText);
+      const delivType = isDraft ? 'HR Communication' : 'Policy Analysis';
+      const firstLine = answerText.split('\n')[0].replace(/[#*]/g, '').trim();
+      const title = firstLine && firstLine.length < 50 ? firstLine : `Policy Guidance & Compliance Brief`;
+
+      await hrService.createDeliverable({
+        title,
+        type: delivType as any,
+        status: 'NEEDS_REVIEW',
+        content: answerText,
+        subject: isDraft ? title : undefined,
+        policySources: [
+          { document: 'employee_handbook.pdf', page: 1, excerpt: 'Retrieved from AI Policy Copilot RAG grounding.' }
+        ],
+        createdBy: 'Sarah Jenkins (via AI Copilot)'
+      });
+      setSavedDeliverable(true);
+      setTimeout(() => setSavedDeliverable(false), 3000);
+    } catch (err) {
+      console.error('Failed to save deliverable:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleFeedback = (type: 'up' | 'down') => {
@@ -104,6 +136,31 @@ export const ResponseActions: React.FC<ResponseActionsProps> = ({
               <>
                 <Copy className="w-3.5 h-3.5" />
                 <span className="font-mono text-[11px]">{isEmailDraft ? 'Copy Full Draft' : 'Copy Guidance'}</span>
+              </>
+            )}
+          </button>
+
+          {/* Save as Deliverable */}
+          <button
+            type="button"
+            onClick={handleSaveDeliverable}
+            disabled={isSaving}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+              savedDeliverable
+                ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300'
+                : 'bg-purple-950/40 hover:bg-purple-900/50 border-purple-500/30 text-purple-200 hover:text-white'
+            }`}
+            title="Create official HR deliverable draft in HR Deliverables workspace"
+          >
+            {savedDeliverable ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="font-mono text-[11px] text-emerald-300">Saved!</span>
+              </>
+            ) : (
+              <>
+                <FileText className="w-3.5 h-3.5 text-purple-400" />
+                <span className="font-mono text-[11px]">{isSaving ? 'Saving...' : 'Save as Deliverable'}</span>
               </>
             )}
           </button>

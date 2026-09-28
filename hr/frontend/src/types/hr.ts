@@ -1,6 +1,17 @@
 export type Priority = 'high' | 'medium' | 'low';
 export type TicketStatus = 'open' | 'in_review' | 'resolved' | 'escalated';
-export type Category = 'payroll' | 'benefits' | 'leave' | 'documents' | 'compliance' | 'other';
+export type Category =
+  | 'payroll'
+  | 'benefits'
+  | 'leave'
+  | 'documents'
+  | 'compliance'
+  | 'employee_relations'
+  | 'reimbursement'
+  | 'remote_work'
+  | 'recruitment'
+  | 'general_hr'
+  | 'other';
 
 export interface Employee {
   id: string;
@@ -42,6 +53,7 @@ export interface RequestItem {
     classification: string;
     autoRouted: boolean;
   };
+  triage?: TriageMetadata;
   description: string;
   resolutionNotes?: string;
   tags?: string[];
@@ -50,6 +62,34 @@ export interface RequestItem {
   statusUpper?: string;
   attachmentName?: string;
   subject?: string;
+  assignedTo?: string;
+  assignedToId?: string;
+  employeeId?: string;
+  categoryDisplay?: string;
+  department?: string;
+  lastUpdated?: string;
+}
+
+export type TriageSensitivity = 'NORMAL' | 'SENSITIVE' | 'HIGHLY_SENSITIVE' | 'NEEDS_REVIEW';
+export type TriagePriority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+export type TriageStatus = 'PENDING' | 'ANALYZING' | 'TRIAGED' | 'NEEDS_REVIEW' | 'FAILED';
+
+export interface TriageMetadata {
+  category: string;
+  categoryDisplay?: string;
+  priority: TriagePriority;
+  sensitivity: TriageSensitivity;
+  confidence: number;
+  relevantPolicy: string;
+  suggestedAction: string;
+  reason: string;
+  status: TriageStatus;
+  analyzedAt?: string;
+  humanCategory?: string;
+  humanPriority?: TriagePriority;
+  overrideNotes?: string;
+  overriddenBy?: string;
+  overriddenAt?: string;
 }
 
 export interface AITriageItem {
@@ -59,22 +99,51 @@ export interface AITriageItem {
   employeeName: string;
   predictedCategory: Category;
   confidenceScore: number;
-  urgencyScore: 'HIGH' | 'MEDIUM' | 'LOW';
+  urgencyScore: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  sensitivity?: TriageSensitivity;
+  relevantPolicy?: string;
   reasoning: string;
   suggestedAction: string;
-  status: 'AUTO_ROUTED' | 'NEEDS_VERIFICATION' | 'OVERRIDDEN';
+  status: 'AUTO_ROUTED' | 'NEEDS_VERIFICATION' | 'OVERRIDDEN' | 'PENDING' | 'ANALYZING';
   timestamp: string;
+  triage?: TriageMetadata;
 }
+
+export type DeliverableType =
+  | 'HR Communication'
+  | 'Case Summary'
+  | 'Policy Analysis'
+  | 'Compliance Checklist'
+  | 'Employee Notice'
+  | 'Investigation Summary'
+  | 'HR Report'
+  | 'Policy Comparison';
+
+export type DeliverableStatus =
+  | 'AI_GENERATED'
+  | 'NEEDS_REVIEW'
+  | 'EDITED'
+  | 'READY'
+  | 'SENT'
+  | 'ARCHIVED';
 
 export interface DeliverableItem {
   id: string;
   title: string;
-  type: 'compensation_letter' | 'verification_of_employment' | 'sabbatical_approval' | 'policy_acknowledgement';
-  employeeName: string;
-  department: string;
-  status: 'pending_approval' | 'approved' | 'dispatched';
-  generatedAt: string;
-  contentPreview: string;
+  type: DeliverableType;
+  status: DeliverableStatus;
+  requestId?: string;
+  employeeName?: string;
+  department?: string;
+  recipient?: string;
+  subject?: string;
+  content: string;
+  contentPreview?: string;
+  policySources?: Array<{ document: string; page?: number; excerpt?: string }>;
+  createdBy?: string;
+  createdAt: string;
+  updatedAt?: string;
+  generatedAt?: string;
   pdfUrl?: string;
   previewUrl?: string;
 }

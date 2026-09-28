@@ -142,10 +142,11 @@ function HROperationsPortal() {
   useEffect(() => {
     const unsubscribe = hrService.subscribe(async (event) => {
       try {
-        const [m, reqs, tQ, actLogs, cats, vel] = await Promise.all([
+        const [m, reqs, tQ, delivs, actLogs, cats, vel] = await Promise.all([
           hrService.getMetrics(),
           hrService.getRequests(),
           hrService.getTriageQueue(),
+          hrService.getDeliverables(),
           hrService.getActivities(),
           hrService.getCategoryVolumes(),
           hrService.getVelocity(activeVelocityRange)
@@ -157,6 +158,7 @@ function HROperationsPortal() {
           try { localStorage.setItem('hr_admin_requests', JSON.stringify(sanitized)); } catch {}
         }
         if (Array.isArray(tQ)) setTriageQueue(tQ);
+        if (Array.isArray(delivs)) setDeliverables(delivs);
         if (Array.isArray(actLogs)) setActivities(actLogs);
         if (Array.isArray(cats)) setCategories(cats);
         if (vel) setVelocity(vel);
@@ -248,12 +250,43 @@ function HROperationsPortal() {
     return newComment;
   };
 
-  // Approve deliverable
+  // Deliverable Handlers
   const handleApproveDeliverable = async (id: string) => {
     await hrService.approveDeliverable(id);
-    setDeliverables(prev => prev.map(d => d.id === id ? { ...d, status: 'approved' } : d));
+    setDeliverables(prev => prev.map(d => d.id === id ? { ...d, status: 'READY' } : d));
     const updatedActivities = await hrService.getActivities();
     setActivities(updatedActivities);
+  };
+
+  const handleUpdateDeliverable = async (id: string, updates: Partial<DeliverableItem>) => {
+    const updated = await hrService.updateDeliverable(id, updates);
+    if (updated) {
+      setDeliverables(prev => prev.map(d => d.id === id ? updated : d));
+    }
+    return updated;
+  };
+
+  const handleSendDeliverable = async (id: string) => {
+    const sent = await hrService.sendDeliverable(id);
+    if (sent) {
+      setDeliverables(prev => prev.map(d => d.id === id ? sent : d));
+      // Refresh requests and activities since sending deliverable adds ticket comments & timeline
+      const [updatedReqs, updatedActs] = await Promise.all([
+        hrService.getRequests(),
+        hrService.getActivities()
+      ]);
+      setRequests(updatedReqs.map(sanitizeRequestItem));
+      setActivities(updatedActs);
+    }
+    return sent;
+  };
+
+  const handleCreateDeliverable = async (deliv: Partial<DeliverableItem>) => {
+    const created = await hrService.createDeliverable(deliv);
+    if (created) {
+      setDeliverables(prev => [created, ...prev.filter(d => d.id !== created.id)]);
+    }
+    return created;
   };
 
   // Execute HR action
@@ -266,10 +299,27 @@ function HROperationsPortal() {
     setActivities(updatedActivities);
   };
 
-  // Override triage category
-  const handleOverrideTriage = async (id: string, category: Category) => {
-    await hrService.overrideTriage(id, category);
-    setTriageQueue(prev => prev.map(t => t.id === id ? { ...t, predictedCategory: category, status: 'OVERRIDDEN' } : t));
+  // AI Triage: Human Override
+  const handleOverrideTriage = async (
+    requestId: string,
+    humanPriority?: string,
+    humanCategory?: string,
+    notes?: string
+  ) => {
+    await hrService.overrideRequestTriage(requestId, humanPriority, humanCategory, notes);
+    const [updatedReqs, updatedQueue] = await Promise.all([
+      hrService.getRequests(),
+      hrService.getTriageQueue()
+    ]);
+    setRequests(updatedReqs.map(sanitizeRequestItem));
+    setTriageQueue(updatedQueue);
+  };
+
+  // AI Triage: Retry Analysis
+  const handleRetryTriage = async (requestId: string) => {
+    await hrService.retryRequestTriage(requestId);
+    const updatedReqs = await hrService.getRequests();
+    setRequests(updatedReqs.map(sanitizeRequestItem));
   };
 
   // Urgent items for Dashboard attention queue
@@ -365,8 +415,10 @@ function HROperationsPortal() {
 
             {activeTab === 'ai-triage' && (
               <AITriageView
-                triageQueue={triageQueue}
-                onOverride={handleOverrideTriage}
+                requests={requests}
+                onSelectRequest={(item) => setSelectedReviewItem(item)}
+                onOverrideTriage={handleOverrideTriage}
+                onRetryTriage={handleRetryTriage}
               />
             )}
 
@@ -379,7 +431,15 @@ function HROperationsPortal() {
             {activeTab === 'deliverables' && (
               <DeliverablesView
                 deliverables={deliverables}
+                requests={requests}
                 onApprove={handleApproveDeliverable}
+                onUpdateDeliverable={handleUpdateDeliverable}
+                onSendDeliverable={handleSendDeliverable}
+                onCreateDeliverable={handleCreateDeliverable}
+                onNavigateToRequest={(reqId) => {
+                  const target = requests.find(r => r.id === reqId || r.id?.toLowerCase() === reqId.toLowerCase());
+                  if (target) setSelectedReviewItem(target);
+                }}
               />
             )}
 

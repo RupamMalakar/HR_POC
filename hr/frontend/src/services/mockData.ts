@@ -73,44 +73,56 @@ export const initialTriageQueue: AITriageItem[] = [];
 
 export const initialDeliverables: DeliverableItem[] = [
   {
-    id: "DEL-1024",
-    title: "Alex Johnson - Q3 Retention Bonus Reconciliation Addendum",
-    type: "compensation_letter",
+    id: "DELIV-101",
+    title: "Medical Leave Documentation Request & Entitlement Notice",
+    type: "HR Communication",
+    employeeName: "Maya Patel",
+    department: "Design & Product",
+    recipient: "maya.patel@enterprise.internal",
+    subject: "Regarding Medical Leave & Dependent Documentation (REQ-1042)",
+    status: "NEEDS_REVIEW",
+    createdAt: new Date().toISOString(),
+    content: "Dear Maya,\n\nThank you for reaching out regarding your medical leave request and dependent documentation. Under Article 6 of the Corporate Health & Leave Policy, medical absences exceeding three consecutive days require an authorized medical practitioner certificate.\n\nPlease upload the official certificate through the Employee Self-Service Portal within 5 business days so we can finalize your coverage.\n\nWarm regards,\nSarah Jenkins\nHR Operations Team",
+    contentPreview: "Dear Maya, Thank you for reaching out regarding your medical leave request and dependent documentation..."
+  },
+  {
+    id: "DELIV-102",
+    title: "Remote Work Abroad & Cross-Border Compliance Analysis",
+    type: "Policy Analysis",
     employeeName: "Alex Johnson",
-    department: "Platform Engineering",
-    status: "pending_approval",
-    generatedAt: "Today, 08:30 AM",
-    contentPreview: "Official confirmation of adjusted retention milestone payout of $5,000 to be reflected on November 1st payroll cycle with retroactive tax adjustment."
+    department: "Engineering",
+    recipient: "alex.johnson@enterprise.internal",
+    subject: "Compliance Assessment: Overseas Remote Work Schedule",
+    status: "READY",
+    createdAt: new Date().toISOString(),
+    content: "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\n**Case Overview:** Employee Alex Johnson requested 3 weeks of remote work from Spain during winter break.\n\n**Policy Evaluation:**\n- **Handbook Section 3.2 (International Remote Cadence):** Permits up to 20 business days per calendar year in eligible jurisdictions.\n- **Tax & Legal Risk:** Spain has a 30-day bilateral treaty grace period; 15 working days poses zero permanent establishment (PE) risk.\n- **Infrastructure Security:** Mandates hardware token VPN authentication.\n\n**Recommendation:** Approve remote work agreement with standard security stipulations.",
+    contentPreview: "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\nCase Overview: Employee Alex Johnson requested 3 weeks of remote work from Spain..."
   },
   {
-    id: "DEL-1021",
-    title: "Priya Sharma - Cross-Border Dependent Health Rider Notice",
-    type: "policy_acknowledgement",
-    employeeName: "Priya Sharma",
-    department: "Product Design",
-    status: "pending_approval",
-    generatedAt: "Today, 07:45 AM",
-    contentPreview: "Underwriter acceptance document specifying supplemental dependent healthcare coverage terms across UK & EU locations effective Dec 1st."
+    id: "DELIV-103",
+    title: "Salary Revision Verification Letter for Home Loan",
+    type: "Employee Notice",
+    employeeName: "Rupam Sharma",
+    department: "Product Engineering",
+    recipient: "rupam.sharma@enterprise.org",
+    subject: "Official Employment & Compensation Verification Letter (REQ-1029)",
+    status: "SENT",
+    createdAt: new Date().toISOString(),
+    content: "To Whom It May Concern,\n\nThis letter certifies that Rupam Sharma is employed on a permanent, full-time basis as Lead Full-Stack Engineer at Enterprise Technologies. Current base compensation and active standing have been verified by HR Operations.\n\nSincerely,\nSarah Jenkins\nHR Operations Lead",
+    contentPreview: "To Whom It May Concern, This letter certifies that Rupam Sharma is employed on a permanent, full-time basis..."
   },
   {
-    id: "DEL-1018",
-    title: "Daniel Thomas - Sabbatical Carryover Exemption Letter",
-    type: "sabbatical_approval",
-    employeeName: "Daniel Thomas",
-    department: "Data Infrastructure",
-    status: "approved",
-    generatedAt: "Today, 05:20 AM",
-    contentPreview: "Formal notice approving a 6-month extension to utilize 12 accrued sabbatical days through June 30, 2027 due to production infrastructure release."
-  },
-  {
-    id: "DEL-1015",
-    title: "Marcus Vance - Standard Verification of Employment",
-    type: "verification_of_employment",
-    employeeName: "Marcus Vance",
-    department: "Legal & Compliance",
-    status: "dispatched",
-    generatedAt: "Today, 01:12 AM",
-    contentPreview: "Encrypted verifiable digital credential confirming current employment status, job title, and tenure sent directly to Chase Mortgage Underwriting."
+    id: "DELIV-104",
+    title: "Overtime Allocation & Workload Disparity Investigation Summary",
+    type: "Case Summary",
+    employeeName: "David Chen",
+    department: "Finance & Operations",
+    recipient: "david.chen@enterprise.internal",
+    subject: "Internal HR Case Summary: Workload Disparity Grievance",
+    status: "NEEDS_REVIEW",
+    createdAt: new Date().toISOString(),
+    content: "### Confidential Investigation Summary: REQ-1014\n\n**Grievance:** Employee reported unequal overtime allocation during fiscal quarter-end close.\n\n**Findings:**\n1. Overtime records across the financial analysis team for Q3 show a 28% variance between team members.\n2. Workload scheduling was managed ad-hoc without rotation logs.\n\n**Proposed Remediation:**\n- Establish formalized rotation roster for month-end close.\n- HR Specialist Marcus Vance to facilitate a 1-on-1 alignment session.",
+    contentPreview: "### Confidential Investigation Summary: REQ-1014\n\nGrievance: Employee reported unequal overtime allocation during fiscal quarter-end close..."
   }
 ];
 

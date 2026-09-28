@@ -18,6 +18,7 @@ const DB_PATH = path.join(DB_DIR, 'db.json');
 
 const PORT = 8000;
 
+
 // Connected SSE clients for real-time live push updates
 /** @type {Set<http.ServerResponse>} */
 const sseClients = new Set();
@@ -95,6 +96,206 @@ function normalizeStatus(st) {
   return { status: 'open', statusUpper: 'SUBMITTED' };
 }
 
+function generateTriageMetadata(reqItem) {
+  const title = String(reqItem?.title || reqItem?.subject || '');
+  const desc = String(reqItem?.description || '');
+  const text = `${title} ${desc}`.toLowerCase();
+
+  // 1. Sensitivity Detection
+  let sensitivity = 'NORMAL';
+  let isHighlySensitive = false;
+  if (
+    text.includes('harass') || text.includes('discriminat') || text.includes('sexual') ||
+    text.includes('retaliat') || text.includes('misconduct') || text.includes('hostile') ||
+    text.includes('investigat') || text.includes('legal') || text.includes('terminat') ||
+    text.includes('grievance') || text.includes('complaint against') || text.includes('unfair treatment')
+  ) {
+    sensitivity = 'HIGHLY_SENSITIVE';
+    isHighlySensitive = true;
+  } else if (
+    text.includes('medical') || text.includes('doctor') || text.includes('hospital') ||
+    text.includes('disability') || text.includes('fmla') || text.includes('mental health') ||
+    text.includes('dispute') || text.includes('salary issue') || text.includes('confidential') ||
+    text.includes('disparity') || text.includes('audit')
+  ) {
+    sensitivity = 'SENSITIVE';
+  }
+
+  // 2. Category Normalization & Practical Categories
+  let category = 'general_hr';
+  let categoryDisplay = 'General HR';
+  let relevantPolicy = 'Corporate Employee Handbook & Code of Conduct';
+  let suggestedAction = 'Review request and route to appropriate People Partner';
+  let confidence = 0.94;
+  let reason = 'Standard inquiry cross-referenced with enterprise HR knowledge base.';
+
+  if (text.includes('harass') || text.includes('hostile') || text.includes('complaint') || text.includes('grievance') || text.includes('conduct') || text.includes('dispute') || text.includes('disparity')) {
+    category = 'employee_relations';
+    categoryDisplay = 'Employee Relations';
+    relevantPolicy = 'Anti-Harassment & Workplace Respect Policy (Sec. 2.1)';
+    suggestedAction = 'Human Review Required — Initiate Confidential People Partner Triage';
+    confidence = 0.97;
+    reason = 'Lexical matches for workplace conduct, workload disparity, and grievance resolution guidelines.';
+  } else if (text.includes('leave') || text.includes('vacation') || text.includes('absence') || text.includes('sick') || text.includes('pto') || text.includes('time off') || text.includes('sabbatical') || text.includes('paternity') || text.includes('maternity')) {
+    category = 'leave';
+    categoryDisplay = 'Leave & Attendance';
+    relevantPolicy = text.includes('sick') || text.includes('medical')
+      ? 'Medical & Statutory Sick Leave Policy (Handbook Art. 6)'
+      : text.includes('paternity') || text.includes('maternity') || text.includes('parental')
+        ? 'Global Parental & Caregiver Leave Guidelines'
+        : 'Annual Paid Vacation & Earned Leave Policy';
+    suggestedAction = text.includes('medical') || text.includes('sick')
+      ? 'Verify Supporting Medical Documentation & Tenure Entitlement'
+      : 'Review Calendar Overlap & Route for Supervisor Endorsement';
+    confidence = 0.96;
+    reason = 'Absence patterns matched against statutory eligibility and employee leave balance.';
+  } else if (text.includes('pay') || text.includes('salary') || text.includes('bonus') || text.includes('tax') || text.includes('withholding') || text.includes('compensation') || text.includes('deduction')) {
+    category = 'payroll';
+    categoryDisplay = 'Payroll';
+    relevantPolicy = 'Compensation, Withholding & Performance Incentive Framework';
+    suggestedAction = 'Audit Payroll Ledger & Verify Net Disbursal Reconciliation';
+    confidence = 0.98;
+    reason = 'High density of financial compensation metrics and tax withholding references.';
+  } else if (text.includes('insurance') || text.includes('health') || text.includes('dental') || text.includes('benefits') || text.includes('dependent') || text.includes('claim') || text.includes('tpa') || text.includes('mediassist')) {
+    category = 'benefits';
+    categoryDisplay = 'Benefits';
+    relevantPolicy = 'Group Medical & Dependent Healthcare Insurance Policy';
+    suggestedAction = 'Dispatch Enrollment Guide & Verify Dependent Eligibility Proof';
+    confidence = 0.95;
+    reason = 'Matched healthcare benefit schedule and dependent enrollment criteria.';
+  } else if (text.includes('remote') || text.includes('wfh') || text.includes('work from home') || text.includes('hybrid') || text.includes('work abroad') || text.includes('travel')) {
+    category = 'remote_work';
+    categoryDisplay = 'Remote Work';
+    relevantPolicy = 'Global Hybrid & International Remote Working Policy (Sec. 3.2)';
+    suggestedAction = 'Review Cross-Border Tax Risk & Team Hybrid Operating Cadence';
+    confidence = 0.96;
+    reason = 'Identified remote work location variance and hybrid operating requirements.';
+  } else if (text.includes('letter') || text.includes('certificate') || text.includes('verification') || text.includes('visa') || text.includes('tenure') || text.includes('experience') || text.includes('documents')) {
+    category = 'documents';
+    categoryDisplay = 'HR Documentation';
+    relevantPolicy = 'Corporate Document Certification & Employment Verification Standards';
+    suggestedAction = 'Generate Official Employment Verification Deliverable';
+    confidence = 0.97;
+    reason = 'Direct match for employment verification letter templates and background verification.';
+  } else if (text.includes('reimburse') || text.includes('expense') || text.includes('receipt') || text.includes('allowance')) {
+    category = 'reimbursement';
+    categoryDisplay = 'Reimbursement';
+    relevantPolicy = 'Business Travel & Corporate Expense Policy';
+    suggestedAction = 'Validate Supporting Invoices Against Category Spend Thresholds';
+    confidence = 0.94;
+    reason = 'Expense voucher submission identified for finance audit.';
+  } else if (text.includes('compliance') || text.includes('nda') || text.includes('policy') || text.includes('conflict of interest')) {
+    category = 'compliance';
+    categoryDisplay = 'Compliance';
+    relevantPolicy = 'Code of Business Conduct & Regulatory Compliance Standards';
+    suggestedAction = 'Execute Policy Compliance Review Checklist';
+    confidence = 0.95;
+    reason = 'Regulatory compliance term density triggers corporate oversight.';
+  }
+
+  // 3. Priority Determination (AI Suggested)
+  let priority = 'MEDIUM';
+  if (isHighlySensitive || text.includes('urgent') || text.includes('critical') || text.includes('emergency')) {
+    priority = 'CRITICAL';
+  } else if (sensitivity === 'SENSITIVE' || reqItem?.priority === 'high' || reqItem?.priority === 'Urgent') {
+    priority = 'HIGH';
+  } else if (reqItem?.priority === 'low' || text.includes('question') || text.includes('general info')) {
+    priority = 'LOW';
+  }
+
+  const triageStatus = sensitivity === 'HIGHLY_SENSITIVE' || sensitivity === 'SENSITIVE' ? 'NEEDS_REVIEW' : 'TRIAGED';
+
+  return {
+    category,
+    categoryDisplay,
+    priority,
+    sensitivity,
+    confidence,
+    relevantPolicy,
+    suggestedAction,
+    reason,
+    status: triageStatus,
+    analyzedAt: new Date().toISOString()
+  };
+}
+
+const defaultDeliverables = [
+  {
+    id: "DELIV-101",
+    title: "Medical Leave Documentation Request & Entitlement Notice",
+    type: "HR Communication",
+    status: "NEEDS_REVIEW",
+    requestId: "REQ-1042",
+    employeeName: "Maya Patel",
+    department: "Design & Product",
+    recipient: "maya.patel@enterprise.internal",
+    subject: "Regarding Medical Leave & Dependent Documentation (REQ-1042)",
+    content: "Dear Maya,\n\nThank you for reaching out regarding your medical leave request and dependent documentation. Under Article 6 of the Corporate Health & Leave Policy, medical absences exceeding three consecutive days require an authorized medical practitioner certificate.\n\nPlease upload the official certificate through the Employee Self-Service Portal within 5 business days so we can finalize your coverage.\n\nWarm regards,\nSarah Jenkins\nHR Operations Team",
+    contentPreview: "Dear Maya, Thank you for reaching out regarding your medical leave request and dependent documentation...",
+    policySources: [
+      { document: "employee_handbook.pdf", page: 14, excerpt: "Medical absence exceeding 3 days requires a certified practitioner notice." }
+    ],
+    createdBy: "Sarah Jenkins (HR Ops)",
+    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000 * 2).toISOString()
+  },
+  {
+    id: "DELIV-102",
+    title: "Remote Work Abroad & Cross-Border Compliance Analysis",
+    type: "Policy Analysis",
+    status: "READY",
+    requestId: "REQ-1037",
+    employeeName: "Alex Johnson",
+    department: "Engineering",
+    recipient: "alex.johnson@enterprise.internal",
+    subject: "Compliance Assessment: Overseas Remote Work Schedule",
+    content: "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\n**Case Overview:** Employee Alex Johnson requested 3 weeks of remote work from Spain during winter break.\n\n**Policy Evaluation:**\n- **Handbook Section 3.2 (International Remote Cadence):** Permits up to 20 business days per calendar year in eligible jurisdictions.\n- **Tax & Legal Risk:** Spain has a 30-day bilateral treaty grace period; 15 working days poses zero permanent establishment (PE) risk.\n- **Infrastructure Security:** Mandates hardware token VPN authentication.\n\n**Recommendation:** Approve remote work agreement with standard security stipulations.",
+    contentPreview: "### Policy Analysis: Remote Working Overseas (REQ-1037)\n\nCase Overview: Employee Alex Johnson requested 3 weeks of remote work from Spain...",
+    policySources: [
+      { document: "employee_handbook.pdf", page: 22, excerpt: "Employees may work remotely abroad for up to 20 days annually upon manager and HR compliance sign-off." }
+    ],
+    createdBy: "Sarah Jenkins (HR Ops)",
+    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000 * 4).toISOString()
+  },
+  {
+    id: "DELIV-103",
+    title: "Salary Revision Verification Letter for Home Loan",
+    type: "Employee Notice",
+    status: "SENT",
+    requestId: "REQ-1029",
+    employeeName: "Rupam Sharma",
+    department: "Product Engineering",
+    recipient: "rupam.sharma@enterprise.org",
+    subject: "Official Employment & Compensation Verification Letter (REQ-1029)",
+    content: "To Whom It May Concern,\n\nThis letter certifies that Rupam Sharma is employed on a permanent, full-time basis as Lead Full-Stack Engineer at Enterprise Technologies. Current base compensation and active standing have been verified by HR Operations.\n\nSincerely,\nSarah Jenkins\nHR Operations Lead",
+    contentPreview: "To Whom It May Concern, This letter certifies that Rupam Sharma is employed on a permanent, full-time basis...",
+    policySources: [],
+    createdBy: "Sarah Jenkins (HR Ops)",
+    createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000 * 20).toISOString()
+  },
+  {
+    id: "DELIV-104",
+    title: "Overtime Allocation & Workload Disparity Investigation Summary",
+    type: "Case Summary",
+    status: "NEEDS_REVIEW",
+    requestId: "REQ-1014",
+    employeeName: "David Chen",
+    department: "Finance & Operations",
+    recipient: "david.chen@enterprise.internal",
+    subject: "Internal HR Case Summary: Workload Disparity Grievance",
+    content: "### Confidential Investigation Summary: REQ-1014\n\n**Grievance:** Employee reported unequal overtime allocation during fiscal quarter-end close.\n\n**Findings:**\n1. Overtime records across the financial analysis team for Q3 show a 28% variance between team members.\n2. Workload scheduling was managed ad-hoc without rotation logs.\n\n**Proposed Remediation:**\n- Establish formalized rotation roster for month-end close.\n- HR Specialist Marcus Vance to facilitate a 1-on-1 alignment session.",
+    contentPreview: "### Confidential Investigation Summary: REQ-1014\n\nGrievance: Employee reported unequal overtime allocation during fiscal quarter-end close...",
+    policySources: [
+      { document: "employee_handbook.pdf", page: 8, excerpt: "Overtime and on-call schedules must be distributed equitably across qualified team members." }
+    ],
+    createdBy: "Marcus Vance (HR Ops)",
+    createdAt: new Date(Date.now() - 3600000 * 30).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000 * 28).toISOString()
+  }
+];
+
 function recalculateCategoryVolumes() {
   const counts = { payroll: 0, benefits: 0, leave: 0, documents: 0, compliance: 0, other: 0 };
   for (const r of state.requests) {
@@ -145,7 +346,7 @@ function recalculateVelocity() {
       try {
         const d = new Date(r.resolvedAt);
         if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
-      } catch {}
+      } catch { }
     }
     if (Array.isArray(r.timeline)) {
       for (const ev of r.timeline) {
@@ -156,7 +357,7 @@ function recalculateVelocity() {
             try {
               const dt = new Date(ev.date);
               if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
-            } catch {}
+            } catch { }
           }
         }
       }
@@ -165,13 +366,13 @@ function recalculateVelocity() {
       try {
         const dt = new Date(r.lastUpdated);
         if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
-      } catch {}
+      } catch { }
     }
     if (r.createdAt) {
       try {
         const dt = new Date(r.createdAt);
         if (!isNaN(dt.getTime())) return dt.toISOString().split('T')[0];
-      } catch {}
+      } catch { }
     }
     return null;
   };
@@ -230,7 +431,7 @@ function recalculateVelocity() {
           }
         }
       }
-    } catch {}
+    } catch { }
   }
 
   state.velocity['30D'] = {
@@ -269,7 +470,7 @@ function recalculateVelocity() {
           resolved90[idx]++;
         }
       }
-    } catch {}
+    } catch { }
   }
 
   state.velocity['90D'] = {
@@ -327,7 +528,7 @@ const defaultState = {
   },
   requests: [],
   triageQueue: [],
-  deliverables: [],
+  deliverables: JSON.parse(JSON.stringify(defaultDeliverables)),
   hrActions: [],
   insights: [],
   categoryVolumes: [
@@ -464,9 +665,25 @@ function loadState() {
       const loaded = JSON.parse(raw);
       if (loaded && typeof loaded === 'object') {
         console.log(`[HR Database] Loaded ${loaded.requests?.length || 0} persistent requests from ${DB_PATH}`);
+
+        // Ensure deliverables exist and are populated
+        if (!Array.isArray(loaded.deliverables) || loaded.deliverables.length === 0) {
+          loaded.deliverables = JSON.parse(JSON.stringify(defaultDeliverables));
+        }
+
+        // Ensure all requests have triage metadata
+        if (Array.isArray(loaded.requests)) {
+          for (const req of loaded.requests) {
+            if (!req.triage) {
+              req.triage = generateTriageMetadata(req);
+            }
+          }
+        }
+
         return {
           ...defaultState,
           ...loaded,
+          deliverables: loaded.deliverables,
           metrics: { ...defaultState.metrics, ...(loaded.metrics || {}) },
           velocity: { ...defaultState.velocity, ...(loaded.velocity || {}) },
           users: { ...defaultState.users, ...(loaded.users || {}) }
@@ -586,7 +803,7 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     let json = {};
     if (body) {
-      try { json = JSON.parse(body); } catch {}
+      try { json = JSON.parse(body); } catch { }
     }
 
     const sendJson = (status, data) => {
@@ -831,6 +1048,12 @@ const server = http.createServer((req, res) => {
           classification: `${normCat.toUpperCase()} Inquiry`,
           autoRouted: true
         },
+        triage: generateTriageMetadata({
+          title: json.title || json.subject || 'New HR Request',
+          description: json.description || '',
+          category: normCat,
+          priority: normPrio
+        }),
         description: json.description || '',
         tags: [normCat],
         timeline: Array.isArray(json.timeline) && json.timeline.length ? json.timeline : [
@@ -854,12 +1077,12 @@ const server = http.createServer((req, res) => {
         requestId: item.id,
         title: item.title,
         employeeName: item.employee.name,
-        predictedCategory: normCat,
-        confidenceScore: 0.96,
-        urgencyScore: normPrio === 'high' ? 'HIGH' : normPrio === 'low' ? 'LOW' : 'MEDIUM',
-        reasoning: `Matched enterprise knowledge base vocabulary and policy grounding for ${item.categoryDisplay}.`,
-        suggestedAction: `Route to ${item.categoryDisplay} specialist queue.`,
-        status: 'AUTO_ROUTED',
+        predictedCategory: item.triage?.category || normCat,
+        confidenceScore: item.triage?.confidence || 0.96,
+        urgencyScore: item.triage?.priority || (normPrio === 'high' ? 'HIGH' : normPrio === 'low' ? 'LOW' : 'MEDIUM'),
+        reasoning: item.triage?.reason || `Matched enterprise knowledge base vocabulary and policy grounding for ${item.categoryDisplay}.`,
+        suggestedAction: item.triage?.suggestedAction || `Route to ${item.categoryDisplay} specialist queue.`,
+        status: item.triage?.status || 'TRIAGED',
         timestamp: 'Just now'
       };
       state.triageQueue.unshift(triageItem);
@@ -914,15 +1137,15 @@ const server = http.createServer((req, res) => {
     // Requests: Update status (HR Specialist resolves/approves ticket)
     if (path.startsWith('/api/v1/requests/') && req.method === 'PATCH') {
       const targetId = decodeURIComponent(path.split('/')[4] || '');
-      const reqIndex = state.requests.findIndex(r => 
-        r.id === targetId || 
+      const reqIndex = state.requests.findIndex(r =>
+        r.id === targetId ||
         (r.id && targetId && r.id.toLowerCase() === targetId.toLowerCase())
       );
 
       if (reqIndex >= 0) {
         const current = state.requests[reqIndex];
         const normStat = normalizeStatus(json.status || json.statusUpper || current.status);
-        
+
         // Add timeline event
         const newTimeline = [...(current.timeline || [])];
         if (normStat.status === 'resolved' && current.status !== 'resolved') {
@@ -1029,12 +1252,98 @@ const server = http.createServer((req, res) => {
       return sendJson(404, { error: 'Request not found' });
     }
 
+    // Triage: Get enriched requests with triage intelligence
+    if (path === '/api/v1/triage' && req.method === 'GET') {
+      const triagedRequests = state.requests.map(r => {
+        if (!r.triage) {
+          r.triage = generateTriageMetadata(r);
+        }
+        return r;
+      });
+      return sendJson(200, triagedRequests);
+    }
+
     // Triage Queue (Support both /api/v1/triage/queue and /api/v1/ai/triage/queue)
     if ((path === '/api/v1/triage/queue' || path === '/api/v1/ai/triage/queue') && req.method === 'GET') {
       return sendJson(200, state.triageQueue);
     }
 
-    // Triage Override
+    // Triage: Get single request triage metadata
+    if (path.startsWith('/api/v1/triage/') && !path.endsWith('/retry') && !path.endsWith('/queue') && !path.endsWith('/override') && req.method === 'GET') {
+      const reqId = decodeURIComponent(path.split('/')[4] || '');
+      const found = state.requests.find(r => r.id === reqId || (r.id && r.id.toLowerCase() === reqId.toLowerCase()));
+      if (found) {
+        if (!found.triage) found.triage = generateTriageMetadata(found);
+        return sendJson(200, found.triage);
+      }
+      return sendJson(404, { error: 'Request not found' });
+    }
+
+    // Triage: Human Override (Stores human override separately from AI output to preserve AI transparency)
+    if (path.startsWith('/api/v1/triage/') && !path.endsWith('/retry') && !path.endsWith('/override') && req.method === 'PATCH') {
+      const reqId = decodeURIComponent(path.split('/')[4] || '');
+      const reqItem = state.requests.find(r => r.id === reqId || (r.id && r.id.toLowerCase() === reqId.toLowerCase()));
+      if (!reqItem) return sendJson(404, { error: 'Request not found' });
+
+      if (!reqItem.triage) reqItem.triage = generateTriageMetadata(reqItem);
+
+      const { humanPriority, humanCategory, overrideNotes, status } = json;
+
+      if (humanPriority !== undefined) {
+        reqItem.triage.humanPriority = humanPriority;
+        reqItem.priority = String(humanPriority).toLowerCase();
+        reqItem.priorityDisplay = getPriorityDisplay(reqItem.priority);
+      }
+      if (humanCategory !== undefined) {
+        reqItem.triage.humanCategory = humanCategory;
+        reqItem.category = normalizeCategory(humanCategory);
+        reqItem.categoryDisplay = getCategoryDisplay(reqItem.category);
+      }
+      if (overrideNotes !== undefined) {
+        reqItem.triage.overrideNotes = overrideNotes;
+      }
+      if (status !== undefined) {
+        reqItem.triage.status = status;
+      } else {
+        reqItem.triage.status = 'TRIAGED';
+      }
+      reqItem.triage.overriddenAt = new Date().toISOString();
+      reqItem.lastUpdated = 'Just now';
+
+      // Synchronize in state.triageQueue
+      const tItem = state.triageQueue.find(t => t.requestId === reqItem.id);
+      if (tItem) {
+        if (humanCategory) tItem.predictedCategory = normalizeCategory(humanCategory);
+        if (humanPriority) tItem.urgencyScore = humanPriority;
+        tItem.status = 'OVERRIDDEN';
+      }
+
+      recalculateMetrics();
+      recalculateCategoryVolumes();
+      persistState();
+
+      broadcastEvent('REQUEST_UPDATED', { request: reqItem, metrics: state.metrics });
+      broadcastEvent('TRIAGE_UPDATED', { requestId: reqItem.id, triage: reqItem.triage });
+      return sendJson(200, reqItem.triage);
+    }
+
+    // Triage: Retry analysis
+    if (path.startsWith('/api/v1/triage/') && path.endsWith('/retry') && req.method === 'POST') {
+      const reqId = decodeURIComponent(path.split('/')[4] || '');
+      const reqItem = state.requests.find(r => r.id === reqId || (r.id && r.id.toLowerCase() === reqId.toLowerCase()));
+      if (!reqItem) return sendJson(404, { error: 'Request not found' });
+
+      reqItem.triage = generateTriageMetadata(reqItem);
+      reqItem.triage.status = 'TRIAGED';
+      reqItem.lastUpdated = 'Just now';
+
+      persistState();
+      broadcastEvent('REQUEST_UPDATED', { request: reqItem });
+      broadcastEvent('TRIAGE_UPDATED', { requestId: reqItem.id, triage: reqItem.triage });
+      return sendJson(200, reqItem.triage);
+    }
+
+    // Legacy Triage Override (/api/v1/triage/override)
     if ((path === '/api/v1/triage/override' || path === '/api/v1/ai/triage/override') && req.method === 'POST') {
       const { triageId, newCategory } = json;
       const item = state.triageQueue.find(t => t.id === triageId);
@@ -1047,18 +1356,127 @@ const server = http.createServer((req, res) => {
       return sendJson(404, { error: 'Triage item not found' });
     }
 
-    // Deliverables
+    // Deliverables: List with optional filter query
     if (path === '/api/v1/deliverables' && req.method === 'GET') {
-      return sendJson(200, state.deliverables);
+      let filtered = [...(state.deliverables || [])];
+      if (parsed.query.status && parsed.query.status !== 'all') {
+        filtered = filtered.filter(d => d.status.toLowerCase() === String(parsed.query.status).toLowerCase());
+      }
+      if (parsed.query.requestId) {
+        filtered = filtered.filter(d => d.requestId === parsed.query.requestId);
+      }
+      return sendJson(200, filtered);
     }
 
-    // Deliverables: Approve
+    // Deliverables: Get Single
+    if (path.startsWith('/api/v1/deliverables/') && !path.endsWith('/approve') && !path.endsWith('/send') && req.method === 'GET') {
+      const delivId = decodeURIComponent(path.split('/')[4] || '');
+      const item = state.deliverables.find(d => d.id === delivId);
+      if (item) return sendJson(200, item);
+      return sendJson(404, { error: 'Deliverable not found' });
+    }
+
+    // Deliverables: Create (from Requests, Copilot, or Triage)
+    if (path === '/api/v1/deliverables' && req.method === 'POST') {
+      const newDeliv = {
+        id: json.id || `DELIV-${Date.now()}`,
+        title: json.title || 'Official HR Deliverable',
+        type: json.type || 'HR Communication',
+        status: json.status || 'NEEDS_REVIEW',
+        requestId: json.requestId || undefined,
+        employeeName: json.employeeName || 'Employee',
+        department: json.department || 'Operations',
+        recipient: json.recipient || '',
+        subject: json.subject || json.title || 'Official HR Communication',
+        content: json.content || '',
+        contentPreview: (json.content || '').substring(0, 140) + '...',
+        policySources: Array.isArray(json.policySources) ? json.policySources : [],
+        createdBy: json.createdBy || 'Sarah Jenkins (HR Ops)',
+        createdAt: json.createdAt || new Date().toISOString(),
+        updatedAt: json.updatedAt || new Date().toISOString()
+      };
+
+      state.deliverables.unshift(newDeliv);
+      persistState();
+
+      broadcastEvent('DELIVERABLE_CREATED', { deliverable: newDeliv });
+      return sendJson(201, newDeliv);
+    }
+
+    // Deliverables: Patch/Edit
+    if (path.startsWith('/api/v1/deliverables/') && !path.endsWith('/approve') && !path.endsWith('/send') && req.method === 'PATCH') {
+      const delivId = decodeURIComponent(path.split('/')[4] || '');
+      const idx = state.deliverables.findIndex(d => d.id === delivId);
+      if (idx >= 0) {
+        const current = state.deliverables[idx];
+        const updated = {
+          ...current,
+          ...json,
+          contentPreview: json.content ? json.content.substring(0, 140) + '...' : current.contentPreview,
+          updatedAt: new Date().toISOString()
+        };
+        state.deliverables[idx] = updated;
+        persistState();
+
+        broadcastEvent('DELIVERABLE_UPDATED', { deliverable: updated });
+        return sendJson(200, updated);
+      }
+      return sendJson(404, { error: 'Deliverable not found' });
+    }
+
+    // Deliverables: Send/Dispatch (Appends to linked ticket and updates status to SENT)
+    if (path.startsWith('/api/v1/deliverables/') && path.endsWith('/send') && req.method === 'POST') {
+      const delivId = decodeURIComponent(path.split('/')[4] || '');
+      const idx = state.deliverables.findIndex(d => d.id === delivId);
+      if (idx >= 0) {
+        const deliv = state.deliverables[idx];
+        deliv.status = 'SENT';
+        deliv.updatedAt = new Date().toISOString();
+
+        // If deliverable is linked to a request ticket, append official notification & comment
+        if (deliv.requestId) {
+          const reqItem = state.requests.find(r => r.id === deliv.requestId);
+          if (reqItem) {
+            reqItem.timeline = reqItem.timeline || [];
+            reqItem.timeline.push({
+              date: new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }),
+              title: `Deliverable Dispatched: ${deliv.type}`,
+              desc: `Sent "${deliv.title}" to ${deliv.recipient || reqItem.employee?.name}`,
+              actor: 'HR Operations'
+            });
+
+            reqItem.comments = reqItem.comments || [];
+            reqItem.comments.push({
+              id: `c-${Date.now()}`,
+              author: 'HR Operations',
+              authorId: 'HR001',
+              avatar: state.users.HR001?.avatar,
+              text: `[Official HR Deliverable Sent]\n**Subject:** ${deliv.subject || deliv.title}\n\n${deliv.content}`,
+              time: 'Just now',
+              isHr: true
+            });
+
+            reqItem.lastUpdated = 'Just now';
+            broadcastEvent('REQUEST_UPDATED', { request: reqItem });
+          }
+        }
+
+        persistState();
+        broadcastEvent('DELIVERABLE_UPDATED', { deliverable: deliv });
+        return sendJson(200, deliv);
+      }
+      return sendJson(404, { error: 'Deliverable not found' });
+    }
+
+    // Deliverables: Approve (Legacy route)
     if (path.startsWith('/api/v1/deliverables/') && path.endsWith('/approve') && req.method === 'POST') {
       const delivId = decodeURIComponent(path.split('/')[4] || '');
       const item = state.deliverables.find(d => d.id === delivId);
       if (item) {
-        item.status = 'approved';
+        item.status = 'READY';
+        item.updatedAt = new Date().toISOString();
         persistState();
+        broadcastEvent('DELIVERABLE_UPDATED', { deliverable: item });
         return sendJson(200, item);
       }
       return sendJson(404, { error: 'Deliverable not found' });
