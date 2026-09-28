@@ -828,3 +828,81 @@ input[type="text"][placeholder*="search" i]:focus {
   outline: none !important;
 }
 
+/* =========================================================
+   Animated Auth & Enterprise UI Keyframes
+   ========================================================= */
+@keyframes floatOrb1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, 20px, 0) scale(1.06);
+  }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-20px, -24px, 0) scale(1.05);
+  }
+}
+
+.animate-orb-1 {
+  animation: floatOrb1 12s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-orb-2 {
+  animation: floatOrb2 16s ease-in-out infinite;
+  will-change: transform;
+}
+
+.auth-card-glow {
+  box-shadow: 0 24px 70px -15px rgba(0, 0, 0, 0.8),
+              0 0 50px -10px rgba(0, 240, 255, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.bg-cyber-grid {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+.bg-shimmer-btn {
+  background-size: 200% auto;
+  transition: background-position 0.4s ease, transform 0.15s ease, box-shadow 0.25s ease;
+}
+
+.bg-shimmer-btn:hover {
+  background-position: right center;
+}
+
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar-sweep {
+  animation: radarSweep 12s linear infinite;
+  transform-origin: center center;
+}
+
+.card-interactive-glow {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.card-interactive-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(0, 240, 255, 0.12), 0 0 0 1px rgba(0, 240, 255, 0.3);
+}
+
+
+
