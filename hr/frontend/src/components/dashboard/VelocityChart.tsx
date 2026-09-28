@@ -16,11 +16,11 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
 
   // SVG coordinate calculations
   const width = 640;
-  const height = 220;
+  const height = 230;
   const paddingLeft = 46;
-  const paddingRight = 24;
-  const paddingTop = 28;
-  const paddingBottom = 28;
+  const paddingRight = 32;
+  const paddingTop = 26;
+  const baselineY = 186;
 
   const safeIncoming = Array.isArray(velocity?.incoming) && velocity.incoming.length > 0 
     ? velocity.incoming 
@@ -35,11 +35,9 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
   // Dynamic vertical scaling: adapt directly to real operational data peaks
   const peakVal = Math.max(...safeIncoming, ...safeResolved, 0);
   const maxVal = peakVal === 0 ? 4 : Math.max(peakVal + 1, Math.ceil(peakVal * 1.25));
-  const minVal = 0;
 
   const chartWidth = width - paddingLeft - paddingRight;
-  const chartHeight = height - paddingTop - paddingBottom;
-  const baselineY = height - paddingBottom;
+  const chartHeight = baselineY - paddingTop;
 
   const getX = (index: number) => {
     const denom = Math.max(safeLabels.length - 1, 1);
@@ -47,7 +45,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
   };
 
   const getY = (val: number) => {
-    const rawY = height - paddingBottom - (val / (maxVal || 1)) * chartHeight;
+    const rawY = baselineY - (val / (maxVal || 1)) * chartHeight;
     return Math.min(baselineY, Math.max(paddingTop, rawY));
   };
 
@@ -189,15 +187,15 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
                     y1={y}
                     x2={width - paddingRight}
                     y2={y}
-                    stroke="rgba(255,255,255,0.06)"
-                    strokeDasharray="4 4"
+                    stroke={step.val === 0 ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.06)"}
+                    strokeDasharray={step.val === 0 ? "none" : "4 4"}
                     strokeWidth="1"
                   />
                   <text
-                    x={paddingLeft - 8}
+                    x={paddingLeft - 10}
                     y={y + 3.5}
                     textAnchor="end"
-                    fill="rgba(255,255,255,0.35)"
+                    fill="rgba(255,255,255,0.4)"
                     fontSize="10"
                     fontFamily="monospace"
                   >
@@ -248,12 +246,61 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
                 x1={getX(hoveredIndex)}
                 y1={paddingTop}
                 x2={getX(hoveredIndex)}
-                y2={baselineY}
-                stroke="rgba(0, 240, 255, 0.4)"
+                y2={baselineY + 6}
+                stroke="rgba(0, 240, 255, 0.45)"
                 strokeDasharray="3 3"
                 strokeWidth="1.5"
               />
             )}
+
+            {/* Dedicated X-Axis Day Labels & Baseline Column Ticks (Locked to Coordinate Grid) */}
+            {safeLabels.map((lbl, idx) => {
+              const x = getX(idx);
+              const isLast = idx === safeLabels.length - 1;
+              const isHovered = hoveredIndex === idx;
+
+              return (
+                <g
+                  key={`day-tick-${lbl}-${idx}`}
+                  onMouseEnter={() => setHoveredIndex(idx)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className="cursor-pointer"
+                >
+                  {/* Subtle column tick mark on baseline */}
+                  <line
+                    x1={x}
+                    y1={baselineY}
+                    x2={x}
+                    y2={baselineY + 4}
+                    stroke={isHovered ? "#00f0ff" : "rgba(255, 255, 255, 0.22)"}
+                    strokeWidth={isHovered ? "1.5" : "1"}
+                  />
+
+                  {/* Invisible hit area for hovering the day text */}
+                  <rect
+                    x={x - 22}
+                    y={baselineY + 6}
+                    width="44"
+                    height="26"
+                    fill="transparent"
+                  />
+
+                  {/* Day Label Text (100% pixel-aligned directly under data node) */}
+                  <text
+                    x={x}
+                    y={baselineY + 22}
+                    textAnchor="middle"
+                    fill={isHovered ? "#ffffff" : isLast ? "#00f0ff" : "rgba(255, 255, 255, 0.45)"}
+                    fontSize="11"
+                    fontFamily="monospace"
+                    fontWeight={isHovered || isLast ? "700" : "500"}
+                    className="select-none transition-colors"
+                  >
+                    {lbl}
+                  </text>
+                </g>
+              );
+            })}
 
             {/* Interactive Data Nodes */}
             {safeIncoming.map((val, idx) => {
@@ -270,7 +317,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
                   className="cursor-pointer"
                 >
                   {/* Invisible enlarged hit target for effortless hover */}
-                  <circle cx={cx} cy={cy} r="16" fill="transparent" />
+                  <circle cx={cx} cy={cy} r="18" fill="transparent" />
 
                   {/* Pulsing halo if hovered or last */}
                   {(isLast || isHovered) && (
@@ -297,73 +344,55 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({
                     className="transition-all duration-150"
                   />
 
-                  {/* Floating Number Value on hover */}
+                  {/* Floating Tooltip Value on hover */}
                   {isHovered && (
-                    <text
-                      x={cx}
-                      y={cy - 12}
-                      textAnchor="middle"
-                      fill="#00f0ff"
-                      fontSize="11"
-                      fontFamily="monospace"
-                      fontWeight="bold"
-                    >
-                      {val}
-                    </text>
+                    <g className="pointer-events-none animate-fadeIn">
+                      <rect
+                        x={cx - 16}
+                        y={cy - 28}
+                        width="32"
+                        height="20"
+                        rx="6"
+                        fill="rgba(8, 12, 29, 0.92)"
+                        stroke="#00f0ff"
+                        strokeWidth="1"
+                      />
+                      <text
+                        x={cx}
+                        y={cy - 14}
+                        textAnchor="middle"
+                        fill="#00f0ff"
+                        fontSize="11"
+                        fontFamily="monospace"
+                        fontWeight="bold"
+                      >
+                        {val}
+                      </text>
+                    </g>
                   )}
                 </g>
               );
             })}
           </svg>
         </div>
-
-        {/* Dedicated X-Axis Day Labels Row */}
-        <div className="relative w-full h-8 mt-2 pt-2 border-t border-white/10 font-mono text-[11px]">
-          {safeLabels.map((lbl, idx) => {
-            const percentX = (getX(idx) / width) * 100;
-            const isLast = idx === safeLabels.length - 1;
-            const isHovered = hoveredIndex === idx;
-
-            return (
-              <button
-                key={`${lbl}-${idx}`}
-                type="button"
-                onMouseEnter={() => setHoveredIndex(idx)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                style={{ left: `${percentX}%` }}
-                className={`absolute -translate-x-1/2 top-1.5 transition-all cursor-pointer whitespace-nowrap ${
-                  isHovered
-                    ? 'text-white font-bold scale-110'
-                    : isLast
-                    ? 'text-neon-cyan font-bold'
-                    : 'text-white/40 hover:text-white/80'
-                }`}
-              >
-                {lbl}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
-      {/* Chart Bottom Stat Capsule */}
-      <div className="mt-6 p-3.5 bg-black/40 border border-white/10 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-neon-cyan shadow-[0_0_8px_#00f0ff]" />
-          <span className="text-white font-bold">{velocity?.openTotal ?? 0}</span>
-          <span className="text-white/50">open total</span>
+      {/* Chart Bottom Stat Capsule: Perfectly Aligned 3-Col Metric Strip */}
+      <div className="mt-4 p-3 bg-black/40 border border-white/10 rounded-2xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10 text-xs font-mono">
+        <div className="flex items-center justify-center gap-2 py-1 sm:py-0 px-3">
+          <span className="w-2 h-2 rounded-full bg-neon-cyan shadow-[0_0_8px_#00f0ff] shrink-0" />
+          <span className="text-white font-bold text-sm">{velocity?.openTotal ?? 0}</span>
+          <span className="text-white/50 text-[11px]">open total</span>
         </div>
-        <span className="text-white/20">|</span>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-blue-400" />
-          <span className="text-white font-bold">{velocity?.receivedToday ?? 0}</span>
-          <span className="text-white/50">received today</span>
+        <div className="flex items-center justify-center gap-2 py-1 sm:py-0 px-3">
+          <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
+          <span className="text-white font-bold text-sm">{velocity?.receivedToday ?? 0}</span>
+          <span className="text-white/50 text-[11px]">received today</span>
         </div>
-        <span className="text-white/20">|</span>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-neon-emerald shadow-[0_0_8px_#10b981]" />
-          <span className="text-white font-bold">{velocity?.resolvedToday ?? 0}</span>
-          <span className="text-white/50">resolved today</span>
+        <div className="flex items-center justify-center gap-2 py-1 sm:py-0 px-3">
+          <span className="w-2 h-2 rounded-full bg-neon-emerald shadow-[0_0_8px_#10b981] shrink-0" />
+          <span className="text-white font-bold text-sm">{velocity?.resolvedToday ?? 0}</span>
+          <span className="text-white/50 text-[11px]">resolved today</span>
         </div>
       </div>
     </section>
