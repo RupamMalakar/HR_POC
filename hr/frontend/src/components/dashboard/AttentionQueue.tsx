@@ -13,7 +13,7 @@ export const AttentionQueue: React.FC<AttentionQueueProps> = ({
   onViewAll
 }) => {
   return (
-    <section className="lg:col-span-5 xl:col-span-4 rounded-3xl p-6 bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col justify-between specular-border">
+    <section className="lg:col-span-5 xl:col-span-4 h-fit self-start rounded-3xl p-6 bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass flex flex-col specular-border">
       <div>
         <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
           <div className="flex items-center gap-2.5">
@@ -33,8 +33,8 @@ export const AttentionQueue: React.FC<AttentionQueueProps> = ({
           </button>
         </div>
 
-        {/* Priority Items List */}
-        <div className="space-y-3">
+        {/* Priority Items List (compact and scrollable to prevent inflating grid height) */}
+        <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
           {items.map((item) => {
             const isHigh = item.priority === 'high';
             return (

@@ -63,7 +63,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       />
 
       {/* 3. Main Velocity Chart & Attention Queue */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <VelocityChart
           velocity={velocity}
           activeRange={activeVelocityRange}
