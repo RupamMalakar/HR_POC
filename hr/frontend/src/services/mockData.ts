@@ -179,28 +179,40 @@ export const initialHRActions: HRActionItem[] = [
 
 export const initialInsights: InsightItem[] = [
   {
-    id: "INS-1",
-    title: "Payroll requests ↑ 23%",
-    description: "Increase in payroll-related requests over the last 30 days due to tax deduction queries.",
-    icon: "payments",
-    type: "info",
-    changeText: "+23% last 30d"
-  },
-  {
-    id: "INS-2",
-    title: "Leave requests taking longer",
-    description: "Resolution time is 31% above the HR average. Suggest updating self-service sabbatical guidelines.",
-    icon: "timelapse",
+    id: "INS-201",
+    title: "Medical Leave Documentation Lag",
+    description: "32% of sick leave cases exceed 48h turnaround due to missing clinic practitioner slips.",
+    icon: "alarm",
     type: "warning",
-    changeText: "+31% resolution lag"
+    changeText: "+14% delay vs last week",
+    impact: "HIGH",
+    suggestedRemediation: "Automate medical documentation checklist deliverable during employee intake.",
+    relatedCategory: "leave",
+    relatedPolicy: "Medical & Statutory Sick Leave Policy (Art. 6)"
   },
   {
-    id: "INS-3",
-    title: "Insurance FAQ recurring",
-    description: "Frequently repeated employee question on annual dental coverage limits.",
-    icon: "quiz",
-    type: "emerald",
-    changeText: "82 query citations"
+    id: "INS-202",
+    title: "Payroll Deductions Volume Spike",
+    description: "Payroll tickets represent 38% of total case volume, exceeding normal threshold by 13%.",
+    icon: "trending_up",
+    type: "warning",
+    changeText: "38% of volume",
+    impact: "HIGH",
+    suggestedRemediation: "Publish an automated tax withholding calculator and FAQ in the Employee Knowledge Hub.",
+    relatedCategory: "payroll",
+    relatedPolicy: "Compensation & Withholding Policy"
+  },
+  {
+    id: "INS-203",
+    title: "Parental Leave Policy Ambiguity",
+    description: "Repetitive inquiries detected regarding parental leave carryover and primary caregiver eligibility.",
+    icon: "auto_awesome",
+    type: "cyan",
+    changeText: "4 recurring cases",
+    impact: "MEDIUM",
+    suggestedRemediation: "Update Parental Leave FAQ section in Employee Handbook and enable self-service policy chatbot.",
+    relatedCategory: "leave",
+    relatedPolicy: "Global Parental & Caregiver Leave Guidelines"
   }
 ];
 

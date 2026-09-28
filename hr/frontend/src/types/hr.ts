@@ -202,8 +202,12 @@ export interface InsightItem {
   title: string;
   description: string;
   icon: string;
-  type: 'info' | 'warning' | 'emerald';
+  type: 'info' | 'warning' | 'emerald' | 'cyan';
   changeText?: string;
+  impact?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  suggestedRemediation?: string;
+  relatedCategory?: string | null;
+  relatedPolicy?: string;
 }
 
 export interface CategoryVolume {
