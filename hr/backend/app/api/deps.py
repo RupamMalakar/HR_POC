@@ -89,3 +89,12 @@ def require_roles(allowed_roles: List[str]) -> Callable:
             )
         return current_user
     return role_checker
+
+def require_employee(current_user: User = Depends(get_current_user)) -> User:
+    """Guard: only EMPLOYEE role can access this endpoint."""
+    if current_user.role not in ["EMPLOYEE"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: employee portal only.",
+        )
+    return current_user

@@ -14,7 +14,7 @@ from app.schemas.request import (
     RequestItemResponse, EmployeeSummary, AITriageSummary,
     RequestCreate, RequestReview, RequestListResponse
 )
-from app.api.deps import get_current_user, require_roles
+from app.api.deps import get_current_user, require_roles, require_employee
 from app.ws.manager import ws_manager
 
 router = APIRouter(prefix="/requests", tags=["Requests & Case Management"])
@@ -103,6 +103,22 @@ def get_requests(
 
     requests = query.order_by(Request.created_at.desc()).all()
     return [map_request_to_response(r) for r in requests]
+
+@router.get("/my", response_model=List[RequestItemResponse])
+def get_my_requests(
+    current_user: User = Depends(require_employee),
+    db: Session = Depends(get_db)
+):
+    """Employee-only: returns only the authenticated employee's own requests."""
+    emp = db.query(Employee).filter(
+        or_(Employee.user_id == current_user.id, Employee.email == current_user.email)
+    ).first()
+    if not emp:
+        return []
+    reqs = db.query(Request).filter(
+        Request.employee_id == emp.id
+    ).order_by(Request.created_at.desc()).all()
+    return [map_request_to_response(r) for r in reqs]
 
 @router.post("", response_model=RequestItemResponse, status_code=status.HTTP_201_CREATED)
 async def create_request(

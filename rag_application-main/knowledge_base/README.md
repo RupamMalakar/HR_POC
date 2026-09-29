@@ -1,16 +1,19 @@
-﻿# Company Policy Knowledge Base
+# Company Policy Knowledge Base
 
 Place your company policy PDF documents in this directory.
 
 ## Structure Example
 ```
 knowledge_base/
-├── leave_policy.pdf
-├── remote_work_policy.pdf
-├── travel_policy.pdf
+├── benefits_guide.pdf
+├── employee_handbook.pdf
 ├── expense_policy.pdf
+├── leave_policy.pdf
+├── performance_and_growth_policy.pdf
+├── remote_work_policy.pdf
 ├── security_policy.pdf
-└── employee_handbook.pdf
+├── travel_expense_policy.pdf
+└── travel_policy.pdf
 ```
 
 ## How It Works
