@@ -9,7 +9,9 @@ import {
   CategoryVolume,
   ActivityEvent,
   CopilotMessage,
-  RequestComment
+  RequestComment,
+  ComplianceReportItem,
+  InsightsTelemetry
 } from '../types/hr';
 import {
   initialMetrics,
@@ -151,6 +153,15 @@ if (typeof window !== 'undefined') {
           syncListeners.forEach(fn => fn({ type: 'TRIAGE_UPDATED', data: payload }));
         } catch (err) {
           console.warn('[HR Live Sync] Error handling TRIAGE_UPDATED:', err);
+        }
+      });
+
+      es.addEventListener('INSIGHTS_UPDATED', (e: MessageEvent) => {
+        try {
+          const payload = JSON.parse(e.data);
+          syncListeners.forEach(fn => fn({ type: 'INSIGHTS_UPDATED', data: payload }));
+        } catch (err) {
+          console.warn('[HR Live Sync] Error handling INSIGHTS_UPDATED:', err);
         }
       });
 
@@ -622,6 +633,19 @@ export const hrService = {
       }
     } catch {}
     return [...state.insights];
+  },
+
+  async getInsightsTelemetry(range: '7D' | '30D' | '90D' = '7D'): Promise<InsightsTelemetry | null> {
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/insights/telemetry?range=${range}`);
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (err) {
+      console.warn('[HR Service] getInsightsTelemetry fetch error:', err);
+    }
+    return null;
   },
 
   async exportInsightsCsv(): Promise<void> {
@@ -1141,5 +1165,110 @@ ${userQuery || 'Analyze this request and recommend appropriate action.'}`;
         'Make More Concise'
       ]
     };
+  },
+
+  async getReports(): Promise<ComplianceReportItem[]> {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/reports');
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {}
+
+    if (IS_MOCK_MODE) {
+      await delay(120);
+      return [];
+    }
+    return request<ComplianceReportItem[]>('/reports');
+  },
+
+  async generateReport(payload: {
+    reportType?: string;
+    name?: string;
+    standard?: string;
+    quarter?: string;
+    year?: number;
+    startDate?: string;
+    endDate?: string;
+    generatedBy?: string;
+  }): Promise<ComplianceReportItem> {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/reports/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Report generation failed (${res.status})`);
+    } catch (e: any) {
+      if (!IS_MOCK_MODE) throw e;
+    }
+
+    if (IS_MOCK_MODE) {
+      await delay(600);
+      const q = payload.quarter || 'Q3';
+      const yr = payload.year || 2026;
+      return {
+        id: `REP-${yr}-${Date.now().toString(36).toUpperCase()}`,
+        name: payload.name || `Compliance Audit Package (${q} ${yr})`,
+        standard: payload.standard || 'SOC2 Type II / EEOC',
+        periodStart: payload.startDate || `${yr}-07-01T00:00:00.000Z`,
+        periodEnd: payload.endDate || `${yr}-09-30T23:59:59.999Z`,
+        periodLabel: `${q} ${yr}`,
+        generatedBy: payload.generatedBy || 'Sarah Jenkins (HR Ops)',
+        generatedAt: new Date().toISOString(),
+        status: 'VERIFIED & SIGNED',
+        reportType: (payload.reportType as any) || 'QUARTERLY_SLA_AUDIT',
+        integrityHash: 'sha256:' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+        metrics: {
+          totalCases: state.requests.length,
+          resolvedCases: state.requests.filter(r => r.status === 'resolved').length,
+          openCases: state.requests.filter(r => r.status !== 'resolved').length,
+          highPriorityCases: state.requests.filter(r => r.priority === 'high').length,
+          sensitiveCases: 2,
+          slaApplicableCases: state.requests.length,
+          slaMet: state.requests.length - 2,
+          slaBreached: 2,
+          slaResolvedWithin: 5,
+          slaResolvedBreached: 0,
+          slaOpenWithin: 7,
+          slaOpenBreached: 2,
+          slaComplianceRate: 85.7,
+          avgResolutionTimeHours: 2.8,
+          executiveSummary: 'Audit generated under local fallback mode.',
+          categoryDistribution: [],
+          policyDistribution: []
+        }
+      };
+    }
+    return request<ComplianceReportItem>('/reports/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
+  async downloadReport(id: string, format: 'pdf' | 'csv' | 'json', filename?: string): Promise<void> {
+    const url = `http://localhost:8000/api/v1/reports/${encodeURIComponent(id)}/download?format=${format}`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      let msg = `Download failed with status ${res.status}`;
+      try {
+        const err = await res.json();
+        if (err.error) msg = err.error;
+      } catch {}
+      throw new Error(msg);
+    }
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename || `${id}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
   }
 };

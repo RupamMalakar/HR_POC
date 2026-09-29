@@ -11,7 +11,8 @@ import { DeliverablesView } from './components/views/DeliverablesView';
 import { HRActionsView } from './components/views/HRActionsView';
 import { InsightsView } from './components/views/InsightsView';
 import { SettingsView } from './components/views/SettingsView';
-import { ReportsView, HRProfileView } from './components/views/HRProfileAndReports';
+import { ReportsView } from './components/views/ReportsView';
+import { HRProfileView } from './components/views/HRProfileAndReports';
 import { CommandPalette } from './components/modals/CommandPalette';
 import { NewActionModal } from './components/modals/NewActionModal';
 import { ReviewDrawer } from './components/modals/ReviewDrawer';
@@ -324,15 +325,19 @@ function HROperationsPortal() {
     setRequests(updatedReqs.map(sanitizeRequestItem));
   };
 
-  // Refresh dynamic insights and categorical distribution
+  // Refresh dynamic insights, categorical distribution, and telemetry
   const handleRefreshInsights = async () => {
     try {
-      const [ins, cats] = await Promise.all([
+      const [ins, cats, m, vel] = await Promise.all([
         hrService.getInsights(),
-        hrService.getCategoryVolumes()
+        hrService.getCategoryVolumes(),
+        hrService.getMetrics(),
+        hrService.getVelocity(activeVelocityRange)
       ]);
       if (Array.isArray(ins)) setInsights(ins);
       if (Array.isArray(cats)) setCategories(cats);
+      if (m) setMetrics(m);
+      if (vel) setVelocity(vel);
     } catch (err) {
       console.warn('Failed to refresh insights:', err);
     }
@@ -470,8 +475,12 @@ function HROperationsPortal() {
               <InsightsView
                 insights={insights}
                 categories={categories}
+                requests={requests}
+                metrics={metrics}
+                velocity={velocity}
                 onRefresh={handleRefreshInsights}
                 onNavigateTab={(tab) => setActiveTab(tab)}
+                onSelectVelocityRange={handleChangeVelocityRange}
               />
             )}
 

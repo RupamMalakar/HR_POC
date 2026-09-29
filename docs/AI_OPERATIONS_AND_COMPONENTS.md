@@ -158,8 +158,8 @@ A high-contrast investigation console that opens when clicking any request from 
    - Quick prompt shortcuts: `[Draft Reply]`, `[Summarize Case]`, `[Check Policy]`.
    - Markdown rendering with clean typography.
    - Source citations showing matching policy PDFs and page numbers.
-4. **Deliverable Synergy**:
-   - Includes **`[Save as Deliverable]`** button alongside **`[Use in Reply]`**, allowing specialists to convert an AI response into an official deliverable with one click.
+4. **Direct Response Integration**:
+   - Includes **`[Use in Reply]`**, allowing specialists to seamlessly insert AI guidance directly into the ticket reply thread with one click.
 
 #### Core Benefits
 - **Faster Case Resolution**: Cuts ticket handling time by pre-generating policy-grounded replies.
@@ -182,8 +182,8 @@ An interactive, standalone knowledge assistant backed by FastAPI and ChromaDB ve
    - Automatically highlights key policy figures (e.g., `16 weeks`, `$500/day`, `20 business days`).
 2. **Follow-Up Suggestions**:
    - Recommends next logical questions based on the retrieved policy.
-3. **Deliverable Export**:
-   - Includes a **`[Save as Deliverable]`** button in the action toolbar to transform policy guidance into an official memo or policy analysis deliverable.
+3. **Actionable Guidance**:
+   - Provides one-click clipboard copying (`[Copy Guidance]`) and thumbs-up/down quality feedback for continuous grounding evaluation.
 
 #### Core Benefits
 - **Prevents Misinformation**: Eliminates hallucination by restricting answers to ingested policy documents.
@@ -246,7 +246,7 @@ Case Console (ReviewDrawer) opens
     ├─► HR reviews full employee narrative and message history
     ├─► AI Copilot generates policy-grounded reply
     │
-    ▼ HR clicks [Save as Deliverable]
+    ▼ HR reviews reply and clicks [Use in Reply]
 
 Step 4: Governance & Review
 HR Deliverables workspace receives DELIVERABLE_CREATED

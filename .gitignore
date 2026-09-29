@@ -36,3 +36,4 @@ __pycache__/
 chroma_db/
 storage/
 gmail_tokens.json
+scratch_edge/

@@ -249,3 +249,120 @@ export interface CopilotMessage {
     value: string;
   }[];
 }
+
+export type ReportType =
+  | 'QUARTERLY_SLA_AUDIT'
+  | 'POLICY_GROUNDING'
+  | 'SENSITIVE_CASES'
+  | 'LATENCY_VOLUME';
+
+export type ReportStatus =
+  | 'GENERATING'
+  | 'VERIFIED & SIGNED'
+  | 'DRAFT'
+  | 'FAILED';
+
+export interface ReportMetrics {
+  totalCases: number;
+  resolvedCases: number;
+  openCases: number;
+  highPriorityCases: number;
+  sensitiveCases: number;
+  slaApplicableCases: number;
+  slaMet: number;
+  slaBreached: number;
+  slaResolvedWithin: number;
+  slaResolvedBreached: number;
+  slaOpenWithin: number;
+  slaOpenBreached: number;
+  slaComplianceRate: number;
+  avgResolutionTimeHours: number;
+  executiveSummary: string;
+  categoryDistribution: Array<{
+    category: string;
+    categoryDisplay: string;
+    count: number;
+    percentage: number;
+  }>;
+  policyDistribution: Array<{
+    policy: string;
+    count: number;
+  }>;
+}
+
+export interface ComplianceReportItem {
+  id: string;
+  name: string;
+  standard: string;
+  periodStart: string;
+  periodEnd: string;
+  periodLabel: string;
+  generatedBy: string;
+  generatedAt: string;
+  status: ReportStatus;
+  reportType: ReportType;
+  integrityHash: string;
+  metrics: ReportMetrics;
+}
+
+export interface InsightsTelemetry {
+  horizon: '7D' | '30D' | '90D';
+  kpis: {
+    totalInbound: number;
+    totalResolved: number;
+    throughputRate: number;
+    slaCompliance: number;
+    mttrHours: number;
+    mttrAiMinutes: number;
+    aiDeflectionRate: number;
+    triageAccuracy: number;
+    draftAdoptionRate: number;
+    hoursSaved: number;
+    costSavings: number;
+  };
+  velocity: Array<{
+    label: string;
+    inflow: number;
+    resolved: number;
+    slaPercent: number;
+    aiDeflected: number;
+  }>;
+  categories: Array<{
+    category: string;
+    name: string;
+    count: number;
+    percent: number;
+    isThresholdExceeded: boolean;
+  }>;
+  dominantCategory: {
+    category?: string;
+    name: string;
+    count: number;
+    percent: number;
+    isThresholdExceeded?: boolean;
+  };
+  slaCohorts: Array<{
+    id: string;
+    label: string;
+    count: number;
+    percent: number;
+    color: string;
+    textColor: string;
+    description: string;
+  }>;
+  departments: Array<{
+    dept: string;
+    volume: number;
+    resolved: number;
+    adherence: number;
+    avgTime: string;
+    status: 'optimal' | 'within-sla' | 'warning' | 'critical';
+  }>;
+  latencyComparison: {
+    manualHours: number;
+    aiMinutes: number;
+    reductionPercent: number;
+  };
+  insights: InsightItem[];
+}
+

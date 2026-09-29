@@ -15,10 +15,10 @@ import {
   User,
   CheckCircle2,
   CornerDownRight,
-  FileText,
   ChevronRight,
   Maximize2,
-  Minimize2
+  Minimize2,
+  FileText
 } from 'lucide-react';
 import { RequestItem, RequestComment } from '../../types/hr';
 import { hrService } from '../../services/hrService';
@@ -56,8 +56,6 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
   const [copied, setCopied] = useState(false);
-  const [isSavingDeliverable, setIsSavingDeliverable] = useState(false);
-  const [savedDeliverableSuccess, setSavedDeliverableSuccess] = useState(false);
 
   // Resolution state
   const [isResolving, setIsResolving] = useState(false);
@@ -134,41 +132,6 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSaveAsDeliverable = async () => {
-    if (!aiOutput) return;
-    setIsSavingDeliverable(true);
-    try {
-      const delivType = aiOutput.type === 'draft' ? 'HR Communication'
-        : aiOutput.type === 'summary' ? 'Case Summary'
-        : aiOutput.type === 'policy' ? 'Policy Analysis'
-        : 'HR Report';
-
-      await hrService.createDeliverable({
-        title: `${delivType}: Case ${item.id}`,
-        type: delivType as any,
-        status: 'NEEDS_REVIEW',
-        requestId: item.id,
-        employeeName: empName,
-        department: empDept,
-        recipient: empEmail,
-        subject: `Regarding Case ${item.id}: ${item.title || item.subject || ''}`,
-        content: aiOutput.text,
-        policySources: aiOutput.citations?.map(c => ({
-          document: c.section || c.title || 'employee_handbook.pdf',
-          page: c.page || 1,
-          excerpt: c.title
-        })) || [],
-        createdBy: 'Sarah Jenkins (HR Ops)'
-      });
-      setSavedDeliverableSuccess(true);
-      setTimeout(() => setSavedDeliverableSuccess(false), 3000);
-    } catch (err) {
-      console.error('Failed to save deliverable:', err);
-    } finally {
-      setIsSavingDeliverable(false);
-    }
   };
 
   // =========================================================================
@@ -521,31 +484,8 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
                       </div>
                     )}
 
-                    {/* Action Buttons: Save as Deliverable & Use in Reply */}
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
-                      <button
-                        onClick={handleSaveAsDeliverable}
-                        disabled={isSavingDeliverable}
-                        className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-                          savedDeliverableSuccess
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40'
-                            : 'bg-purple-950/40 hover:bg-purple-900/50 text-purple-200 border-purple-500/30'
-                        }`}
-                        title="Create official HR deliverable draft in HR Deliverables workspace"
-                      >
-                        {savedDeliverableSuccess ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Saved to Deliverables</span>
-                          </>
-                        ) : (
-                          <>
-                            <FileText className="w-3.5 h-3.5 text-purple-400" />
-                            <span>{isSavingDeliverable ? 'Saving...' : 'Save as Deliverable'}</span>
-                          </>
-                        )}
-                      </button>
-
+                    {/* Action Button: Use in Reply */}
+                    <div className="pt-2 border-t border-white/10 flex items-center justify-end gap-2">
                       <button
                         onClick={() => handleUseReply(aiOutput.text)}
                         className="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
