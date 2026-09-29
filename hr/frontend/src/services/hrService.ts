@@ -706,6 +706,81 @@ export const hrService = {
     return null;
   },
 
+  async getGmailStatus(): Promise<{ connected: boolean; email?: string; display_name?: string; mode: string } | null> {
+    try {
+      const res = await fetch('/api/gmail/status');
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
+  async getGmailAuthUrl(): Promise<{ auth_url: string; mode: string; message: string } | null> {
+    try {
+      const res = await fetch('/api/gmail/auth-url');
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
+  async disconnectGmail(): Promise<boolean> {
+    try {
+      const res = await fetch('/api/gmail/disconnect', { method: 'POST' });
+      return res.ok;
+    } catch {}
+    return false;
+  },
+
+  async getGmailEmails(category?: string, search?: string): Promise<any[]> {
+    try {
+      const params = new URLSearchParams();
+      if (category && category !== 'All') params.set('category', category);
+      if (search) params.set('search', search);
+      const res = await fetch(`/api/gmail/emails?${params.toString()}`);
+      if (res.ok) return await res.json();
+    } catch {}
+    return [];
+  },
+
+  async getGmailEmailDetail(emailId: string): Promise<any | null> {
+    try {
+      const res = await fetch(`/api/gmail/emails/${emailId}`);
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
+  async triageGmailEmail(emailId: string): Promise<any | null> {
+    try {
+      const res = await fetch(`/api/gmail/emails/${emailId}/triage`, { method: 'POST' });
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
+  async generateGmailDraft(emailId: string, options: { tone?: string; refinement?: string; custom_instructions?: string } = {}): Promise<any | null> {
+    try {
+      const res = await fetch(`/api/gmail/emails/${emailId}/draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(options)
+      });
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
+  async sendGmailReply(emailId: string, reply: { to: string; subject: string; body: string; thread_id?: string; approved_by_hr: boolean }): Promise<any | null> {
+    try {
+      const res = await fetch(`/api/gmail/emails/${emailId}/reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reply)
+      });
+      if (res.ok) return await res.json();
+    } catch {}
+    return null;
+  },
+
   async queryCopilot(prompt: string, history: Array<{ role: string; content: string }> = []): Promise<CopilotMessage> {
     try {
       // 1. Query the RAG agent backend (port 8001 direct or port 8000 proxy)

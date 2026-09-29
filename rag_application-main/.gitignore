@@ -7,8 +7,10 @@ env/
 # Environment variables
 .env
 
-# Vector database storage
+# Vector database storage & token storage
 chroma_db/
+storage/
+gmail_tokens.json
 
 # Python cache files
 __pycache__/

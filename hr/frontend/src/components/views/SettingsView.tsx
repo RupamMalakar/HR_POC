@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { hrService } from '../../services/hrService';
 
 export const SettingsView: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -8,6 +9,59 @@ export const SettingsView: React.FC = () => {
   const [enableSlackSync, setEnableSlackSync] = useState(true);
   const [enableEmailDigest, setEnableEmailDigest] = useState(true);
   const [saved, setSaved] = useState(false);
+
+  // Google Gmail Integration State
+  const [gmailStatus, setGmailStatus] = useState<{
+    connected: boolean;
+    email?: string;
+    display_name?: string;
+    mode: string;
+  } | null>(null);
+  const [isConnectingGmail, setIsConnectingGmail] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchStatus = async () => {
+      const st = await hrService.getGmailStatus();
+      if (mounted && st) {
+        setGmailStatus(st);
+      }
+    };
+    fetchStatus();
+    return () => { mounted = false; };
+  }, []);
+
+  const handleConnectGmail = async () => {
+    setIsConnectingGmail(true);
+    try {
+      const data = await hrService.getGmailAuthUrl();
+      if (data?.auth_url) {
+        if (data.mode === 'live') {
+          window.location.href = data.auth_url;
+        } else {
+          // In demo sandbox mode, call callback endpoint
+          await fetch(data.auth_url);
+          const st = await hrService.getGmailStatus();
+          if (st) setGmailStatus(st);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to initiate Gmail connection:', e);
+    } finally {
+      setIsConnectingGmail(false);
+    }
+  };
+
+  const handleDisconnectGmail = async () => {
+    setIsConnectingGmail(true);
+    try {
+      await hrService.disconnectGmail();
+      const st = await hrService.getGmailStatus();
+      setGmailStatus(st || { connected: false, mode: 'demo' });
+    } finally {
+      setIsConnectingGmail(false);
+    }
+  };
 
   const handleSave = () => {
     setSaved(true);
@@ -109,6 +163,59 @@ export const SettingsView: React.FC = () => {
             <h3 className="text-xs font-mono uppercase text-purple-300 font-semibold tracking-wider">
               Integrations &amp; Telemetry
             </h3>
+
+            {/* Google Gmail & Email Triage Integration */}
+            <div className="p-4 rounded-xl bg-white/[0.04] border border-white/10 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-red-500/20 border border-red-500/40 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-red-400 text-[20px]">mail</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">Google Gmail HR Inbox</span>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono border ${
+                        gmailStatus?.connected
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                          : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                      }`}>
+                        {gmailStatus?.connected
+                          ? (gmailStatus.mode === 'live' ? 'Connected (Live OAuth)' : 'Connected (Sandbox Demo)')
+                          : 'Not Connected'}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-white/50 block">
+                      {gmailStatus?.connected
+                        ? `Authorized inbox: ${gmailStatus.email || 'hr.desk@enterprise.internal'}`
+                        : 'Connect HR inbox to enable automated policy triage and grounded email drafts.'}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  {gmailStatus?.connected ? (
+                    <button
+                      type="button"
+                      onClick={handleDisconnectGmail}
+                      disabled={isConnectingGmail}
+                      className="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-medium transition-all cursor-pointer"
+                    >
+                      Disconnect
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleConnectGmail}
+                      disabled={isConnectingGmail}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">sync</span>
+                      {isConnectingGmail ? 'Connecting...' : 'Connect Gmail'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
 
             <div className="space-y-3">
               <label className="flex items-center justify-between p-3 rounded-xl bg-white/5 cursor-pointer">

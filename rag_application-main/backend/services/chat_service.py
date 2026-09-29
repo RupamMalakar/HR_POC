@@ -88,7 +88,7 @@ class ChatService:
         if settings.is_azure_configured() and is_vector_store_populated():
             try:
                 return self._answer_via_azure(question, request.history)
-            except (AuthenticationError, APIError, RateLimitError, ConfigurationError, VectorStoreNotFoundError) as e:
+            except (AuthenticationError, APIError, RateLimitError, ConfigurationError, VectorStoreNotFoundError, ChatServiceError, Exception) as e:
                 logger.warning(f"Azure OpenAI pipeline encountered error ({e}), failing over to grounded local PDF retrieval.")
                 return self._answer_from_local_kb(question)
 

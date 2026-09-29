@@ -34,3 +34,5 @@ __pycache__/
 *.db
 *.sqlite3
 chroma_db/
+storage/
+gmail_tokens.json

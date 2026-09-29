@@ -181,6 +181,13 @@
           "text": "REQ-3847",
           "time": "Just now",
           "isHr": false
+        },
+        {
+          "id": "c-1790673095501",
+          "author": "Sarah Jenkins (HR Ops)",
+          "text": "Hi Alex Johnson,\n\nThank you for reaching out regarding your leave inquiry for Case REQ-3847. According to our Leave & Time Off Policy (Section 3.2), full-time employees accrue 1.67 PTO days per month. I have reviewed your balance and verified that your requested dates can be accommodated.\n\nPlease ensure your direct supervisor has also approved the calendar block in the portal. Feel free to reply if you need any adjustments!\n\nBest regards,\nSarah Jenkins\nHR Operations Lead",
+          "time": "Just now",
+          "isHr": true
         }
       ],
       "lastUpdated": "Just now"
@@ -1250,7 +1257,56 @@
     }
   ],
   "hrActions": [],
-  "insights": [],
+  "insights": [
+    {
+      "id": "INS-CAT-LEAVE",
+      "type": "warning",
+      "icon": "trending_up",
+      "title": "Leave & Attendance Volume Spike",
+      "description": "Leave & Attendance tickets represent 36% of total case volume (5 of 14 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
+      "changeText": "36% of volume",
+      "impact": "HIGH",
+      "suggestedRemediation": "Review Leave & Attendance SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new Leave & Attendance submissions.",
+      "relatedCategory": "leave",
+      "relatedPolicy": "Leave & Attendance Policy (Art. 6)"
+    },
+    {
+      "id": "INS-CAT-OTHER",
+      "type": "warning",
+      "icon": "trending_up",
+      "title": "General HR Volume Spike",
+      "description": "General HR tickets represent 29% of total case volume (4 of 14 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
+      "changeText": "29% of volume",
+      "impact": "HIGH",
+      "suggestedRemediation": "Review General HR SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new General HR submissions.",
+      "relatedCategory": "other",
+      "relatedPolicy": "Employee Handbook"
+    },
+    {
+      "id": "INS-SLA-BREACH",
+      "type": "warning",
+      "icon": "alarm",
+      "title": "Resolution SLA Bottleneck Detected",
+      "description": "7 tickets have exceeded the standard 24-hour response SLA. 4 are high priority. Average wait time is ~101 hours.",
+      "changeText": "7 overdue (>24h)",
+      "impact": "CRITICAL",
+      "suggestedRemediation": "Assign dedicated HR specialists to overdue tickets immediately. Enable automated SLA escalation alerts in the request intake pipeline.",
+      "relatedCategory": "leave",
+      "relatedPolicy": "HR Operations Service Level Agreement (SLA) Standards"
+    },
+    {
+      "id": "INS-POLICY-GAP",
+      "type": "warning",
+      "icon": "rule",
+      "title": "Policy Grounding & Coverage Gaps",
+      "description": "9 active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.",
+      "changeText": "9 ungrounded",
+      "impact": "HIGH",
+      "suggestedRemediation": "Trigger an AI re-triage pass across unclassified tickets. Ensure every specialist response cites an authoritative section in the Employee Handbook.",
+      "relatedCategory": "compliance",
+      "relatedPolicy": "Code of Business Conduct & Knowledge Base Governance"
+    }
+  ],
   "categoryVolumes": [
     {
       "category": "payroll",

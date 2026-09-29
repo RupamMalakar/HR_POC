@@ -92,6 +92,7 @@ class Settings(BaseSettings):
 
     # Backend / Frontend Communication
     BACKEND_URL: str = Field(default="http://localhost:8000", description="Backend service URL")
+    FRONTEND_URL: str = Field(default="http://localhost:5173", description="Frontend app URL for OAuth redirects")
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
@@ -101,6 +102,25 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8501",
         "*",
     ]
+
+    # Google OAuth 2.0 & Gmail Integration
+    GOOGLE_CLIENT_ID: str = Field(default="", description="Google OAuth 2.0 Client ID")
+    GOOGLE_CLIENT_SECRET: str = Field(default="", description="Google OAuth 2.0 Client Secret")
+    GOOGLE_REDIRECT_URI: str = Field(
+        default="http://localhost:8001/api/gmail/callback",
+        description="Google OAuth 2.0 Redirect URI"
+    )
+    GMAIL_STORAGE_DIR: Path = BASE_DIR / "storage"
+
+    def is_google_oauth_configured(self) -> bool:
+        """Returns True if real Google OAuth client credentials are configured."""
+        return bool(
+            self.GOOGLE_CLIENT_ID
+            and self.GOOGLE_CLIENT_SECRET
+            and "your-" not in self.GOOGLE_CLIENT_ID
+            and "your-" not in self.GOOGLE_CLIENT_SECRET
+        )
+
 
     def validate_azure_chat_config(self) -> None:
         """Validates that chat model configuration parameters are present."""

@@ -1024,6 +1024,34 @@ const server = http.createServer((req, res) => {
       }
     }
 
+    // Gmail & Email Triage Proxy to RAG/FastAPI Backend on port 8001
+    if (path.startsWith('/api/gmail') || path === '/health') {
+      try {
+        const queryStr = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+        const targetPath = `${path}${queryStr}`;
+        const proxyReq = http.request(`http://127.0.0.1:8001${targetPath}`, {
+          method: req.method,
+          headers: {
+            'Content-Type': req.headers['content-type'] || 'application/json',
+          },
+        }, (proxyRes) => {
+          res.writeHead(proxyRes.statusCode || 200, proxyRes.headers);
+          proxyRes.pipe(res);
+        });
+        proxyReq.on('error', (err) => {
+          console.warn('[HR Sync Server] Gmail/Health proxy error:', err.message);
+          return sendJson(503, { error: 'RAG/Gmail backend on port 8001 unavailable' });
+        });
+        if (body) {
+          proxyReq.write(body);
+        }
+        proxyReq.end();
+        return;
+      } catch (err) {
+        return sendJson(500, { error: 'Failed to proxy Gmail request' });
+      }
+    }
+
     // Auth: Me
     if (path === '/api/v1/auth/me' && req.method === 'GET') {
       const user = getSessionUser(req);

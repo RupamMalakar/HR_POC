@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from backend.config import settings, ConfigurationError
+from backend.integrations.gmail.router import router as gmail_router
 from backend.models import ChatRequest, ChatResponse, HealthResponse, RootResponse
 from backend.rag.vector_store import VectorStoreNotFoundError, is_vector_store_populated
 from backend.services.chat_service import ChatService, ChatServiceError
@@ -29,6 +30,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register routers
+app.include_router(gmail_router)
 
 
 @app.exception_handler(ConfigurationError)
