@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { SpatialBackground } from './components/layout/SpatialBackground';
 import { Sidebar, NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
-import { Footer } from './components/layout/Footer';
 import { DashboardView } from './components/views/DashboardView';
 import { RequestsView } from './components/views/RequestsView';
 import { AITriageView } from './components/views/AITriageView';
@@ -497,13 +496,6 @@ function HROperationsPortal() {
             )}
           </div>
 
-          {/* Spatial Glass Footer */}
-          {activeTab !== 'ai-assistance' && (
-            <Footer
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-              onQuickTriage={() => setActiveTab('ai-triage')}
-            />
-          )}
         </div>
       </div>
 

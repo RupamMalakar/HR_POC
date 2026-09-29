@@ -1,26 +1,32 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
-  FileText,
-  Plus,
-  Search,
-  Filter,
-  CheckCircle2,
-  Clock,
+  Mail,
   Send,
   Sparkles,
+  BookOpen,
   AlertTriangle,
+  CheckCircle2,
+  RefreshCw,
+  Search,
+  SlidersHorizontal,
+  X,
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  Inbox,
+  Clock,
   ExternalLink,
   ChevronRight,
-  MoreVertical,
-  BookOpen,
-  ArrowUpDown
+  Filter,
+  User,
+  Paperclip,
+  CheckCheck
 } from 'lucide-react';
-import { DeliverableItem, DeliverableStatus, RequestItem } from '../../types/hr';
-import { DeliverableDrawer } from '../modals/DeliverableDrawer';
-import { CreateDeliverableModal } from '../modals/CreateDeliverableModal';
+import { hrService } from '../../services/hrService';
+import { DeliverableItem, RequestItem } from '../../types/hr';
 
-interface DeliverablesViewProps {
-  deliverables: DeliverableItem[];
+export interface DeliverablesViewProps {
+  deliverables?: DeliverableItem[];
   requests?: RequestItem[];
   onApprove?: (id: string) => void;
   onUpdateDeliverable?: (id: string, updates: Partial<DeliverableItem>) => Promise<any>;
@@ -29,353 +35,678 @@ interface DeliverablesViewProps {
   onNavigateToRequest?: (requestId: string) => void;
 }
 
-type FilterTab = 'all' | 'needs_review' | 'drafts' | 'ready' | 'sent';
+type EmailFilterTab = 'all' | 'needs_triage' | 'draft_ready' | 'sent' | 'sensitive';
 
-export const DeliverablesView: React.FC<DeliverablesViewProps> = ({
-  deliverables = [],
-  requests = [],
-  onApprove,
-  onUpdateDeliverable,
-  onSendDeliverable,
-  onCreateDeliverable,
-  onNavigateToRequest
-}) => {
-  const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
+export const DeliverablesView: React.FC<DeliverablesViewProps> = () => {
+  const [emails, setEmails] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [gmailStatus, setGmailStatus] = useState<any>(null);
+  const [activeFilter, setActiveFilter] = useState<EmailFilterTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDeliverable, setSelectedDeliverable] = useState<DeliverableItem | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // Real Counts from the active dataset
-  const counts = useMemo(() => {
-    return {
-      all: deliverables.length,
-      needs_review: deliverables.filter(d => d.status === 'NEEDS_REVIEW' || d.status === 'AI_GENERATED').length,
-      drafts: deliverables.filter(d => d.status === 'EDITED' || d.status === 'AI_GENERATED').length,
-      ready: deliverables.filter(d => d.status === 'READY').length,
-      sent: deliverables.filter(d => d.status === 'SENT').length
-    };
-  }, [deliverables]);
+  // Selected Email Drawer State
+  const [selectedEmail, setSelectedEmail] = useState<any | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+  const [emailTriage, setEmailTriage] = useState<any | null>(null);
+  const [isTriaging, setIsTriaging] = useState(false);
+  const [emailDraft, setEmailDraft] = useState<any | null>(null);
+  const [isDrafting, setIsDrafting] = useState(false);
+  const [draftTone, setDraftTone] = useState<'professional' | 'empathetic' | 'concise'>('professional');
+  const [editableBody, setEditableBody] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState(false);
 
-  // Filtered deliverables
-  const filteredDeliverables = useMemo(() => {
-    return deliverables.filter(d => {
+  // Load Gmail Emails & Live Status
+  const loadEmails = async () => {
+    setLoading(true);
+    try {
+      const [emailList, status] = await Promise.all([
+        hrService.getGmailEmails(),
+        hrService.getGmailStatus()
+      ]);
+      setEmails(emailList || []);
+      setGmailStatus(status || null);
+    } catch (err) {
+      console.error('Error fetching Gmail deliverables:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEmails();
+  }, []);
+
+  // Open & Inspect an Email
+  const handleOpenEmail = async (email: any) => {
+    setSelectedEmail(email);
+    setEmailDraft(null);
+    setEmailTriage(null);
+    setSendSuccess(false);
+    setLoadingDetail(true);
+
+    try {
+      const detail = await hrService.getGmailEmailDetail(email.id);
+      if (detail) {
+        setSelectedEmail(detail);
+      }
+    } catch (err) {
+      console.warn('Could not load email detail:', err);
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
+
+  // Run AI Policy Triage on Email
+  const handleTriageEmail = async () => {
+    if (!selectedEmail) return;
+    setIsTriaging(true);
+    try {
+      const triage = await hrService.triageGmailEmail(selectedEmail.id);
+      if (triage) {
+        setEmailTriage(triage);
+        setSelectedEmail((prev: any) => prev ? {
+          ...prev,
+          category: triage.category,
+          is_sensitive: triage.is_sensitive,
+          urgency: triage.urgency,
+          triage_done: true
+        } : prev);
+
+        setEmails(prev => prev.map(e => e.id === selectedEmail.id ? {
+          ...e,
+          category: triage.category,
+          is_sensitive: triage.is_sensitive,
+          urgency: triage.urgency,
+          triage_done: true
+        } : e));
+      }
+    } finally {
+      setIsTriaging(false);
+    }
+  };
+
+  // Generate Policy-Grounded RAG Draft
+  const handleGenerateDraft = async (tone = draftTone) => {
+    if (!selectedEmail) return;
+    setIsDrafting(true);
+    try {
+      const draft = await hrService.generateGmailDraft(selectedEmail.id, { tone });
+      if (draft) {
+        setEmailDraft(draft);
+        setEditableBody(draft.draft_body || '');
+        setSelectedEmail((prev: any) => prev ? { ...prev, has_draft: true } : prev);
+        setEmails(prev => prev.map(e => e.id === selectedEmail.id ? { ...e, has_draft: true } : e));
+      }
+    } finally {
+      setIsDrafting(false);
+    }
+  };
+
+  // Dispatch Approved Reply via Gmail
+  const handleSendReply = async () => {
+    if (!selectedEmail || !editableBody) return;
+    setIsSending(true);
+    try {
+      const res = await hrService.sendGmailReply(selectedEmail.id, {
+        to: selectedEmail.sender?.email || selectedEmail.recipient,
+        subject: selectedEmail.subject?.startsWith('Re:') ? selectedEmail.subject : `Re: ${selectedEmail.subject}`,
+        body: editableBody,
+        thread_id: selectedEmail.thread_id,
+        approved_by_hr: true
+      });
+
+      if (res?.success) {
+        setSendSuccess(true);
+        setSelectedEmail((prev: any) => prev ? { ...prev, status: 'SENT', sent: true } : prev);
+        setEmails(prev => prev.map(e => e.id === selectedEmail.id ? { ...e, status: 'SENT', sent: true } : e));
+
+        setTimeout(() => {
+          setSelectedEmail(null);
+          loadEmails();
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Failed to send reply:', err);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  // Calculated Summary Metrics
+  const metrics = useMemo(() => {
+    const total = emails.length;
+    const needsTriage = emails.filter(e => !e.category || e.category === 'General HR' || !e.triage_done).length;
+    const draftReady = emails.filter(e => e.has_draft || e.status === 'READY' || e.draft_body).length;
+    const sentCount = emails.filter(e => e.sent || e.status === 'SENT').length;
+    const sensitiveCount = emails.filter(e => e.is_sensitive).length;
+
+    return { total, needsTriage, draftReady, sentCount, sensitiveCount };
+  }, [emails]);
+
+  // Filtered List
+  const filteredEmails = useMemo(() => {
+    return emails.filter(e => {
       // Tab filter
-      if (activeFilter === 'needs_review' && d.status !== 'NEEDS_REVIEW' && d.status !== 'AI_GENERATED') {
-        return false;
-      }
-      if (activeFilter === 'drafts' && d.status !== 'EDITED' && d.status !== 'AI_GENERATED') {
-        return false;
-      }
-      if (activeFilter === 'ready' && d.status !== 'READY') {
-        return false;
-      }
-      if (activeFilter === 'sent' && d.status !== 'SENT') {
-        return false;
+      if (activeFilter === 'needs_triage') {
+        if (e.sent || e.status === 'SENT') return false;
+        if (e.triage_done && e.category && e.category !== 'General HR') return false;
+      } else if (activeFilter === 'draft_ready') {
+        if (!e.has_draft && e.status !== 'READY' && !e.draft_body) return false;
+      } else if (activeFilter === 'sent') {
+        if (!e.sent && e.status !== 'SENT') return false;
+      } else if (activeFilter === 'sensitive') {
+        if (!e.is_sensitive) return false;
       }
 
-      // Search query
+      // Search filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchTitle = (d.title || '').toLowerCase().includes(q);
-        const matchType = (d.type || '').toLowerCase().includes(q);
-        const matchReq = (d.requestId || '').toLowerCase().includes(q);
-        const matchEmp = (d.employeeName || '').toLowerCase().includes(q);
-        const matchContent = (d.content || '').toLowerCase().includes(q);
-        return matchTitle || matchType || matchReq || matchEmp || matchContent;
+        const matchSubj = (e.subject || '').toLowerCase().includes(q);
+        const matchSenderName = (e.sender?.name || '').toLowerCase().includes(q);
+        const matchSenderEmail = (e.sender?.email || '').toLowerCase().includes(q);
+        const matchSnippet = (e.snippet || e.body_text || '').toLowerCase().includes(q);
+        const matchCat = (e.category || '').toLowerCase().includes(q);
+        return matchSubj || matchSenderName || matchSenderEmail || matchSnippet || matchCat;
       }
 
       return true;
     });
-  }, [deliverables, activeFilter, searchQuery]);
-
-  const getStatusBadge = (st: DeliverableStatus) => {
-    switch (st) {
-      case 'NEEDS_REVIEW':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse';
-      case 'AI_GENERATED':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/40';
-      case 'EDITED':
-        return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40';
-      case 'READY':
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-      case 'SENT':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/40';
-      case 'ARCHIVED':
-        return 'bg-white/10 text-white/50 border-white/10';
-      default:
-        return 'bg-white/10 text-white/70 border-white/15';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'HR Communication':
-      case 'Employee Notice':
-        return <Send className="w-3.5 h-3.5 text-blue-400" />;
-      case 'Policy Analysis':
-      case 'Policy Comparison':
-        return <BookOpen className="w-3.5 h-3.5 text-cyan-400" />;
-      case 'Case Summary':
-      case 'Investigation Summary':
-        return <FileText className="w-3.5 h-3.5 text-purple-400" />;
-      default:
-        return <Sparkles className="w-3.5 h-3.5 text-indigo-400" />;
-    }
-  };
+  }, [emails, activeFilter, searchQuery]);
 
   return (
-    <div className="flex-1 flex flex-col gap-5">
-      {/* Workspace Header */}
-      <div className="rounded-3xl p-6 bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass specular-border flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5 mb-1">
-            <span className="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
-              <FileText className="w-5 h-5" />
-            </span>
-            <h1 className="font-display text-xl font-bold text-white tracking-tight">
-              HR DELIVERABLES
+    <div className="space-y-6 pb-20">
+      {/* Header Banner */}
+      <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-red-950/40 via-[#0a0f29]/70 to-[#050716]/90 border border-red-500/20 backdrop-blur-2xl relative overflow-hidden">
+        <div className="absolute right-0 top-0 bottom-0 w-96 bg-gradient-to-l from-red-600/10 via-rose-500/5 to-transparent pointer-events-none" />
+
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-[10px] font-mono font-bold text-red-300 tracking-wider uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                Live Gmail Dispatcher
+              </span>
+              <span className="text-white/40 text-xs font-mono">• Google OAuth 2.0</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+              HR Deliverables &amp; Email Dispatch
             </h1>
+            <p className="text-xs sm:text-sm text-white/60 mt-1 max-w-2xl leading-relaxed">
+              Inbound employee emails automatically triaged against company policy PDFs. Synthesize RAG-grounded draft responses with exact page citations and dispatch approved replies directly from your connected inbox.
+            </p>
           </div>
-          <p className="text-xs text-white/50">
-            Review and manage AI-generated HR work before dispatch.
-          </p>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Live Connected Account Pill */}
+            <div className="px-3.5 py-2 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                <Mail className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Connected &amp; Verified
+                </span>
+                <span className="text-xs text-white font-mono truncate max-w-[180px]" title={gmailStatus?.email || 'vsd2kwork@gmail.com'}>
+                  {gmailStatus?.email || 'vsd2kwork@gmail.com'}
+                </span>
+              </div>
+            </div>
+
+            {/* Sync Button */}
+            <button
+              onClick={loadEmails}
+              disabled={loading}
+              className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-cyan-300 ${loading ? 'animate-spin' : ''}`} />
+              <span>{loading ? 'Fetching...' : 'Sync Inbox'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Metric Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-mono uppercase text-white/50">Total Inbound</span>
+            <Inbox className="w-3.5 h-3.5 text-cyan-400" />
+          </div>
+          <div className="text-2xl font-bold text-white font-display">{metrics.total}</div>
+          <span className="text-[11px] font-mono text-cyan-300/80 mt-1 block">Live Inbound Inquiries</span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsCreateOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-purple-500/20 transition-all cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create Deliverable</span>
-          </button>
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-mono uppercase text-amber-300/70">Needs Triage</span>
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+          </div>
+          <div className="text-2xl font-bold text-amber-200 font-display">{metrics.needsTriage}</div>
+          <span className="text-[11px] font-mono text-amber-300/80 mt-1 block">Awaiting Classification</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-mono uppercase text-purple-300/70">Drafts Synthesized</span>
+            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+          </div>
+          <div className="text-2xl font-bold text-purple-200 font-display">{metrics.draftReady}</div>
+          <span className="text-[11px] font-mono text-purple-300/80 mt-1 block">Policy Grounded (RAG)</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-mono uppercase text-emerald-300/70">Dispatched &amp; Sent</span>
+            <CheckCheck className="w-3.5 h-3.5 text-emerald-400" />
+          </div>
+          <div className="text-2xl font-bold text-emerald-200 font-display">{metrics.sentCount}</div>
+          <span className="text-[11px] font-mono text-emerald-300/80 mt-1 block">Delivered via Gmail API</span>
         </div>
       </div>
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        {/* Filter Pills with Real Counts */}
         <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/10 overflow-x-auto">
           <button
             onClick={() => setActiveFilter('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
               activeFilter === 'all'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-red-600 text-white font-bold shadow-sm'
                 : 'text-white/60 hover:text-white'
             }`}
           >
-            All ({counts.all})
+            All Inbound ({metrics.total})
           </button>
+
           <button
-            onClick={() => setActiveFilter('needs_review')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-              activeFilter === 'needs_review'
+            onClick={() => setActiveFilter('needs_triage')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              activeFilter === 'needs_triage'
                 ? 'bg-amber-500 text-black font-bold shadow-sm'
                 : 'text-amber-300/80 hover:text-amber-200'
             }`}
           >
-            <span>Needs Review</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'needs_review' ? 'bg-black/20 text-black' : 'bg-amber-500/20 text-amber-300'}`}>
-              {counts.needs_review}
+            <span>Needs Triage</span>
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'needs_triage' ? 'bg-black/20 text-black' : 'bg-amber-500/20 text-amber-300'}`}>
+              {metrics.needsTriage}
             </span>
           </button>
+
           <button
-            onClick={() => setActiveFilter('drafts')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'drafts'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
+            onClick={() => setActiveFilter('draft_ready')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              activeFilter === 'draft_ready'
+                ? 'bg-purple-600 text-white font-bold shadow-sm'
+                : 'text-purple-300/80 hover:text-purple-200'
             }`}
           >
-            Drafts ({counts.drafts})
+            <span>Draft Ready</span>
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'draft_ready' ? 'bg-white/20 text-white' : 'bg-purple-500/20 text-purple-300'}`}>
+              {metrics.draftReady}
+            </span>
           </button>
+
           <button
-            onClick={() => setActiveFilter('ready')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'ready'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
+            onClick={() => setActiveFilter('sensitive')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+              activeFilter === 'sensitive'
+                ? 'bg-rose-600 text-white font-bold shadow-sm'
+                : 'text-rose-300/80 hover:text-rose-200'
             }`}
           >
-            Ready ({counts.ready})
+            <span>Sensitive</span>
+            {metrics.sensitiveCount > 0 && (
+              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'sensitive' ? 'bg-white/20 text-white' : 'bg-rose-500/20 text-rose-300'}`}>
+                {metrics.sensitiveCount}
+              </span>
+            )}
           </button>
+
           <button
             onClick={() => setActiveFilter('sent')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
               activeFilter === 'sent'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
+                ? 'bg-emerald-600 text-white font-bold shadow-sm'
+                : 'text-emerald-300/80 hover:text-emerald-200'
             }`}
           >
-            Sent ({counts.sent})
+            <span>Sent ({metrics.sentCount})</span>
           </button>
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-64">
+        <div className="relative w-full sm:w-72">
           <Search className="w-3.5 h-3.5 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search deliverables..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-400"
+            placeholder="Search sender, subject, keywords..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-red-400"
           />
         </div>
       </div>
 
-      {/* Enterprise Output Workspace Table */}
-      <div className="rounded-3xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-glass overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-white/10 bg-white/[0.02] text-white/50 font-mono uppercase text-[10px] tracking-wider">
-                <th className="py-3 px-4">Type</th>
-                <th className="py-3 px-4">Title</th>
-                <th className="py-3 px-4">Related Request</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Created / Updated</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {filteredDeliverables.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-12 text-center text-white/40">
-                    <FileText className="w-8 h-8 mx-auto mb-2 opacity-30 text-white" />
-                    <span>No deliverables found matching the current filter.</span>
-                  </td>
-                </tr>
-              ) : (
-                filteredDeliverables.map((deliv) => {
-                  const createdDate = new Date(deliv.createdAt);
-                  const isToday = createdDate.toDateString() === new Date().toDateString();
-                  const timeFormatted = isToday
-                    ? `Today · ${createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-                    : createdDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      {/* Inbound Emails Queue */}
+      <div className="space-y-3.5">
+        {loading && emails.length === 0 ? (
+          <div className="rounded-3xl p-16 bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-center gap-3">
+            <RefreshCw className="w-8 h-8 text-red-400 animate-spin opacity-60" />
+            <span className="text-white/60 text-sm font-mono">Syncing inbox messages from Gmail...</span>
+          </div>
+        ) : filteredEmails.length === 0 ? (
+          <div className="rounded-3xl p-16 bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-center gap-2">
+            <Inbox className="w-10 h-10 text-white/20 mb-1" />
+            <span className="text-white/60 text-sm font-medium">No emails matching current criteria</span>
+            <span className="text-white/30 text-xs font-mono">Try selecting a different filter tab or clear search terms.</span>
+          </div>
+        ) : (
+          filteredEmails.map((email) => {
+            const isSensitive = email.is_sensitive;
+            const category = email.category || 'General HR';
+            const urgency = (email.urgency || 'MEDIUM').toUpperCase();
+            const isSent = email.sent || email.status === 'SENT';
+            const hasDraft = email.has_draft || email.draft_body;
 
-                  return (
-                    <tr
-                      key={deliv.id}
-                      onClick={() => setSelectedDeliverable(deliv)}
-                      className="hover:bg-white/[0.04] transition-colors cursor-pointer group"
-                    >
-                      {/* TYPE */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <span className="p-1.5 rounded-lg bg-white/[0.04] border border-white/10">
-                            {getTypeIcon(deliv.type)}
-                          </span>
-                          <span className="font-mono text-[11px] text-white/80 font-medium">
-                            {deliv.type}
-                          </span>
-                        </div>
-                      </td>
+            return (
+              <div
+                key={email.id}
+                onClick={() => handleOpenEmail(email)}
+                className={`rounded-2xl p-5 bg-[#0a0e24]/95 hover:bg-[#0d1230] border transition-all specular-border flex flex-col gap-3.5 cursor-pointer shadow-lg ${
+                  isSent
+                    ? 'border-emerald-500/25 opacity-85'
+                    : isSensitive
+                    ? 'border-purple-500/35 shadow-[0_0_18px_rgba(168,85,247,0.12)]'
+                    : 'border-white/10'
+                }`}
+              >
+                {/* Header row: Category pill, badges, date, and review button */}
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div className="flex items-start gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600/20 to-rose-500/20 border border-red-500/30 flex items-center justify-center shrink-0">
+                      <Mail className="w-5 h-5 text-red-400" />
+                    </div>
 
-                      {/* TITLE */}
-                      <td className="py-3.5 px-4">
-                        <div className="max-w-md">
-                          <h4 className="font-semibold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
-                            {deliv.title}
-                          </h4>
-                          <p className="text-[11px] text-white/40 line-clamp-1 mt-0.5">
-                            {deliv.contentPreview || deliv.content.substring(0, 100)}
-                          </p>
-                        </div>
-                      </td>
-
-                      {/* RELATED REQUEST */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        {deliv.requestId ? (
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-500/30">
-                              {deliv.requestId}
-                            </span>
-                            {deliv.employeeName && (
-                              <span className="text-[11px] text-white/50 hidden md:inline">
-                                ({deliv.employeeName})
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-white/30 font-mono">—</span>
-                        )}
-                      </td>
-
-                      {/* STATUS */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-semibold border ${getStatusBadge(
-                            deliv.status
-                          )}`}
-                        >
-                          {deliv.status.replace('_', ' ')}
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-cyan-300 font-bold">
+                          {category}
                         </span>
-                      </td>
 
-                      {/* CREATED */}
-                      <td className="py-3.5 px-4 whitespace-nowrap font-mono text-white/50 text-[11px]">
-                        {timeFormatted}
-                      </td>
+                        {urgency === 'CRITICAL' || urgency === 'HIGH' ? (
+                          <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-mono font-semibold">
+                            🔴 {urgency} Urgency
+                          </span>
+                        ) : null}
 
-                      {/* ACTIONS */}
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                        <div
-                          className="inline-flex items-center gap-2"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <button
-                            onClick={() => setSelectedDeliverable(deliv)}
-                            className="px-3 py-1 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-white font-medium text-xs transition-colors cursor-pointer"
-                          >
-                            Open
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                        {isSensitive && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-mono font-semibold">
+                            <AlertTriangle className="w-3 h-3 text-purple-400" />
+                            <span>⚠ Sensitive</span>
+                          </span>
+                        )}
+
+                        {isSent ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-semibold">
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span>Sent via Gmail</span>
+                          </span>
+                        ) : hasDraft ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-mono font-semibold">
+                            <Sparkles className="w-3 h-3 text-purple-400" />
+                            <span>Draft Ready</span>
+                          </span>
+                        ) : null}
+
+                        <span className="text-[10px] font-mono text-white/40 ml-auto sm:ml-0">
+                          {email.date || 'Today'}
+                        </span>
+                      </div>
+
+                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                        {email.subject || 'No Subject'}
+                      </h3>
+
+                      <p className="text-xs text-white/60 font-mono mt-0.5">
+                        From: <strong className="text-white/80">{email.sender?.name || email.sender?.email}</strong> &lt;{email.sender?.email}&gt;
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleOpenEmail(email); }}
+                      className={`px-4 py-2 rounded-xl text-white font-semibold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                        isSent
+                          ? 'bg-emerald-600/60 hover:bg-emerald-600 text-white'
+                          : 'bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 shadow-red-500/20'
+                      }`}
+                    >
+                      <span>{isSent ? 'View Thread' : 'Review & Dispatch'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Email Snippet */}
+                <p className="text-xs text-white/70 line-clamp-2 bg-black/50 p-3.5 rounded-xl border border-white/5 font-sans leading-relaxed">
+                  {email.snippet || email.body_text || 'No snippet preview available.'}
+                </p>
+              </div>
+            );
+          })
+        )}
       </div>
 
-      {/* Right-Side Deliverable Detail Drawer */}
-      {selectedDeliverable && (
-        <DeliverableDrawer
-          deliverable={selectedDeliverable}
-          onClose={() => setSelectedDeliverable(null)}
-          onUpdate={async (id, updates) => {
-            if (onUpdateDeliverable) {
-              const updated = await onUpdateDeliverable(id, updates);
-              if (updated) setSelectedDeliverable(updated);
-            }
-          }}
-          onSend={async (id) => {
-            if (onSendDeliverable) {
-              const sent = await onSendDeliverable(id);
-              if (sent) setSelectedDeliverable(sent);
-            }
-          }}
-          onNavigateToRequest={(reqId) => {
-            setSelectedDeliverable(null);
-            if (onNavigateToRequest) onNavigateToRequest(reqId);
-          }}
-        />
-      )}
+      {/* Review, Policy Triage & Dispatch Drawer Modal */}
+      {selectedEmail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div
+            className="w-full max-w-3xl max-h-[92vh] rounded-3xl bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 sm:p-7 overflow-y-auto no-scrollbar flex flex-col gap-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/20 border border-red-500/40 flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-red-400" />
+                </div>
+                <div>
+                  <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-tight">
+                    {selectedEmail.subject || 'Incoming Inbound Email'}
+                  </h3>
+                  <p className="text-xs text-white/50 font-mono mt-0.5">
+                    From: <strong className="text-white/80">{selectedEmail.sender?.name || selectedEmail.sender?.email}</strong> &lt;{selectedEmail.sender?.email}&gt;
+                  </p>
+                </div>
+              </div>
 
-      {/* Create Deliverable Modal */}
-      <CreateDeliverableModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        requests={requests}
-        onCreate={async (deliv) => {
-          if (onCreateDeliverable) {
-            await onCreateDeliverable(deliv);
-          }
-        }}
-      />
+              <button
+                onClick={() => setSelectedEmail(null)}
+                className="p-1.5 rounded-xl hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Email Message Body Preview */}
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/10 text-xs text-white/80 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase text-white/40 block">Inbound Message Body</span>
+                <span className="text-[10px] font-mono text-white/40">{selectedEmail.date || 'Received'}</span>
+              </div>
+              {loadingDetail ? (
+                <div className="flex items-center gap-2 text-white/50 py-4">
+                  <RefreshCw className="w-4 h-4 animate-spin text-red-400" />
+                  <span>Loading full email body from Gmail...</span>
+                </div>
+              ) : (
+                <div className="whitespace-pre-wrap leading-relaxed max-h-52 overflow-y-auto pr-2 no-scrollbar font-sans text-xs bg-white/[0.02] p-3 rounded-xl border border-white/5">
+                  {selectedEmail.body_text || selectedEmail.snippet || 'No message content available.'}
+                </div>
+              )}
+            </div>
+
+            {/* AI Policy Triage Section */}
+            <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/25 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <span className="text-xs font-bold text-purple-200">Automated AI Policy Triage</span>
+                </div>
+                <button
+                  onClick={handleTriageEmail}
+                  disabled={isTriaging}
+                  className="px-3.5 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isTriaging ? 'animate-spin' : ''}`} />
+                  <span>{isTriaging ? 'Analyzing with Model...' : (emailTriage ? 'Re-Run Triage' : 'Run AI Triage')}</span>
+                </button>
+              </div>
+
+              {emailTriage ? (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs">
+                  <div className="p-2.5 rounded-xl bg-black/30 border border-white/5">
+                    <span className="text-[10px] font-mono text-white/40 block">Category</span>
+                    <span className="font-bold text-cyan-300 font-mono text-[11px] truncate block">{emailTriage.category}</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-black/30 border border-white/5">
+                    <span className="text-[10px] font-mono text-white/40 block">Urgency</span>
+                    <span className={`font-bold font-mono text-[11px] ${
+                      emailTriage.urgency === 'High' || emailTriage.urgency === 'Urgent'
+                        ? 'text-rose-400'
+                        : 'text-amber-300'
+                    }`}>
+                      {emailTriage.urgency}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-black/30 border border-white/5">
+                    <span className="text-[10px] font-mono text-white/40 block">Sensitivity</span>
+                    <span className={`font-bold font-mono text-[11px] ${
+                      emailTriage.is_sensitive ? 'text-amber-400' : 'text-emerald-400'
+                    }`}>
+                      {emailTriage.is_sensitive ? '⚠ SENSITIVE' : '✓ Standard'}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-black/30 border border-white/5">
+                    <span className="text-[10px] font-mono text-white/40 block">Action</span>
+                    <span className="font-bold text-indigo-300 font-mono text-[11px] truncate block">
+                      {emailTriage.recommended_action || 'Draft Response'}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-purple-300/70 font-mono">
+                  Click &lsquo;Run AI Triage&rsquo; to evaluate inquiry urgency, category, and sensitive policy topics before formulating the response.
+                </p>
+              )}
+            </div>
+
+            {/* AI Policy-Grounded Response Draft Generator (RAG) */}
+            <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-cyan-400" />
+                  <span className="text-xs font-bold text-cyan-200">Policy-Grounded Reply Synthesis (RAG)</span>
+                </div>
+
+                {/* Tone Switcher & Generator */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center p-0.5 rounded-lg bg-black/40 border border-white/10 text-[10px] font-mono">
+                    <button
+                      onClick={() => { setDraftTone('professional'); handleGenerateDraft('professional'); }}
+                      className={`px-2 py-0.5 rounded-md cursor-pointer transition-all ${draftTone === 'professional' ? 'bg-cyan-500 text-white font-bold' : 'text-white/60 hover:text-white'}`}
+                    >
+                      Professional
+                    </button>
+                    <button
+                      onClick={() => { setDraftTone('empathetic'); handleGenerateDraft('empathetic'); }}
+                      className={`px-2 py-0.5 rounded-md cursor-pointer transition-all ${draftTone === 'empathetic' ? 'bg-purple-500 text-white font-bold' : 'text-white/60 hover:text-white'}`}
+                    >
+                      Empathetic
+                    </button>
+                    <button
+                      onClick={() => { setDraftTone('concise'); handleGenerateDraft('concise'); }}
+                      className={`px-2 py-0.5 rounded-md cursor-pointer transition-all ${draftTone === 'concise' ? 'bg-blue-500 text-white font-bold' : 'text-white/60 hover:text-white'}`}
+                    >
+                      Concise
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => handleGenerateDraft(draftTone)}
+                    disabled={isDrafting}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-xs transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Sparkles className={`w-3.5 h-3.5 ${isDrafting ? 'animate-spin' : ''}`} />
+                    <span>{isDrafting ? 'Synthesizing...' : (emailDraft ? 'Regenerate Draft' : 'Generate Grounded Draft')}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Citations Preview */}
+              {emailDraft?.citations && emailDraft.citations.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="text-[10px] font-mono text-cyan-300/70">Verified Policy PDF Citations:</span>
+                  {emailDraft.citations.map((c: any, idx: number) => (
+                    <span
+                      key={idx}
+                      className="px-2.5 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-500/30 text-cyan-200 text-[10px] font-mono flex items-center gap-1"
+                    >
+                      <BookOpen className="w-2.5 h-2.5" />
+                      <span>{c.title || c.document} (Page {c.page})</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Editable Draft Body */}
+              <div>
+                <label className="text-[10px] font-mono uppercase text-white/40 block mb-1">
+                  HR Specialist Review &amp; Editable Reply
+                </label>
+                <textarea
+                  rows={7}
+                  value={editableBody}
+                  onChange={(e) => setEditableBody(e.target.value)}
+                  placeholder="Click 'Generate Grounded Draft' above to synthesize a response grounded in company policies..."
+                  className="w-full p-3.5 rounded-xl bg-black/40 border border-white/15 text-white text-xs leading-relaxed focus:outline-none focus:border-cyan-400 font-sans"
+                />
+              </div>
+
+              {/* Dispatch Footer */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
+                <span className="text-[11px] text-white/50 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Authenticated sender: <strong>{gmailStatus?.email || 'vsd2kwork@gmail.com'}</strong></span>
+                </span>
+
+                <div className="flex items-center gap-3">
+                  {sendSuccess && (
+                    <span className="text-xs font-mono text-emerald-300 animate-fadeIn flex items-center gap-1.5 font-bold">
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <span>Reply dispatched successfully via Gmail!</span>
+                    </span>
+                  )}
+                  <button
+                    onClick={handleSendReply}
+                    disabled={isSending || !editableBody}
+                    className={`px-6 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer ${
+                      isSending || !editableBody
+                        ? 'bg-white/10 text-white/40 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-500/20'
+                    }`}
+                  >
+                    <Send className={`w-3.5 h-3.5 ${isSending ? 'animate-bounce' : ''}`} />
+                    <span>{isSending ? 'Sending via Gmail API...' : 'Approve & Send via Gmail'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

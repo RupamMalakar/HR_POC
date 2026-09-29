@@ -235,5 +235,9 @@ class OAuthManager:
         self._write_tokens({})
         return True
 
+    def clear_credentials(self) -> bool:
+        """Alias for disconnect."""
+        return self.disconnect()
+
 
 oauth_manager = OAuthManager()

@@ -256,88 +256,89 @@ export const AITriageView: React.FC<AITriageViewProps> = ({
         </div>
       </div>
 
-      {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/10 overflow-x-auto">
-          <button
-            onClick={() => setActiveFilter('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'all'
-                ? 'bg-cyan-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            All ({requests.length})
-          </button>
 
-          <button
-            onClick={() => setActiveFilter('needs_review')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-              activeFilter === 'needs_review'
-                ? 'bg-amber-500 text-black font-bold shadow-sm'
-                : 'text-amber-300/80 hover:text-amber-200'
-            }`}
-          >
-            <span>Needs Review</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'needs_review' ? 'bg-black/20 text-black' : 'bg-amber-500/20 text-amber-300'}`}>
-              {summary.needReview}
-            </span>
-          </button>
+          {/* Filters & Search */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/10 overflow-x-auto">
+              <button
+                onClick={() => setActiveFilter('all')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  activeFilter === 'all'
+                    ? 'bg-cyan-600 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                All ({requests.length})
+              </button>
 
-          <button
-            onClick={() => setActiveFilter('high_priority')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'high_priority'
-                ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            High Priority ({summary.highPriority})
-          </button>
+              <button
+                onClick={() => setActiveFilter('needs_review')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeFilter === 'needs_review'
+                    ? 'bg-amber-500 text-black font-bold shadow-sm'
+                    : 'text-amber-300/80 hover:text-amber-200'
+                }`}
+              >
+                <span>Needs Review</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeFilter === 'needs_review' ? 'bg-black/20 text-black' : 'bg-amber-500/20 text-amber-300'}`}>
+                  {summary.needReview}
+                </span>
+              </button>
 
-          <button
-            onClick={() => setActiveFilter('sensitive')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'sensitive'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            Sensitive ({summary.sensitive})
-          </button>
+              <button
+                onClick={() => setActiveFilter('high_priority')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  activeFilter === 'high_priority'
+                    ? 'bg-rose-600 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                High Priority ({summary.highPriority})
+              </button>
 
-          <button
-            onClick={() => setActiveFilter('policy_related')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
-              activeFilter === 'policy_related'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-white/60 hover:text-white'
-            }`}
-          >
-            Policy Related
-          </button>
-        </div>
+              <button
+                onClick={() => setActiveFilter('sensitive')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  activeFilter === 'sensitive'
+                    ? 'bg-purple-600 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Sensitive ({summary.sensitive})
+              </button>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search requests, policies, names..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-400"
-          />
-        </div>
-      </div>
+              <button
+                onClick={() => setActiveFilter('policy_related')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  activeFilter === 'policy_related'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Policy Related
+              </button>
+            </div>
 
-      {/* Main Prioritized Triage Queue */}
-      <div className="space-y-3.5">
-        {triageQueue.length === 0 ? (
-          <div className="rounded-3xl p-12 bg-white/[0.02] border border-white/10 text-center text-white/40">
-            <Zap className="w-8 h-8 mx-auto mb-2 opacity-30 text-white" />
-            <span>No incoming requests match the selected triage filter.</span>
+            <div className="relative w-full sm:w-64">
+              <Search className="w-3.5 h-3.5 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search requests, policies, names..."
+                className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-400"
+              />
+            </div>
           </div>
-        ) : (
+
+          {/* Main Prioritized Triage Queue */}
+          <div className="space-y-3.5">
+            {triageQueue.length === 0 ? (
+              <div className="rounded-3xl p-12 bg-white/[0.02] border border-white/10 text-center text-white/40">
+                <Zap className="w-8 h-8 mx-auto mb-2 opacity-30 text-white" />
+                <span>No incoming requests match the selected triage filter.</span>
+              </div>
+            ) : (
           triageQueue.map((req) => {
             const triage = req.triage;
             const effectivePriority = (triage?.humanPriority || triage?.priority || req.priority || 'MEDIUM').toUpperCase();
@@ -488,6 +489,8 @@ export const AITriageView: React.FC<AITriageViewProps> = ({
           })
         )}
       </div>
+
+
 
       {/* Human Override Modal */}
       {overrideModalItem && (

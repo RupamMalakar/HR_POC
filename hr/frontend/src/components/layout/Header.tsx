@@ -28,8 +28,8 @@ const tabTitles: Record<NavTab, { title: string; subtitle: string }> = {
     subtitle: "RAG-assisted policy query, handbook citations, & deliverable drafting"
   },
   deliverables: {
-    title: "Deliverables & Official Documents",
-    subtitle: "Cryptographically verified employee letters, contracts, and addendums"
+    title: "HR Deliverables & Email Dispatch",
+    subtitle: "Inbound employee email triage, policy RAG drafts, and live Gmail response dispatch"
   },
   'hr-actions': {
     title: "Operational HR Actions",

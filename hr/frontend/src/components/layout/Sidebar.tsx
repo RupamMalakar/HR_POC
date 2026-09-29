@@ -224,7 +224,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
 
-            {/* Deliverables */}
+            {/* Deliverables / Gmail Dispatch */}
             <button
               onClick={() => onSelectTab('deliverables')}
               className={`rounded-xl transition-all duration-200 text-left relative group ${
@@ -233,20 +233,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   : 'w-full flex items-center gap-3 px-3 py-2.5'
               } ${
                 activeTab === 'deliverables'
-                  ? 'bg-white/[0.12] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-cyan-400/40'
+                  ? 'bg-gradient-to-r from-red-600/20 via-rose-500/15 to-white/[0.08] text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent'
               }`}
             >
               {activeTab === 'deliverables' && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-cyan-400 shadow-[0_0_10px_#00f0ff]" />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-red-400 shadow-[0_0_10px_#ef4444]" />
               )}
-              <span className="material-symbols-outlined text-[20px]">
-                assignment_turned_in
+              <span className="material-symbols-outlined text-[20px] text-red-400">
+                mail
               </span>
-              {!isCollapsed && <span className="text-sm">Deliverables</span>}
+              {!isCollapsed && (
+                <>
+                  <span className="text-sm">Deliverables</span>
+                  <span className="ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 flex items-center gap-1 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Gmail
+                  </span>
+                </>
+              )}
               {isCollapsed && (
-                <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#0c1024] border border-white/15 rounded-lg text-xs text-white whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-                  Deliverables
+                <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#0c1024] border border-red-500/30 rounded-lg text-xs text-white whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg flex items-center gap-1.5">
+                  <span>Deliverables</span>
+                  <span className="text-[9px] font-mono text-emerald-400">• Gmail</span>
                 </div>
               )}
             </button>
