@@ -43,6 +43,10 @@ const tabTitles: Record<NavTab, { title: string; subtitle: string }> = {
     title: "Executive Reports & Audit Logs",
     subtitle: "SOC2 and HIPAA compliant telemetry, SLA summaries, and export tools"
   },
+  'ai-telemetry': {
+    title: "AI Model Telemetry & Token Intelligence",
+    subtitle: "Real-time token utilization, model inference latency, cost attribution, and RAG vector store health"
+  },
   settings: {
     title: "System & AI Model Settings",
     subtitle: "Routing thresholds, vector store parameters, and notification policies"

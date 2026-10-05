@@ -3,11 +3,13 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+import time
 from backend.config import settings, ConfigurationError
 from backend.integrations.gmail.router import router as gmail_router
 from backend.models import ChatRequest, ChatResponse, HealthResponse, RootResponse
 from backend.rag.vector_store import VectorStoreNotFoundError, is_vector_store_populated
 from backend.services.chat_service import ChatService, ChatServiceError
+from backend.services.telemetry_client import record_invocation_async
 
 # Configure root logger
 logging.basicConfig(
@@ -126,5 +128,17 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
     engages in natural multi-turn conversation, and provides grounded policy answers
     with source citations when querying company policies.
     """
+    t0 = time.time()
     service = ChatService()
-    return service.answer_question(request)
+    res = service.answer_question(request)
+    latency_ms = int((time.time() - t0) * 1000)
+    model_name = "gpt-4o" if (res.sources and len(res.sources) > 0) else "pypdf-fallback"
+    record_invocation_async(
+        service="Policy Copilot",
+        model=model_name,
+        prompt_text=request.question,
+        response_text=res.answer,
+        latency_ms=latency_ms,
+        status="200_OK",
+    )
+    return res

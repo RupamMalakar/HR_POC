@@ -16,8 +16,10 @@ from backend.integrations.gmail.schemas import (
     SendEmailRequest,
     SendEmailResponse,
 )
+import time
 from backend.integrations.gmail.service import gmail_service
 from backend.services.email_triage import email_triage_service
+from backend.services.telemetry_client import record_invocation_async
 
 logger = logging.getLogger(__name__)
 
@@ -159,9 +161,20 @@ async def triage_email(email_id: str):
             detail=f"Email with ID '{email_id}' was not found.",
         )
 
+    t0 = time.time()
     triage_result = email_triage_service.analyze_email(
         subject=detail.subject,
         body=detail.body_text,
+    )
+    latency_ms = int((time.time() - t0) * 1000)
+
+    record_invocation_async(
+        service="AI Triage",
+        model="intent-classifier",
+        prompt_text=f"Triage email: {detail.subject}",
+        response_text=f"Category: {triage_result.category} | Sensitivity: {triage_result.is_sensitive}",
+        latency_ms=latency_ms,
+        status="200_OK",
     )
 
     new_status = "escalated" if triage_result.is_sensitive else "analyzed"
@@ -202,12 +215,23 @@ async def generate_response_draft(
         body=detail.body_text,
     )
 
+    t0 = time.time()
     draft = email_triage_service.generate_draft_response(
         email=detail,
         triage=triage_result,
         tone=request.tone or "professional",
         refinement=request.refinement,
         custom_instructions=request.custom_instructions,
+    )
+    latency_ms = int((time.time() - t0) * 1000)
+
+    record_invocation_async(
+        service="Gmail Deliverables",
+        model="gpt-4o",
+        prompt_text=f"Draft HR reply for: {detail.subject}",
+        response_text=draft.draft_body,
+        latency_ms=latency_ms,
+        status="200_OK",
     )
 
     gmail_service.update_email_status(email_id=email_id, status="draft_ready")

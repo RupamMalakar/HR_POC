@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 from pathlib import Path
 from typing import Optional, List, Tuple
 from openai import APIError, AuthenticationError, RateLimitError
@@ -69,6 +70,11 @@ class ChatServiceError(Exception):
     pass
 
 
+# Circuit Breaker state to prevent waiting on timeouts when Azure OpenAI is offline
+_azure_circuit_open_until: float = 0.0
+_circuit_failure_reason: str = ""
+
+
 class ChatService:
     """Service handling multi-turn conversation and grounded policy retrieval."""
 
@@ -81,15 +87,29 @@ class ChatService:
         1. If Azure OpenAI & ChromaDB vector store are configured, runs Azure LLM RAG with multi-turn history.
         2. Otherwise, executes grounded local PDF retrieval over knowledge_base/ with friendly fallback.
         """
+        global _azure_circuit_open_until, _circuit_failure_reason
         question = request.question.strip()
         logger.info(f"Processing question: '{question[:80]}...' (History depth: {len(request.history)})")
 
         # Check if full Azure OpenAI pipeline is ready
         if settings.is_azure_configured() and is_vector_store_populated():
+            now = time.time()
+            if now < _azure_circuit_open_until:
+                logger.info(
+                    f"Azure circuit breaker OPEN ({_circuit_failure_reason}). Fast-serving via local KB fallback."
+                )
+                return self._answer_from_local_kb(question)
+
             try:
-                return self._answer_via_azure(question, request.history)
+                res = self._answer_via_azure(question, request.history)
+                _circuit_failure_reason = ""
+                return res
             except (AuthenticationError, APIError, RateLimitError, ConfigurationError, VectorStoreNotFoundError, ChatServiceError, Exception) as e:
-                logger.warning(f"Azure OpenAI pipeline encountered error ({e}), failing over to grounded local PDF retrieval.")
+                _azure_circuit_open_until = time.time() + 180.0  # Trip circuit for 3 minutes
+                _circuit_failure_reason = f"{type(e).__name__}: {str(e)[:80]}"
+                logger.warning(
+                    f"Azure OpenAI pipeline encountered error ({e}), tripping circuit breaker for 180s. Failing over to grounded local PDF retrieval."
+                )
                 return self._answer_from_local_kb(question)
 
         # Fallback to local PDF knowledge base

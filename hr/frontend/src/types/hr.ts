@@ -366,3 +366,93 @@ export interface InsightsTelemetry {
   insights: InsightItem[];
 }
 
+export interface ModelSpec {
+  id: string;
+  name: string;
+  provider: string;
+  role: string;
+  status: 'online' | 'degraded' | 'offline' | 'standby';
+  contextWindow: number;
+  maxOutputTokens: number;
+  temperature: number;
+  topP: number;
+  latencyMs: number;
+  totalCalls: number;
+  totalTokens: number;
+  costPer1kPrompt: number;
+  costPer1kCompletion: number;
+  endpointUrl?: string;
+  version?: string;
+}
+
+export interface FeatureTokenBreakdown {
+  featureId: string;
+  name: string;
+  icon: string;
+  tokens: number;
+  percent: number;
+  calls: number;
+  estimatedCost: number;
+  avgTokensPerCall: number;
+}
+
+export interface DailyTokenTrend {
+  date: string;
+  label: string;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  calls: number;
+  cost: number;
+}
+
+export interface InvocationLogItem {
+  id: string;
+  timestamp: string;
+  service: string;
+  model: string;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  latencyMs: number;
+  cost: number;
+  status: '200_OK' | 'CACHED' | 'FALLBACK' | 'ERROR';
+  queryPreview: string;
+  citationCount?: number;
+}
+
+export interface AITelemetryData {
+  summary: {
+    totalTokens: number;
+    promptTokens: number;
+    completionTokens: number;
+    totalInferences: number;
+    estimatedCostUSD: number;
+    monthlyBudgetUSD: number;
+    budgetUsedPercent: number;
+    avgLatencyMs: number;
+    p95LatencyMs: number;
+    cacheHitRate: number;
+    lastUpdated: string;
+  };
+  models: ModelSpec[];
+  embeddings: {
+    name: string;
+    model: string;
+    dimensions: number;
+    documentsIndexed: number;
+    totalChunks: number;
+    vectorStore: string;
+    status: 'ready' | 'syncing' | 'offline';
+  };
+  fallbackEngine: {
+    name: string;
+    status: 'standby' | 'active';
+    availability: string;
+    failoversTriggered: number;
+  };
+  byFeature: FeatureTokenBreakdown[];
+  dailyTrend: DailyTokenTrend[];
+  recentInvocations: InvocationLogItem[];
+}
+

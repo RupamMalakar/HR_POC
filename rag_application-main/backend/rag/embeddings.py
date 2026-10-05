@@ -1,4 +1,4 @@
-﻿from langchain_openai import AzureOpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
 from backend.config import settings
 
 
@@ -14,4 +14,6 @@ def get_azure_embeddings() -> AzureOpenAIEmbeddings:
         api_key=settings.AZURE_OPENAI_API_KEY,
         api_version=settings.AZURE_OPENAI_API_VERSION,
         azure_deployment=settings.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
+        request_timeout=2.0,
+        max_retries=0,
     )

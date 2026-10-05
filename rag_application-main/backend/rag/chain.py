@@ -49,6 +49,8 @@ def get_azure_chat_llm() -> AzureChatOpenAI:
         azure_deployment=settings.AZURE_OPENAI_DEPLOYMENT,
         max_tokens=4096,
         temperature=0.1,
+        request_timeout=2.5,
+        max_retries=0,
     )
 
 

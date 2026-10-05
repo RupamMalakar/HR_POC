@@ -11,6 +11,7 @@ import { HRActionsView } from './components/views/HRActionsView';
 import { InsightsView } from './components/views/InsightsView';
 import { SettingsView } from './components/views/SettingsView';
 import { ReportsView } from './components/views/ReportsView';
+import { AITelemetryView } from './components/views/AITelemetryView';
 import { HRProfileView } from './components/views/HRProfileAndReports';
 import { CommandPalette } from './components/modals/CommandPalette';
 import { NewActionModal } from './components/modals/NewActionModal';
@@ -485,6 +486,10 @@ function HROperationsPortal() {
 
             {activeTab === 'reports' && (
               <ReportsView />
+            )}
+
+            {activeTab === 'ai-telemetry' && (
+              <AITelemetryView />
             )}
 
             {activeTab === 'settings' && (
