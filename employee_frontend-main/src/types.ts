@@ -111,6 +111,10 @@ export interface PolicyItem {
   image?: string;
   tag?: string;
   featured?: boolean;
+  pdfUrl?: string;
+  fileName?: string;
+  pageCount?: number;
+  fileSize?: string;
 }
 
 export interface ChatMessage {

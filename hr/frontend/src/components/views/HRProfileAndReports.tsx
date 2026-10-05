@@ -8,7 +8,7 @@ export const HRProfileView: React.FC = () => {
           <img
             alt="Sarah Jenkins Headshot"
             className="w-16 h-16 rounded-2xl object-cover ring-2 ring-cyan-400/50 shadow-neon-cyan"
-            src="https://lh3.googleusercontent.com/aida/AEtjO1Xtd_6Zzb5GlqZHxkO20YhGWUIh5W6zeXIQMhT-wo_XWwgwVuROluO2YbW2xoNMM9EX4rSJ9HfXVhPfo0-FHKC9ypn5YpZDfKfjsev9tVACXOmHmujbKFBPnxdIa0mK0Il1qM1GRlo1u2Phyfe_WS_DSjxP_VA-_CcPCooGoexaXN5JJnUeX6ce0c_p78M6YXoqa2h8-dvIVVZUElaP5exk5NPsZxfpbZryLSyTPFga3mLVWeRTcUTS_B0"
+            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80"
           />
           <div>
             <h2 className="font-display text-xl font-bold text-white tracking-tight">
