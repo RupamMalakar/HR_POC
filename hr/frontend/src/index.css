@@ -100,17 +100,18 @@ html.light {
   color-scheme: light;
 }
 
-/* Frosted glass cards */
+/* Frosted glass cards in Light Mode */
 html.light .bg-white\/\[0\.04\],
 html.light .bg-white\/\[0\.03\],
-html.light .bg-white\/\[0\.02\] {
-  background-color: rgba(255, 255, 255, 0.82) !important;
+html.light .bg-white\/\[0\.02\],
+html.light .bg-white\/\[0\.01\] {
+  background-color: rgba(255, 255, 255, 0.88) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02) !important;
 }
 
 html.light .bg-white\/\[0\.05\] {
-  background-color: rgba(255, 255, 255, 0.88) !important;
+  background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
 html.light .bg-white\/\[0\.07\],
@@ -118,7 +119,7 @@ html.light .bg-white\/\[0\.08\],
 html.light .hover\:bg-white\/\[0\.07\]:hover,
 html.light .hover\:bg-white\/\[0\.08\]:hover,
 html.light .hover\:bg-white\/\[0\.06\]:hover {
-  background-color: rgba(248, 250, 252, 0.95) !important;
+  background-color: rgba(241, 245, 249, 0.95) !important;
 }
 
 html.light .bg-white\/\[0\.12\] {
@@ -126,43 +127,366 @@ html.light .bg-white\/\[0\.12\] {
   color: #0369a1 !important;
 }
 
-/* Border colors */
+/* Border & Divider colors in Light Mode */
+html.light .border-white\/5,
 html.light .border-white\/10,
+html.light .border-white\/12,
 html.light .border-white\/15,
 html.light .border-white\/20,
 html.light .border-white\/25,
-html.light .border-white\/5 {
+html.light .border-white\/30 {
   border-color: rgba(226, 232, 240, 0.85) !important;
 }
 
-/* Text Hierarchy: Only target general text, never buttons, badges, pills, or dark surfaces */
-html.light .text-white:not(button):not(button *):not(.btn):not(.btn *):not([class*="bg-[#"]):not([class*="bg-[#"] *):not([class*="bg-slate-9"]):not([class*="bg-slate-9"] *):not([class*="bg-slate-8"]):not([class*="bg-slate-8"] *):not([class*="bg-teal-"]):not([class*="bg-teal-"] *):not([class*="bg-blue-"]):not([class*="bg-blue-"] *):not([class*="bg-indigo-"]):not([class*="bg-indigo-"] *):not([class*="bg-cyan-"]):not([class*="bg-cyan-"] *):not([class*="bg-emerald-"]):not([class*="bg-emerald-"] *):not([class*="bg-red-"]):not([class*="bg-red-"] *):not([class*="bg-gradient-"]):not([class*="bg-gradient-"] *):not(.crystal-glass-dark):not(.crystal-glass-dark *) {
+html.light .divide-white\/5,
+html.light .divide-white\/10,
+html.light .divide-white\/15 {
+  border-color: rgba(241, 245, 249, 0.9) !important;
+}
+
+/* Base Text Hierarchy: Crisp, high-contrast dark typography in light mode */
+html.light .text-white {
   color: #0f172a !important;
 }
 
-html.light .text-white\/90:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
-html.light .text-white\/80:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
+html.light .text-white\/90,
+html.light .text-white\/80 {
   color: #1e293b !important;
 }
 
-html.light .text-white\/70:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
-html.light .text-white\/60:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
-html.light .text-white\/50:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
-  color: #475569 !important;
+html.light .text-white\/70,
+html.light .text-white\/60 {
+  color: #334155 !important;
 }
 
-html.light .text-white\/40:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
-html.light .text-white\/30:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *),
-html.light .text-white\/20:not(button *):not([class*="bg-slate-"] *):not([class*="bg-[#"] *):not(.crystal-glass-dark *) {
+html.light .text-white\/50,
+html.light .text-white\/40 {
   color: #64748b !important;
 }
 
-/* =========================================================
-   Light Theme: High-Contrast White Text on Action Buttons & Dark Surfaces
-   Guarantees that all primary buttons, pills, badges, and dark cards
-   ALWAYS have crisp, high-contrast, perfectly visible white text.
-   ========================================================= */
+html.light .text-white\/30,
+html.light .text-white\/20,
+html.light .text-white\/10 {
+  color: #94a3b8 !important;
+}
 
+/* Slate typography (Markdown, Copilot, Drawers) */
+html.light .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-200,
+html.light [class*="text-slate-200/"] {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-300,
+html.light [class*="text-slate-300/"] {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* High-contrast colored accent text for light background */
+html.light .text-cyan-100,
+html.light .text-cyan-200,
+html.light .text-cyan-300,
+html.light .text-cyan-400,
+html.light .text-neon-cyan,
+html.light [class*="text-cyan-200/"],
+html.light [class*="text-cyan-300/"] {
+  color: #0369a1 !important;
+}
+
+html.light .text-purple-100,
+html.light .text-purple-200,
+html.light .text-purple-300,
+html.light .text-purple-400,
+html.light [class*="text-purple-200/"],
+html.light [class*="text-purple-300/"] {
+  color: #6d28d9 !important;
+}
+
+html.light .text-emerald-100,
+html.light .text-emerald-200,
+html.light .text-emerald-300,
+html.light .text-emerald-400,
+html.light .text-neon-emerald,
+html.light [class*="text-emerald-200/"],
+html.light [class*="text-emerald-300/"] {
+  color: #047857 !important;
+}
+
+html.light .text-rose-100,
+html.light .text-rose-200,
+html.light .text-rose-300,
+html.light .text-rose-400,
+html.light [class*="text-rose-200/"],
+html.light [class*="text-rose-300/"] {
+  color: #be123c !important;
+}
+
+html.light .text-amber-100,
+html.light .text-amber-200,
+html.light .text-amber-300,
+html.light .text-amber-400,
+html.light .text-orange-300,
+html.light .text-orange-400,
+html.light [class*="text-amber-200/"],
+html.light [class*="text-amber-300/"] {
+  color: #b45309 !important;
+}
+
+html.light .text-blue-100,
+html.light .text-blue-200,
+html.light .text-blue-300,
+html.light .text-blue-400,
+html.light .text-indigo-200,
+html.light .text-indigo-300,
+html.light .text-indigo-400 {
+  color: #1d4ed8 !important;
+}
+
+/* Dark tint capsules converted to soft pastels in light mode */
+html.light .bg-cyan-950\/60,
+html.light .bg-cyan-950\/40,
+html.light .bg-cyan-950\/20,
+html.light .bg-cyan-950 {
+  background-color: rgba(14, 165, 233, 0.12) !important;
+  border-color: rgba(14, 165, 233, 0.3) !important;
+}
+
+html.light .bg-purple-950\/30,
+html.light .bg-purple-950\/20,
+html.light .bg-purple-950 {
+  background-color: rgba(168, 85, 247, 0.12) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+html.light .bg-rose-950\/30,
+html.light .bg-rose-950\/20,
+html.light .bg-rose-950 {
+  background-color: rgba(244, 63, 94, 0.12) !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+html.light .bg-emerald-950\/30,
+html.light .bg-emerald-950\/20,
+html.light .bg-emerald-950 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+html.light .bg-amber-950\/30,
+html.light .bg-amber-950\/20,
+html.light .bg-amber-950 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Translucent white toggles/pills in light mode */
+html.light .bg-white\/15,
+html.light .bg-white\/20,
+html.light .bg-white\/25 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Modals, Drawers & Dark Hex Surfaces in Light Mode */
+html.light .bg-\[\#060814\]\/95,
+html.light .bg-\[\#060814\]\/90,
+html.light .bg-\[\#060814\]\/85,
+html.light .bg-\[\#060814\],
+html.light .bg-\[\#0b0e22\]\/95,
+html.light .bg-\[\#0b0e22\],
+html.light .bg-\[\#0c1024\]\/95,
+html.light .bg-\[\#0c1024\]\/90,
+html.light .bg-\[\#0c1024\],
+html.light .bg-\[\#070b1c\]\/80,
+html.light .bg-\[\#070b1c\],
+html.light .bg-\[\#0a0e24\]\/95,
+html.light .bg-\[\#0a0e24\]\/90,
+html.light .bg-\[\#0a0e24\],
+html.light .bg-\[\#080d24\]\/90,
+html.light .bg-\[\#080d24\],
+html.light .bg-\[\#060918\]\/95,
+html.light .bg-\[\#060918\],
+html.light .bg-\[\#070a18\]\/95,
+html.light .bg-\[\#070a18\] {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: rgba(226, 232, 240, 0.95) !important;
+  color: #0f172a !important;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.16) !important;
+}
+
+/* Secondary dark capsules & toolbars */
+html.light .bg-black\/30,
+html.light .bg-black\/40,
+html.light .bg-black\/50,
+html.light .bg-black\/60,
+html.light .bg-black\/70,
+html.light .bg-black\/80 {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+  border-color: rgba(226, 232, 240, 0.95) !important;
+  color: #0f172a !important;
+}
+
+/* Form controls & inputs */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(203, 213, 225, 0.9) !important;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.18) !important;
+  outline: none !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Sidebar & Sticky Header in Light Mode */
+html.light aside {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+}
+
+html.light aside button {
+  color: #475569 !important;
+}
+
+html.light aside button:hover {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+  color: #0f172a !important;
+}
+
+html.light aside button:hover * {
+  color: #0f172a !important;
+}
+
+html.light aside button[class*="bg-white\/[0.12]"],
+html.light aside button[class*="border-cyan-400"] {
+  background-color: rgba(14, 165, 233, 0.12) !important;
+  border-color: rgba(14, 165, 233, 0.45) !important;
+  color: #0369a1 !important;
+}
+
+html.light aside button[class*="bg-white\/[0.12]"] *,
+html.light aside button[class*="border-cyan-400"] * {
+  color: #0369a1 !important;
+}
+
+html.light aside .bg-white\/10 {
+  background-color: rgba(226, 232, 240, 0.95) !important;
+  color: #334155 !important;
+}
+
+html.light header.sticky {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.02) !important;
+}
+
+/* Welcome banner in Light mode */
+html.light .bg-gradient-to-r.from-blue-900\/25,
+html.light .bg-gradient-to-r.from-blue-900\/30 {
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.9) 0%, rgba(238, 242, 255, 0.85) 50%, rgba(243, 232, 255, 0.9) 100%) !important;
+  border-color: rgba(186, 230, 253, 0.7) !important;
+  box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Sarah greeting text gradient in light mode */
+html.light .bg-clip-text.text-transparent {
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #0369a1 100%) !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+/* AI Operations banner in Light mode */
+html.light .bg-gradient-to-r.from-blue-950\/40 {
+  background: linear-gradient(135deg, rgba(243, 232, 255, 0.9) 0%, rgba(224, 242, 254, 0.85) 100%) !important;
+  border-color: rgba(216, 180, 254, 0.6) !important;
+}
+
+/* Copilot User Message Bubble in Light mode */
+html.light .bg-gradient-to-br.from-blue-600\/35 {
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
+  color: #ffffff !important;
+}
+
+html.light .bg-gradient-to-br.from-blue-600\/35 * {
+  color: #ffffff !important;
+}
+
+/* Markdown / Prose in Light mode */
+html.light .prose-invert {
+  color: #1e293b !important;
+}
+
+html.light .prose-invert h1,
+html.light .prose-invert h2,
+html.light .prose-invert h3,
+html.light .prose-invert strong {
+  color: #0f172a !important;
+}
+
+html.light .prose-invert p,
+html.light .prose-invert li,
+html.light .prose-invert td {
+  color: #334155 !important;
+}
+
+html.light .prose-invert th {
+  color: #0f172a !important;
+}
+
+html.light .prose-invert code {
+  color: #0369a1 !important;
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Tables in Light mode */
+html.light thead {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95) !important;
+}
+
+html.light thead th {
+  color: #475569 !important;
+}
+
+html.light tbody tr {
+  border-bottom-color: rgba(241, 245, 249, 0.9) !important;
+}
+
+html.light tbody tr:hover {
+  background-color: rgba(241, 245, 249, 0.75) !important;
+}
+
+/* SVG Charts in Light mode */
+html.light svg text {
+  fill: #64748b !important;
+}
+
+html.light svg line[stroke*="255, 255, 255"],
+html.light svg line[stroke*="255,255,255"] {
+  stroke: rgba(148, 163, 184, 0.25) !important;
+}
+
+/* Action Buttons with Solid Dark/Color Backgrounds: ALWAYS Crisp White Text */
 html.light button.bg-\[\#0F172A\],
 html.light button.bg-\[\#0F172A\] *,
 html.light .bg-\[\#0F172A\],
@@ -185,8 +509,6 @@ html.light .bg-teal-600,
 html.light .bg-teal-600 *,
 html.light button.bg-teal-700,
 html.light button.bg-teal-700 *,
-html.light .bg-teal-700,
-html.light .bg-teal-700 *,
 html.light button.bg-blue-600,
 html.light button.bg-blue-600 *,
 html.light .bg-blue-600,
@@ -203,12 +525,18 @@ html.light button.bg-emerald-600,
 html.light button.bg-emerald-600 *,
 html.light .bg-emerald-600,
 html.light .bg-emerald-600 *,
+html.light button.bg-rose-600,
+html.light button.bg-rose-600 *,
+html.light button.bg-purple-600,
+html.light button.bg-purple-600 *,
 html.light button.bg-red-500,
 html.light button.bg-red-500 *,
-html.light .bg-red-500,
-html.light .bg-red-500 *,
 html.light button[class*="bg-gradient-to-"],
 html.light button[class*="bg-gradient-to-"] *,
+html.light button[class*="from-blue-600"],
+html.light button[class*="from-blue-600"] *,
+html.light button[class*="from-cyan-600"],
+html.light button[class*="from-cyan-600"] *,
 html.light .crystal-glass-dark,
 html.light .crystal-glass-dark * {
   color: #ffffff !important;
@@ -225,94 +553,22 @@ html.light button.bg-teal-600 svg,
 html.light button.bg-blue-600 svg,
 html.light button.bg-indigo-600 svg,
 html.light button.bg-cyan-600 svg,
+html.light button.bg-emerald-600 svg,
+html.light button.bg-rose-600 svg,
+html.light button.bg-purple-600 svg,
 html.light button[class*="bg-gradient-to-"] svg,
 html.light .crystal-glass-dark svg {
   stroke: #ffffff !important;
   color: #ffffff !important;
 }
 
-
-/* Secondary dark capsules & inputs */
-html.light .bg-black\/40,
-html.light .bg-black\/50,
-html.light .bg-black\/60,
-html.light .bg-black\/30 {
-  background-color: rgba(241, 245, 249, 0.9) !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
-  color: #0f172a !important;
-}
-
-html.light .bg-black\/40 input,
-html.light .bg-black\/40 textarea,
-html.light .bg-black\/40 select,
-html.light input.bg-black\/40,
-html.light textarea.bg-black\/40,
-html.light select.bg-black\/40,
-html.light input.bg-black\/30 {
-  color: #0f172a !important;
-}
-
-html.light input::placeholder,
-html.light textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Sidebar & Sticky Header in Light Mode */
-html.light aside {
-  background-color: rgba(255, 255, 255, 0.82) !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
-}
-
-html.light header.sticky {
-  background-color: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-}
-
-/* Welcome banner in Light mode */
-html.light .bg-gradient-to-r.from-blue-900\/25,
-html.light .bg-gradient-to-r.from-blue-900\/30 {
-  background: linear-gradient(135deg, rgba(224, 242, 254, 0.85) 0%, rgba(238, 242, 255, 0.8) 50%, rgba(243, 232, 255, 0.85) 100%) !important;
-  border-color: rgba(186, 230, 253, 0.6) !important;
-  box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.08) !important;
-}
-
-/* AI Operations banner in Light mode */
-html.light .bg-gradient-to-r.from-blue-950\/40 {
-  background: linear-gradient(135deg, rgba(243, 232, 255, 0.85) 0%, rgba(224, 242, 254, 0.8) 100%) !important;
-  border-color: rgba(216, 180, 254, 0.5) !important;
-}
-
-/* Neon accents adjusted for crystalline light mode */
-html.light .text-cyan-300,
-html.light .text-cyan-400 {
+/* Secondary & Filter buttons in Light Mode */
+html.light button.hover\:text-white:hover {
   color: #0284c7 !important;
 }
 
-html.light .text-purple-300,
-html.light .text-purple-400 {
-  color: #7c3aed !important;
-}
-
-html.light .text-emerald-300,
-html.light .text-emerald-400 {
-  color: #059669 !important;
-}
-
-html.light .text-rose-300,
-html.light .text-rose-400 {
-  color: #e11d48 !important;
-}
-
-html.light .text-amber-300,
-html.light .text-amber-400 {
-  color: #d97706 !important;
-}
-
-/* SVG Chart adjustments for Light mode */
 html.light .shadow-glass {
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02) !important;
 }
 
 /* =========================================================
@@ -567,25 +823,38 @@ button svg:not([class*="text-"]) {
 html.light button.bg-\[\#0F172A\],
 html.light button[class*="bg-[#0F172A]"],
 html.light button.bg-slate-900,
-html.light button.bg-slate-800,
-html.light button[class*="bg-teal-600"],
-html.light button[class*="bg-teal-700"],
-html.light button[class*="bg-teal-800"],
-html.light button[class*="bg-gradient-"],
-html.light button.text-white {
+html.light button.bg-slate-800 {
   color: #FFFFFF !important;
-  background-color: var(--button-primary-bg, #0F172A);
+  background-color: var(--button-primary-bg, #0F172A) !important;
+}
+
+html.light button[class*="bg-teal-6"],
+html.light button[class*="bg-teal-7"],
+html.light button[class*="bg-teal-8"],
+html.light button[class*="bg-cyan-6"],
+html.light button[class*="bg-blue-6"],
+html.light button[class*="bg-indigo-6"],
+html.light button[class*="bg-purple-6"],
+html.light button[class*="bg-rose-6"],
+html.light button[class*="bg-emerald-6"],
+html.light button[class*="bg-gradient-"] {
+  color: #FFFFFF !important;
 }
 
 html.light button.bg-\[\#0F172A\] *,
 html.light button[class*="bg-[#0F172A]"] *,
 html.light button.bg-slate-900 *,
 html.light button.bg-slate-800 *,
-html.light button[class*="bg-teal-600"] *,
-html.light button[class*="bg-teal-700"] *,
-html.light button[class*="bg-teal-800"] *,
-html.light button[class*="bg-gradient-"] *,
-html.light button.text-white * {
+html.light button[class*="bg-teal-6"] *,
+html.light button[class*="bg-teal-7"] *,
+html.light button[class*="bg-teal-8"] *,
+html.light button[class*="bg-cyan-6"] *,
+html.light button[class*="bg-blue-6"] *,
+html.light button[class*="bg-indigo-6"] *,
+html.light button[class*="bg-purple-6"] *,
+html.light button[class*="bg-rose-6"] *,
+html.light button[class*="bg-emerald-6"] *,
+html.light button[class*="bg-gradient-"] * {
   color: #FFFFFF !important;
 }
 

@@ -275,7 +275,7 @@ export const ReportsView: React.FC = () => {
       )}
 
       {/* Main Header & Date Range Selector */}
-      <section className="w-full rounded-3xl p-6 sm:p-8 bg-[#0c1024]/90 dark:bg-[#0c1024]/95 backdrop-blur-2xl border border-white/10 shadow-glass specular-border space-y-6 flex-shrink-0 relative z-10">
+      <section className="w-full rounded-3xl p-6 sm:p-8 bg-white/[0.04] dark:bg-[#0c1024]/95 backdrop-blur-2xl border border-white/10 shadow-glass specular-border space-y-6 flex-shrink-0 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -424,7 +424,7 @@ export const ReportsView: React.FC = () => {
             return (
               <div
                 key={card.type}
-                className="group relative rounded-2xl p-5 bg-[#0c1024]/90 dark:bg-[#0c1024]/95 hover:bg-[#111736] backdrop-blur-xl border border-white/10 hover:border-cyan-400/40 transition-all duration-300 flex flex-col justify-between shadow-glass specular-border min-h-[250px] overflow-hidden"
+                className="group relative rounded-2xl p-5 bg-white/[0.04] dark:bg-[#0c1024]/95 hover:bg-white/[0.07] dark:hover:bg-[#111736] backdrop-blur-xl border border-white/10 hover:border-cyan-400/40 transition-all duration-300 flex flex-col justify-between shadow-glass specular-border min-h-[250px] overflow-hidden"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
@@ -479,7 +479,7 @@ export const ReportsView: React.FC = () => {
       </section>
 
       {/* Generated Reports Table Section */}
-      <section className="w-full rounded-3xl p-6 sm:p-8 bg-[#0c1024]/90 dark:bg-[#0c1024]/95 backdrop-blur-2xl border border-white/10 shadow-glass specular-border space-y-6 flex-shrink-0 relative z-10">
+      <section className="w-full rounded-3xl p-6 sm:p-8 bg-white/[0.04] dark:bg-[#0c1024]/95 backdrop-blur-2xl border border-white/10 shadow-glass specular-border space-y-6 flex-shrink-0 relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="font-display text-xl font-bold text-white tracking-tight flex items-center gap-2">

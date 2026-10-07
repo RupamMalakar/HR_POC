@@ -155,7 +155,7 @@ export const DeliverableDrawer: React.FC<DeliverableDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md animate-fadeIn">
       {/* Right-Side Slide-Over Detail Drawer */}
       <div
-        className="w-full max-w-2xl h-full bg-[#060814]/95 backdrop-blur-2xl border-l border-white/10 shadow-2xl flex flex-col overflow-hidden text-slate-100 animate-slideLeft"
+        className="w-full max-w-2xl h-full bg-white/[0.97] dark:bg-[#060814]/95 backdrop-blur-2xl border-l border-white/10 shadow-2xl flex flex-col overflow-hidden text-[#0f172a] dark:text-slate-100 animate-slideLeft"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drawer Header */}

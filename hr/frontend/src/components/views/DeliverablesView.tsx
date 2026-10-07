@@ -413,7 +413,7 @@ export const DeliverablesView: React.FC<DeliverablesViewProps> = () => {
               <div
                 key={email.id}
                 onClick={() => handleOpenEmail(email)}
-                className={`rounded-2xl p-5 bg-[#0a0e24]/95 hover:bg-[#0d1230] border transition-all specular-border flex flex-col gap-3.5 cursor-pointer shadow-lg ${
+                className={`rounded-2xl p-5 bg-white/[0.04] dark:bg-[#0a0e24]/95 hover:bg-white/[0.07] dark:hover:bg-[#0d1230] border transition-all specular-border flex flex-col gap-3.5 cursor-pointer shadow-lg ${
                   isSent
                     ? 'border-emerald-500/25 opacity-85'
                     : isSensitive
@@ -503,7 +503,7 @@ export const DeliverablesView: React.FC<DeliverablesViewProps> = () => {
       {selectedEmail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
           <div
-            className="w-full max-w-3xl max-h-[92vh] rounded-3xl bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 sm:p-7 overflow-y-auto no-scrollbar flex flex-col gap-5"
+            className="w-full max-w-3xl max-h-[92vh] rounded-3xl bg-white/[0.96] dark:bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 sm:p-7 overflow-y-auto no-scrollbar flex flex-col gap-5"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}

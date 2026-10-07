@@ -224,7 +224,7 @@ export const AIAssistanceView: React.FC<AIAssistanceViewProps> = ({
         <button
           type="button"
           onClick={() => scrollToLatest('smooth')}
-          className="absolute bottom-14 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0c1024]/95 hover:bg-cyan-950 border border-cyan-400/50 text-cyan-200 text-xs font-mono shadow-[0_4px_20px_rgba(0,240,255,0.4)] backdrop-blur-md transition-all duration-200 cursor-pointer hover:scale-105"
+          className="absolute bottom-14 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#0c1024]/95 hover:bg-slate-50 dark:hover:bg-cyan-950 border border-cyan-400/50 text-[#0284c7] dark:text-cyan-200 text-xs font-mono shadow-[0_4px_20px_rgba(0,240,255,0.4)] backdrop-blur-md transition-all duration-200 cursor-pointer hover:scale-105"
         >
           <ArrowDown className="w-3.5 h-3.5 text-cyan-400 animate-bounce" />
           <span>Scroll to latest</span>

@@ -496,7 +496,7 @@ export const AITriageView: React.FC<AITriageViewProps> = ({
       {overrideModalItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
           <div
-            className="w-full max-w-lg rounded-3xl bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 overflow-hidden"
+            className="w-full max-w-lg rounded-3xl bg-white/[0.97] dark:bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">

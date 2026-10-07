@@ -61,7 +61,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/70 backdrop-blur-md animate-fadeIn">
       <div 
-        className="w-full max-w-xl rounded-3xl bg-[#0b0e22]/95 border border-white/20 shadow-glass-elevated overflow-hidden specular-border flex flex-col"
+        className="w-full max-w-xl rounded-3xl bg-white/[0.97] dark:bg-[#0b0e22]/95 border border-slate-200 dark:border-white/20 shadow-glass-elevated overflow-hidden specular-border flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search header */}

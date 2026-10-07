@@ -48,7 +48,7 @@ export const NewActionModal: React.FC<NewActionModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
       <div 
-        className="w-full max-w-lg rounded-3xl bg-[#0b0e22]/95 border border-white/20 shadow-glass-elevated overflow-hidden specular-border"
+        className="w-full max-w-lg rounded-3xl bg-white/[0.97] dark:bg-[#0b0e22]/95 border border-slate-200 dark:border-white/20 shadow-glass-elevated overflow-hidden specular-border"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.02]">

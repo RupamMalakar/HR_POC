@@ -84,8 +84,8 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
   };
 
   return (
-    <div className="p-2 sm:p-2.5 bg-[#070a18]/95 backdrop-blur-xl border-t border-white/10 flex-shrink-0 relative">
-      <div className="rounded-2xl bg-white/[0.04] border border-white/15 focus-within:border-cyan-400/70 focus-within:ring-1 focus-within:ring-cyan-400/30 transition-all flex items-end gap-1.5 px-3 py-1.5 shadow-inner">
+    <div className="p-2 sm:p-2.5 bg-white/[0.92] dark:bg-[#070a18]/95 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 flex-shrink-0 relative">
+      <div className="rounded-2xl bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/15 focus-within:border-cyan-400/70 focus-within:ring-1 focus-within:ring-cyan-400/30 transition-all flex items-end gap-1.5 px-3 py-1.5 shadow-inner">
         <textarea
           ref={textareaRef}
           value={input}
@@ -98,7 +98,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
           placeholder={placeholder}
           rows={1}
           disabled={loading}
-          className="flex-1 bg-transparent text-white text-xs sm:text-sm placeholder:text-white/40 focus:outline-none resize-none leading-relaxed py-1 font-sans max-h-[100px]"
+          className="flex-1 bg-transparent text-[#0f172a] dark:text-white text-xs sm:text-sm placeholder:text-slate-400 dark:placeholder:text-white/40 focus:outline-none resize-none leading-relaxed py-1 font-sans max-h-[100px]"
         />
 
         {/* Right side: Minimal Suggestions Pop-up Toggle */}
@@ -120,7 +120,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
 
           {/* Minimal Floating Pop-up on the Right Side */}
           {isSuggestionsOpen && (
-            <div className="absolute bottom-full right-0 mb-2 w-72 sm:w-84 rounded-2xl bg-[#0c1024]/95 backdrop-blur-2xl border border-white/15 shadow-glass-elevated p-2.5 z-50 animate-fadeIn space-y-1.5 specular-border">
+            <div className="absolute bottom-full right-0 mb-2 w-72 sm:w-84 rounded-2xl bg-white/[0.97] dark:bg-[#0c1024]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/15 shadow-glass-elevated p-2.5 z-50 animate-fadeIn space-y-1.5 specular-border">
               <div className="flex items-center justify-between px-1 pb-1.5 border-b border-white/10">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-300 font-semibold flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-cyan-400" />
@@ -147,7 +147,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
                       <span className="text-[9px] font-mono font-bold text-cyan-400 uppercase">
                         {prompt.category}
                       </span>
-                      <span className="text-xs text-white/85 group-hover:text-cyan-100 truncate">
+                      <span className="text-xs text-[#0f172a] dark:text-white/85 group-hover:text-cyan-700 dark:group-hover:text-cyan-100 truncate">
                         {prompt.label}
                       </span>
                     </div>

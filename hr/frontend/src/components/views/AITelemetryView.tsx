@@ -311,10 +311,10 @@ export const AITelemetryView: React.FC = () => {
                 key={model.id}
                 className={`rounded-2xl p-5 border transition-all specular-border flex flex-col justify-between gap-4 ${
                   isGPT
-                    ? 'bg-gradient-to-b from-cyan-950/30 to-[#070b1c]/80 border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.06)]'
+                    ? 'bg-gradient-to-b from-cyan-500/10 to-blue-500/10 dark:from-cyan-950/30 dark:to-[#070b1c]/80 border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.06)]'
                     : isAda
-                    ? 'bg-gradient-to-b from-purple-950/20 to-[#070b1c]/80 border-purple-500/25'
-                    : 'bg-[#0a0e24]/90 border-white/10'
+                    ? 'bg-gradient-to-b from-purple-500/10 to-indigo-500/10 dark:from-purple-950/20 dark:to-[#070b1c]/80 border-purple-500/25'
+                    : 'bg-white/[0.04] dark:bg-[#0a0e24]/90 border-white/10'
                 }`}
               >
                 <div>
@@ -485,7 +485,7 @@ export const AITelemetryView: React.FC = () => {
       </div>
 
       {/* Model Guardrails & Cost Containment Sandbox */}
-      <div className="rounded-3xl p-6 sm:p-7 bg-[#080d24]/90 border border-white/10 backdrop-blur-2xl">
+      <div className="rounded-3xl p-6 sm:p-7 bg-white/[0.04] dark:bg-[#080d24]/90 border border-white/10 backdrop-blur-2xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-white/10">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-300">
@@ -708,7 +708,7 @@ export const AITelemetryView: React.FC = () => {
       {isTestModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
           <div
-            className="w-full max-w-2xl rounded-3xl bg-[#060918]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 sm:p-7 flex flex-col gap-4 overflow-hidden"
+            className="w-full max-w-2xl rounded-3xl bg-white/[0.96] dark:bg-[#060918]/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-6 sm:p-7 flex flex-col gap-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-3 border-b border-white/10">

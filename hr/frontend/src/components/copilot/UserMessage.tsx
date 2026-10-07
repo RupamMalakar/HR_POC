@@ -24,7 +24,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
 
       {/* Message Bubble */}
       <div className="space-y-1.5 text-right max-w-[85%] sm:max-w-[75%]">
-        <div className="inline-block p-4 rounded-2xl rounded-tr-sm bg-gradient-to-br from-blue-600/35 via-indigo-600/30 to-purple-600/25 backdrop-blur-xl border border-blue-400/30 shadow-glass text-left text-xs sm:text-sm text-white leading-relaxed font-sans whitespace-pre-wrap">
+        <div className="inline-block p-4 rounded-2xl rounded-tr-sm bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white backdrop-blur-xl border border-blue-400/30 shadow-glass text-left text-xs sm:text-sm leading-relaxed font-sans whitespace-pre-wrap">
           {text}
         </div>
         <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-white/40 px-1">

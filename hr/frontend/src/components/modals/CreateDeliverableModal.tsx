@@ -82,7 +82,7 @@ export const CreateDeliverableModal: React.FC<CreateDeliverableModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div
-        className="w-full max-w-2xl rounded-3xl bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-2xl rounded-3xl bg-white/[0.97] dark:bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

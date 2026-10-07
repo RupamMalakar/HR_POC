@@ -167,7 +167,7 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-xl animate-fadeIn">
       {/* Clean Obsidian Modal Window Aligned with Main App Theme */}
       <div
-        className="w-full max-w-6xl h-[92vh] max-h-[880px] rounded-3xl bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl flex flex-col overflow-hidden text-slate-100 transition-all"
+        className="w-full max-w-6xl h-[92vh] max-h-[880px] rounded-3xl bg-white/[0.97] dark:bg-[#060814]/95 backdrop-blur-2xl border border-white/10 shadow-2xl flex flex-col overflow-hidden text-[#0f172a] dark:text-slate-100 transition-all"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ================================================================= */}
