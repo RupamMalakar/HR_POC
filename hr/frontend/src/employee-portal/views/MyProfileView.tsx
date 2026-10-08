@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { LeaveBalance, ScreenId } from '../types';
 import { ASSETS, CURRENT_USER } from '../data/mockData';
+import { useAuth } from '../../context/AuthContext';
 
 interface MyProfileViewProps {
   leaveBalance: LeaveBalance;
@@ -29,6 +30,14 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
   onOpenApplyLeave,
   onNavigate,
 }) => {
+  const { user } = useAuth();
+  const profileName = user?.name || CURRENT_USER.name;
+  const profileRole = user?.title || user?.role || CURRENT_USER.role;
+  const profileDept = user?.department || CURRENT_USER.department;
+  const profileId = user?.id || CURRENT_USER.employeeId;
+  const profileEmail = user?.email || CURRENT_USER.email;
+  const profileAvatar = user?.avatarUrl || user?.avatar || CURRENT_USER.avatar || ASSETS.avatar;
+
   const documents = [
     { name: 'Appointment & Employment Agreement', date: '15 Mar 2022', size: '2.4 MB' },
     { name: 'Annual Compensation Letter 2026', date: '01 Apr 2026', size: '480 KB' },
@@ -42,29 +51,29 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
       <div className="crystal-glass rounded-2xl p-6 sm:p-8 shadow-glass border border-white/80 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <img
-            src={ASSETS.avatar}
-            alt={CURRENT_USER.name}
+            src={profileAvatar}
+            alt={profileName}
             className="w-24 h-24 rounded-2xl object-cover ring-4 ring-white dark:ring-white/20 shadow-md flex-shrink-0"
           />
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-[26px] font-bold text-[#0F172A] dark:text-white">{CURRENT_USER.name}</h1>
+              <h1 className="text-[26px] font-bold text-[#0F172A] dark:text-white">{profileName}</h1>
               <span className="bg-teal-50 dark:bg-teal-500/20 text-[#0D9488] dark:text-teal-400 border border-teal-200/60 dark:border-teal-500/30 font-semibold px-2.5 py-0.5 rounded-full text-[12px]">
                 Full Time • Permanent
               </span>
             </div>
-            <p className="text-[15px] text-[#334155] dark:text-slate-300 font-medium">{CURRENT_USER.role}</p>
+            <p className="text-[15px] text-[#334155] dark:text-slate-300 font-medium">{profileRole}</p>
             <div className="flex flex-wrap items-center gap-4 text-[12px] text-slate-500 dark:text-slate-400 pt-1">
               <span className="flex items-center gap-1.5">
                 <Briefcase className="w-3.5 h-3.5 text-slate-400" />
-                {CURRENT_USER.department}
+                {profileDept}
               </span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 {CURRENT_USER.workLocation}
               </span>
               <span className="font-mono bg-white/80 dark:bg-white/10 px-2 py-0.5 rounded border border-white dark:border-white/10 text-slate-700 dark:text-slate-300">
-                ID: {CURRENT_USER.employeeId}
+                ID: {profileId}
               </span>
             </div>
           </div>
@@ -95,7 +104,7 @@ export const MyProfileView: React.FC<MyProfileViewProps> = ({
                 </span>
                 <div className="text-[#0F172A] dark:text-white font-medium flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{CURRENT_USER.email}</span>
+                  <span>{profileEmail}</span>
                 </div>
               </div>
 

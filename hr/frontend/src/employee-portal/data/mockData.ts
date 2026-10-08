@@ -7,7 +7,23 @@ export const ASSETS = {
   taxDeclarationImg: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBu2ha8G2iq0FDxZh61m-yGql-k9EHm2CLiofHd1yNCKoUq8QXO6DfvvZ9FggsUV7p1sTwhJpE1mtRSp7PAuETIDA8_bqmbUPdmEgZC8f-Ef4mzOeN3P7nvNVr39GFNj940HyL915h6APPa2-g9JOIIKCg2Gb6-zk8ED1FxnnsA9ae21puJwptSBSztw7YzlyhYBaNHOHGA4fUwc2WmQJB1MC8QsBFNbJOVpYOfMxSc1zNPMLwqmyd8',
 };
 
-export const CURRENT_USER = {
+export const CURRENT_USER: {
+  id?: string;
+  name: string;
+  role: string;
+  department: string;
+  employeeId: string;
+  email: string;
+  workLocation: string;
+  manager: string;
+  joiningDate: string;
+  phone: string;
+  bankName: string;
+  accountNumberMasked: string;
+  ifsc: string;
+  avatar?: string;
+} = {
+  id: 'EMP-84920',
   name: 'Rupam Sharma',
   role: 'Senior Software Engineer',
   department: 'Product Engineering - Cloud Platform',
@@ -20,6 +36,7 @@ export const CURRENT_USER = {
   bankName: 'HDFC Bank Ltd',
   accountNumberMasked: '•••• •••• •••• 4892',
   ifsc: 'HDFC0001245',
+  avatar: ASSETS.avatar,
 };
 
 export const INITIAL_REQUESTS: HrRequest[] = [];
@@ -91,6 +108,7 @@ export const INITIAL_LEAVE_BALANCE: LeaveBalance = {
   casual: { remaining: 8, total: 12 },
   sick: { remaining: 6, total: 10 },
   earned: { remaining: 12, total: 18 },
+  annual: { remaining: 12, total: 18 },
 };
 
 export const POLICIES: PolicyItem[] = [

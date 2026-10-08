@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { HR_USERS, EMPLOYEE_USERS } from '../../data/mockUsers';
+import { HR_USERS, EMPLOYEE_USERS, ADMIN_USERS } from '../../data/mockUsers';
 import {
   ShieldCheck,
   User,
@@ -17,7 +17,8 @@ import {
   Activity,
   Cpu,
   BadgeCheck,
-  ArrowUpRight
+  ArrowUpRight,
+  Shield
 } from 'lucide-react';
 
 export const LoginView: React.FC = () => {
@@ -30,13 +31,13 @@ export const LoginView: React.FC = () => {
     new URLSearchParams(window.location.search).get('portal') === 'employee'
   );
 
-  const [activePortalTab, setActivePortalTab] = useState<'hr' | 'employee'>(
-    isEmployeePort ? 'employee' : 'hr'
+  const [activePortalTab, setActivePortalTab] = useState<'admin' | 'hr' | 'employee'>(
+    isEmployeePort ? 'employee' : 'admin'
   );
 
   // Sign In credentials state
   const [email, setEmail] = useState(
-    isEmployeePort ? 'alex.johnson@enterprise.internal' : 'sarah.jenkins@enterprise.internal'
+    isEmployeePort ? 'maya.patel@enterprise.internal' : 'john.smith@enterprise.internal'
   );
   const [password, setPassword] = useState('SecretPassword123!');
   const [error, setError] = useState<string | null>(null);
@@ -55,17 +56,21 @@ export const LoginView: React.FC = () => {
 
   // Memoized user personas for instant access
   const activePersonas = useMemo(() => {
-    return activePortalTab === 'employee' ? EMPLOYEE_USERS : HR_USERS;
+    if (activePortalTab === 'admin') return ADMIN_USERS;
+    if (activePortalTab === 'hr') return HR_USERS;
+    return EMPLOYEE_USERS;
   }, [activePortalTab]);
 
-  const handlePortalSwitch = useCallback((tab: 'hr' | 'employee') => {
+  const handlePortalSwitch = useCallback((tab: 'admin' | 'hr' | 'employee') => {
     setActivePortalTab(tab);
     setError(null);
     setSuccessMsg(null);
     if (tab === 'employee') {
-      setEmail('alex.johnson@enterprise.internal');
-    } else {
+      setEmail('maya.patel@enterprise.internal');
+    } else if (tab === 'hr') {
       setEmail('sarah.jenkins@enterprise.internal');
+    } else {
+      setEmail('john.smith@enterprise.internal');
     }
   }, []);
 
@@ -242,24 +247,37 @@ export const LoginView: React.FC = () => {
               </div>
 
               {/* Interactive Portal Switcher Tabs */}
-              <div className="relative flex rounded-xl bg-black/50 border border-white/10 p-1 mb-6">
+              <div className="relative flex rounded-xl bg-black/50 border border-white/10 p-1 mb-6 gap-1">
+                <button
+                  type="button"
+                  onClick={() => handlePortalSwitch('admin')}
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    activePortalTab === 'admin'
+                      ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/20 font-bold'
+                      : 'text-white/50 hover:text-white hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Admin</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => handlePortalSwitch('hr')}
-                  className={`flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     activePortalTab === 'hr'
                       ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/20 font-bold'
                       : 'text-white/50 hover:text-white hover:bg-white/[0.04]'
                   }`}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>HR Cockpit</span>
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>HR</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handlePortalSwitch('employee')}
-                  className={`flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     activePortalTab === 'employee'
                       ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/20 font-bold'
                       : 'text-white/50 hover:text-white hover:bg-white/[0.04]'
@@ -285,52 +303,57 @@ export const LoginView: React.FC = () => {
 
               {/* Animated Interactive Persona List */}
               <div className="space-y-2">
-                {activePersonas.map((persona) => (
-                  <button
-                    key={persona.id}
-                    type="button"
-                    onClick={() => handleSelectPersona(persona.id)}
-                    disabled={isLoading}
-                    className="w-full p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.07] border border-white/5 hover:border-cyan-400/40 card-interactive-glow flex items-center justify-between text-left group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative">
-                        <img
-                          src={persona.avatar}
-                          alt={persona.name}
-                          loading="lazy"
-                          className="w-9 h-9 rounded-lg object-cover ring-1 ring-white/10 group-hover:ring-cyan-400/50 transition-all shrink-0"
-                        />
-                        <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#080c1d]" />
-                      </div>
-
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-semibold text-white group-hover:text-cyan-300 transition-colors truncate">
-                            {persona.name}
-                          </span>
-                          <span
-                            className={`text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-wider ${
-                              persona.isHr
-                                ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
-                                : 'bg-teal-500/20 text-teal-300 border-teal-500/30'
-                            }`}
-                          >
-                            {persona.id}
-                          </span>
+                {activePersonas.map((persona) => {
+                  const rolesDisplay = persona.roles && persona.roles.length > 0 ? persona.roles.join(', ') : persona.role;
+                  return (
+                    <button
+                      key={persona.id}
+                      type="button"
+                      onClick={() => handleSelectPersona(persona.id)}
+                      disabled={isLoading}
+                      className="w-full p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.07] border border-white/5 hover:border-cyan-400/40 card-interactive-glow flex items-center justify-between text-left group cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative">
+                          <img
+                            src={persona.avatar}
+                            alt={persona.name}
+                            loading="lazy"
+                            className="w-9 h-9 rounded-lg object-cover ring-1 ring-white/10 group-hover:ring-cyan-400/50 transition-all shrink-0"
+                          />
+                          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#080c1d]" />
                         </div>
-                        <p className="text-[10px] text-white/50 truncate group-hover:text-white/70 transition-colors">
-                          {persona.role}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center gap-1 text-[11px] font-mono text-cyan-300 px-2.5 py-1 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 group-hover:text-cyan-200 border border-cyan-500/20 transition-all shrink-0">
-                      <span>Launch</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </div>
-                  </button>
-                ))}
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-white group-hover:text-cyan-300 transition-colors truncate">
+                              {persona.name}
+                            </span>
+                            <span
+                              className={`text-[9px] font-mono px-1.5 py-0.5 rounded border uppercase tracking-wider ${
+                                persona.roles?.includes('ADMIN')
+                                  ? 'bg-violet-500/20 text-violet-300 border-violet-500/30'
+                                  : persona.isHr
+                                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
+                                  : 'bg-teal-500/20 text-teal-300 border-teal-500/30'
+                              }`}
+                            >
+                              {rolesDisplay}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-white/50 truncate group-hover:text-white/70 transition-colors">
+                            {persona.title || persona.role}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-[11px] font-mono text-cyan-300 px-2.5 py-1 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 group-hover:text-cyan-200 border border-cyan-500/20 transition-all shrink-0">
+                        <span>Launch</span>
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

@@ -6,8 +6,8 @@
       "comparisonText": "7 active"
     },
     "highPriority": {
-      "count": 5,
-      "requiresAttention": 5
+      "count": 3,
+      "requiresAttention": 3
     },
     "pendingHRActions": {
       "count": 0,
@@ -19,8 +19,8 @@
       "targetPercent": 92
     },
     "avgSla": "0m",
-    "resolvedOvernight": 7,
-    "aiTriagedToday": 10,
+    "resolvedOvernight": 18,
+    "aiTriagedToday": 21,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -28,13 +28,13 @@
     "7D": {
       "range": "7D",
       "labels": [
-        "Tue",
-        "Wed",
-        "Thu",
         "Fri",
         "Sat",
         "Sun",
-        "Mon"
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu"
       ],
       "incoming": [
         0,
@@ -42,8 +42,8 @@
         0,
         0,
         0,
-        0,
-        0
+        1,
+        10
       ],
       "resolved": [
         0,
@@ -51,12 +51,12 @@
         0,
         0,
         0,
-        0,
-        0
+        4,
+        7
       ],
       "openTotal": 7,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "receivedToday": 10,
+      "resolvedToday": 7
     },
     "30D": {
       "range": "30D",
@@ -67,20 +67,20 @@
         "Week 4"
       ],
       "incoming": [
-        0,
         3,
-        11,
-        0
+        6,
+        5,
+        11
       ],
       "resolved": [
-        0,
+        3,
         3,
         4,
-        0
+        8
       ],
       "openTotal": 7,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "receivedToday": 10,
+      "resolvedToday": 7
     },
     "90D": {
       "range": "90D",
@@ -92,19 +92,791 @@
       "incoming": [
         0,
         14,
-        0
+        11
       ],
       "resolved": [
         0,
-        7,
-        0
+        10,
+        8
       ],
       "openTotal": 7,
-      "receivedToday": 0,
-      "resolvedToday": 0
+      "receivedToday": 10,
+      "resolvedToday": 7
     }
   },
   "requests": [
+    {
+      "id": "REQ-2619",
+      "title": "Casual Leave application (2 days)",
+      "subject": "Casual Leave application (2 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "casual",
+        "days": 2
+      },
+      "leaveDays": 2,
+      "leaveType": "casual",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:27:54.254Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:27:54.254Z"
+      },
+      "description": "Applied for 2 days of Casual Leave from 2026-09-28 to 2026-09-29. Reason: e baar aur dede\n",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:27 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:28 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 2 days deducted from Casual Leave balance. (Remaining: 6 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-08T11:28:55.618Z",
+      "leaveDeductedDays": 2,
+      "leaveDeductedType": "casual",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-8554",
+      "title": "Casual Leave application (2 days)",
+      "subject": "Casual Leave application (2 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "casual",
+        "days": 2
+      },
+      "leaveDays": 2,
+      "leaveType": "casual",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:27:37.630Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:27:37.631Z"
+      },
+      "description": "Applied for 2 days of Casual Leave from 2026-09-28 to 2026-09-29. Reason: leave dedo",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:27 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:28 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 2 days deducted from Casual Leave balance. (Remaining: 4 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-08T11:28:57.962Z",
+      "leaveDeductedDays": 2,
+      "leaveDeductedType": "casual",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-DATE-TEST",
+      "title": "Leave from 2026-10-10 to 2026-10-12",
+      "subject": "Leave from 2026-10-10 to 2026-10-12",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "earned",
+        "days": 3
+      },
+      "leaveDays": 3,
+      "leaveType": "earned",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:26:08.740Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.741Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 3 days deducted from Annual Leave balance. (Remaining: 9 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolvedAt": "2026-10-08T11:26:08.753Z",
+      "resolutionNotes": "",
+      "leaveDeductedDays": 3,
+      "leaveDeductedType": "earned",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-CASE-7",
+      "title": "Annual Leave application (3 days)",
+      "subject": "Annual Leave application (3 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 3
+      },
+      "leaveDays": 3,
+      "leaveType": "earned",
+      "leaveDeducted": false,
+      "createdAt": "2026-10-08T11:26:08.677Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.677Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 3 days deducted from Annual Leave balance. (Remaining: 9 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Cancelled & Balance Restored",
+          "desc": "Restored 3 days back to Annual Leave balance.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-CASE-5",
+      "title": "Annual Leave application (3 days)",
+      "subject": "Annual Leave application (3 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 3
+      },
+      "leaveDays": 3,
+      "leaveType": "earned",
+      "leaveDeducted": false,
+      "createdAt": "2026-10-08T11:26:08.645Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.645Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-CASE-4",
+      "title": "Annual Leave application (6 days)",
+      "subject": "Annual Leave application (6 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 6
+      },
+      "leaveDays": 6,
+      "leaveType": "earned",
+      "leaveDeducted": false,
+      "createdAt": "2026-10-08T11:26:08.619Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.619Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "REQ-CASE-3",
+      "title": "Annual Leave application (5 days)",
+      "subject": "Annual Leave application (5 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 5
+      },
+      "leaveDays": 5,
+      "leaveType": "earned",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:26:08.580Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.580Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 5 days deducted from Annual Leave balance. (Remaining: 0 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolvedAt": "2026-10-08T11:26:08.593Z",
+      "resolutionNotes": "",
+      "leaveDeductedDays": 5,
+      "leaveDeductedType": "earned",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-CASE-2",
+      "title": "Annual Leave application (5 days)",
+      "subject": "Annual Leave application (5 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 5
+      },
+      "leaveDays": 5,
+      "leaveType": "earned",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:26:08.555Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.555Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 5 days deducted from Annual Leave balance. (Remaining: 5 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolvedAt": "2026-10-08T11:26:08.566Z",
+      "resolutionNotes": "",
+      "leaveDeductedDays": 5,
+      "leaveDeductedType": "earned",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-CASE-1",
+      "title": "Annual Leave application (2 days)",
+      "subject": "Annual Leave application (2 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "annual",
+        "days": 2
+      },
+      "leaveDays": 2,
+      "leaveType": "earned",
+      "leaveDeducted": true,
+      "createdAt": "2026-10-08T11:26:08.503Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:26:08.532Z"
+      },
+      "description": "",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Self-Service Portal",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:26 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 2 days deducted from Annual Leave balance. (Remaining: 10 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolvedAt": "2026-10-08T11:26:08.542Z",
+      "resolutionNotes": "",
+      "leaveDeductedDays": 2,
+      "leaveDeductedType": "earned",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-4559",
+      "title": "Casual Leave application (3 days)",
+      "subject": "Casual Leave application (3 days)",
+      "employeeId": "EMP002",
+      "employee": {
+        "id": "EMP002",
+        "name": "Rupam Sharma",
+        "department": "Product Engineering",
+        "email": "rupam.sharma@enterprise.org",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+        "role": "Lead Full-Stack Engineer",
+        "title": "Lead Full-Stack Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-10-08T11:03:57.415Z",
+      "createdDate": "Oct 08, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-08T11:03:57.438Z"
+      },
+      "description": "Applied for 3 days of Casual Leave from 2026-09-28 to 2026-09-30. Reason: yugeryg",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 8, 2026, 11:03 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Rupam Sharma"
+        },
+        {
+          "date": "Oct 8, 2026, 11:06 AM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-08T11:06:27.478Z",
+      "lastUpdated": "Just now"
+    },
+    {
+      "id": "REQ-1495",
+      "title": "Sick leave medical certificate submission",
+      "subject": "Sick leave medical certificate submission",
+      "employeeId": "EMP001",
+      "employee": {
+        "id": "EMP001",
+        "name": "Alex Johnson",
+        "department": "Engineering",
+        "email": "alex.johnson@enterprise.internal",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+        "role": "Senior Staff Engineer",
+        "title": "Senior Staff Engineer"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
+      "waitingTime": "Just now",
+      "createdAt": "2026-10-07T12:57:35.533Z",
+      "createdDate": "Oct 07, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "HIGH",
+        "sensitivity": "SENSITIVE",
+        "confidence": 0.96,
+        "relevantPolicy": "Medical & Statutory Sick Leave Policy (Handbook Art. 6)",
+        "suggestedAction": "Verify Supporting Medical Documentation & Tenure Entitlement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "NEEDS_REVIEW",
+        "analyzedAt": "2026-10-07T12:57:35.535Z"
+      },
+      "description": "fever",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 7, 2026, 12:57 PM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Alex Johnson"
+        },
+        {
+          "date": "Oct 7, 2026, 12:57 PM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
+        }
+      ],
+      "comments": [],
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-07T12:57:58.285Z",
+      "lastUpdated": "Just now"
+    },
     {
       "id": "REQ-3847",
       "title": "Casual Leave application (2 days)",
@@ -220,8 +992,8 @@
       "categoryDisplay": "General Inquiry",
       "priority": "high",
       "priorityDisplay": "High",
-      "status": "open",
-      "statusUpper": "SUBMITTED",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
       "waitingTime": "Just now",
       "createdAt": "2026-09-28T09:33:37.887Z",
       "createdDate": "Sep 28, 2026",
@@ -252,6 +1024,12 @@
           "title": "Request Created",
           "desc": "Submitted through HR Self-Service Portal",
           "actor": "Alex Johnson"
+        },
+        {
+          "date": "Oct 7, 2026, 10:37 AM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
         }
       ],
       "comments": [
@@ -263,7 +1041,10 @@
           "isHr": true
         }
       ],
-      "lastUpdated": "Just now"
+      "lastUpdated": "Just now",
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-07T10:37:11.749Z"
     },
     {
       "id": "REQ-7282",
@@ -284,8 +1065,8 @@
       "categoryDisplay": "HR Policies",
       "priority": "high",
       "priorityDisplay": "High",
-      "status": "open",
-      "statusUpper": "SUBMITTED",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
       "waitingTime": "Just now",
       "createdAt": "2026-09-25T11:31:40.091Z",
       "createdDate": "Sep 25, 2026",
@@ -310,6 +1091,12 @@
           "title": "Deliverable Dispatched: HR Communication",
           "desc": "Sent \"Parental Leave Entitlement Schedule Notice\" to david.chen@enterprise.internal",
           "actor": "HR Operations"
+        },
+        {
+          "date": "Oct 7, 2026, 12:59 PM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
         }
       ],
       "comments": [
@@ -325,7 +1112,7 @@
       ],
       "assignedToId": "HR003",
       "assignedTo": "Elena Rostova",
-      "resolutionNotes": "",
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
       "lastUpdated": "Just now",
       "triage": {
         "category": "documents",
@@ -342,7 +1129,9 @@
         "humanCategory": "compliance",
         "overrideNotes": "Escalated by HR Operations Specialist for statutory policy compliance audit",
         "overriddenAt": "2026-09-28T09:33:37.815Z"
-      }
+      },
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-07T12:59:02.719Z"
     },
     {
       "id": "REQ-7248",
@@ -825,8 +1614,8 @@
       },
       "category": "Leave & Time",
       "priority": "High",
-      "status": "open",
-      "statusUpper": "SUBMITTED",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
       "waitingTime": "Just now",
       "createdAt": "2026-09-23T08:48:54.465Z",
       "createdDate": "Sep 23, 2026",
@@ -845,6 +1634,12 @@
           "title": "Created",
           "desc": "Test",
           "actor": "Employee"
+        },
+        {
+          "date": "Oct 7, 2026, 10:36 AM",
+          "title": "Approved & Resolved",
+          "desc": "Approved and resolved directly by HR Operations Lead.",
+          "actor": "Sarah Jenkins (HR Ops)"
         }
       ],
       "comments": [],
@@ -859,7 +1654,11 @@
         "reason": "Standard inquiry cross-referenced with enterprise HR knowledge base.",
         "status": "TRIAGED",
         "analyzedAt": "2026-09-28T09:24:09.737Z"
-      }
+      },
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-07T10:36:51.765Z",
+      "lastUpdated": "Just now"
     },
     {
       "id": "REQ-1124",
@@ -1054,6 +1853,149 @@
     }
   ],
   "triageQueue": [
+    {
+      "id": "TRG-1791458874254",
+      "requestId": "REQ-2619",
+      "title": "Casual Leave application (2 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458857631",
+      "requestId": "REQ-8554",
+      "title": "Casual Leave application (2 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768741",
+      "requestId": "REQ-DATE-TEST",
+      "title": "Leave from 2026-10-10 to 2026-10-12",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768677",
+      "requestId": "REQ-CASE-7",
+      "title": "Annual Leave application (3 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768645",
+      "requestId": "REQ-CASE-5",
+      "title": "Annual Leave application (3 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768619",
+      "requestId": "REQ-CASE-4",
+      "title": "Annual Leave application (6 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768581",
+      "requestId": "REQ-CASE-3",
+      "title": "Annual Leave application (5 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768556",
+      "requestId": "REQ-CASE-2",
+      "title": "Annual Leave application (5 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791458768533",
+      "requestId": "REQ-CASE-1",
+      "title": "Annual Leave application (2 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791457437438",
+      "requestId": "REQ-4559",
+      "title": "Casual Leave application (3 days)",
+      "employeeName": "Rupam Sharma",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
+    {
+      "id": "TRG-1791377855535",
+      "requestId": "REQ-1495",
+      "title": "Sick leave medical certificate submission",
+      "employeeName": "Alex Johnson",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "HIGH",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Verify Supporting Medical Documentation & Tenure Entitlement",
+      "status": "NEEDS_REVIEW",
+      "timestamp": "Just now"
+    },
     {
       "id": "TRG-1790679238452",
       "requestId": "REQ-7124",
@@ -2985,32 +3927,20 @@
       "type": "warning",
       "icon": "trending_up",
       "title": "Leave & Attendance Volume Spike",
-      "description": "Leave & Attendance tickets represent 36% of total case volume (5 of 14 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
-      "changeText": "36% of volume",
+      "description": "Leave & Attendance tickets represent 64% of total case volume (16 of 25 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
+      "changeText": "64% of volume",
       "impact": "HIGH",
       "suggestedRemediation": "Review Leave & Attendance SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new Leave & Attendance submissions.",
       "relatedCategory": "leave",
       "relatedPolicy": "Leave & Attendance Policy (Art. 6)"
     },
     {
-      "id": "INS-CAT-OTHER",
-      "type": "warning",
-      "icon": "trending_up",
-      "title": "General HR Volume Spike",
-      "description": "General HR tickets represent 29% of total case volume (4 of 14 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
-      "changeText": "29% of volume",
-      "impact": "HIGH",
-      "suggestedRemediation": "Review General HR SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new General HR submissions.",
-      "relatedCategory": "other",
-      "relatedPolicy": "Employee Handbook"
-    },
-    {
       "id": "INS-SLA-BREACH",
       "type": "warning",
       "icon": "alarm",
       "title": "Resolution SLA Bottleneck Detected",
-      "description": "7 tickets have exceeded the standard 24-hour response SLA. 5 are high priority. Average wait time is ~260 hours.",
-      "changeText": "7 overdue (>24h)",
+      "description": "4 tickets have exceeded the standard 24-hour response SLA. 3 are high priority. Average wait time is ~356 hours.",
+      "changeText": "4 overdue (>24h)",
       "impact": "CRITICAL",
       "suggestedRemediation": "Assign dedicated HR specialists to overdue tickets immediately. Enable automated SLA escalation alerts in the request intake pipeline.",
       "relatedCategory": "leave",
@@ -3027,6 +3957,18 @@
       "suggestedRemediation": "Trigger an AI re-triage pass across unclassified tickets. Ensure every specialist response cites an authoritative section in the Employee Handbook.",
       "relatedCategory": "compliance",
       "relatedPolicy": "Code of Business Conduct & Knowledge Base Governance"
+    },
+    {
+      "id": "INS-RESOLVE-RATE",
+      "type": "emerald",
+      "icon": "speed",
+      "title": "High Resolution Velocity",
+      "description": "72% of all received cases (18/25) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.",
+      "changeText": "72% throughput",
+      "impact": "LOW",
+      "suggestedRemediation": "Standardize successful resolution workflows into automated response templates to lock in velocity gains.",
+      "relatedCategory": "other",
+      "relatedPolicy": "HR Operations Standard Operating Procedures"
     }
   ],
   "categoryVolumes": [
@@ -3040,28 +3982,352 @@
       "category": "benefits",
       "name": "Health & Benefits",
       "count": 2,
-      "percentage": 14
+      "percentage": 8
     },
     {
       "category": "leave",
       "name": "Leave & Attendance",
-      "count": 5,
-      "percentage": 36
+      "count": 16,
+      "percentage": 64
     },
     {
       "category": "documents",
       "name": "Letters & Verification",
       "count": 2,
-      "percentage": 14
+      "percentage": 8
     },
     {
       "category": "compliance",
       "name": "HR Policies",
       "count": 1,
-      "percentage": 7
+      "percentage": 4
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1791458937964",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-8554 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458935619",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-2619 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458874254",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-2619 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Casual Leave application (2 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458857631",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-8554 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Casual Leave application (2 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768755",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-DATE-TEST to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Leave from 2026-10-10 to 2026-10-12",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768741",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-DATE-TEST (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Leave from 2026-10-10 to 2026-10-12",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768729",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-7 to SUBMITTED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "SUBMITTED",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768716",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-7 to SUBMITTED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "SUBMITTED",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768703",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-7 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768689",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-7 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768677",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-7 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768664",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-5 to SUBMITTED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "SUBMITTED",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768645",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-5 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (3 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768619",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-4 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (6 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768594",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-3 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (5 days)",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768581",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-3 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (5 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768567",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-2 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (5 days)",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768556",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-2 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (5 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791458768543",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-1 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (2 days)",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791458768533",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-CASE-1 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Annual Leave application (2 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791457587478",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-4559 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791457437438",
+      "actorType": "user",
+      "actorName": "Rupam Sharma",
+      "actionText": "Rupam Sharma submitted REQ-4559 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Casual Leave application (3 days)",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791377942719",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-7282 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791377878285",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-1495 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791377855535",
+      "actorType": "user",
+      "actorName": "Alex Johnson",
+      "actionText": "Alex Johnson submitted REQ-1495 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "Sick leave medical certificate submission",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
+    {
+      "id": "ACT-1791369431750",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-8967 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
+    {
+      "id": "ACT-1791369411766",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-9999 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
     {
       "id": "ACT-1790679238452",
       "actorType": "user",
@@ -3380,15 +4646,38 @@
       "id": "HR001",
       "name": "Sarah Jenkins",
       "email": "sarah.jenkins@enterprise.internal",
-      "role": "HR Operations Lead",
-      "title": "HR Operations Lead",
+      "role": "HR_SPECIALIST",
+      "title": "Senior HR Specialist",
       "department": "HR Operations",
       "isHr": true,
       "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80",
       "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 3,
       "tenure": "5 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "systemRole": "HR_SPECIALIST",
+      "roles": [
+        "HR_SPECIALIST"
+      ],
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "HR002": {
       "id": "HR002",
@@ -3402,7 +4691,30 @@
       "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 2,
       "tenure": "3 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "HR_SPECIALIST"
+      ],
+      "systemRole": "HR_SPECIALIST",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "HR003": {
       "id": "HR003",
@@ -3416,7 +4728,30 @@
       "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 2,
       "tenure": "4 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "HR_SPECIALIST"
+      ],
+      "systemRole": "HR_SPECIALIST",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "EMP001": {
       "id": "EMP001",
@@ -3430,7 +4765,30 @@
       "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 1,
       "tenure": "4 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "EMPLOYEE"
+      ],
+      "systemRole": "EMPLOYEE",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "EMP002": {
       "id": "EMP002",
@@ -3444,13 +4802,36 @@
       "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 1,
       "tenure": "2 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "EMPLOYEE"
+      ],
+      "systemRole": "EMPLOYEE",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 4,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "EMP003": {
       "id": "EMP003",
       "name": "Maya Patel",
       "email": "maya.patel@enterprise.internal",
-      "role": "Product Manager",
+      "role": "EMPLOYEE",
       "title": "Product Manager",
       "department": "Design & Product",
       "isHr": false,
@@ -3458,21 +4839,67 @@
       "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 1,
       "tenure": "3 years",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "EMPLOYEE"
+      ],
+      "systemRole": "EMPLOYEE",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "EMP004": {
       "id": "EMP004",
       "name": "David Chen",
       "email": "david.chen@enterprise.internal",
-      "role": "Financial Analyst",
-      "title": "Financial Analyst",
+      "role": "HR_LEAD",
+      "title": "People Operations & HR Lead",
       "department": "Finance & Operations",
-      "isHr": false,
+      "isHr": true,
       "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80",
       "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80",
       "securityLevel": 1,
       "tenure": "1 year",
-      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc"
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "status": "active",
+      "roles": [
+        "HR_LEAD"
+      ],
+      "systemRole": "HR_LEAD",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     },
     "HR004": {
       "id": "HR004",
@@ -3486,7 +4913,315 @@
       "avatarUrl": "",
       "securityLevel": 2,
       "tenure": "New",
-      "passwordHash": "25d962d403426699fe878bd8eba6fc9df321fac748aeb01f57106cf3036d0185"
+      "passwordHash": "25d962d403426699fe878bd8eba6fc9df321fac748aeb01f57106cf3036d0185",
+      "status": "active",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "EMP005": {
+      "id": "EMP005",
+      "name": "Test Candidate Updated",
+      "email": "test.engineer.1791438060162@enterprise.internal",
+      "department": "Platform Engineering",
+      "role": "HR_SPECIALIST",
+      "systemRole": "HR_SPECIALIST",
+      "title": "EMPLOYEE",
+      "status": "inactive",
+      "isHr": true,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 1,
+      "tenure": "New Joiner",
+      "createdAt": "2026-10-08T05:41:00.168Z",
+      "lastActivity": "Deactivated by Admin",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "ADM001": {
+      "id": "ADM001",
+      "name": "John Smith",
+      "email": "john.smith@enterprise.internal",
+      "department": "IT Security & Compliance",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN"
+      ],
+      "title": "Infrastructure Administrator",
+      "status": "active",
+      "isHr": false,
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "2 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "ADM002": {
+      "id": "ADM002",
+      "name": "Rachel Adams",
+      "email": "rachel.adams@enterprise.internal",
+      "department": "Engineering Leadership",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN",
+        "EMPLOYEE"
+      ],
+      "title": "VP of Engineering & System Administrator",
+      "status": "active",
+      "isHr": false,
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "4 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "ADM003": {
+      "id": "ADM003",
+      "name": "Marcus Lee",
+      "email": "marcus.lee@enterprise.internal",
+      "department": "People Operations",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN",
+        "HR_SPECIALIST"
+      ],
+      "title": "HR Systems Administrator & Specialist",
+      "status": "active",
+      "isHr": true,
+      "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "3 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "EMP_TEST": {
+      "id": "EMP_TEST",
+      "name": "Test Leave Employee",
+      "email": "test.leave@enterprise.internal",
+      "department": "Engineering",
+      "role": "EMPLOYEE",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      },
+      "status": "active"
+    },
+    "ALX001": {
+      "id": "ALX001",
+      "name": "Alex Johnson (Admin + Emp)",
+      "email": "alex.admin.emp@enterprise.internal",
+      "department": "Engineering",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN",
+        "EMPLOYEE"
+      ],
+      "title": "Lead Systems Architect & Employee",
+      "status": "active",
+      "isHr": false,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "4 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "ALX002": {
+      "id": "ALX002",
+      "name": "Alex Johnson (Admin + HR Lead)",
+      "email": "alex.admin.hr@enterprise.internal",
+      "department": "People Operations",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN",
+        "HR_LEAD"
+      ],
+      "title": "Operations Director & HR Lead",
+      "status": "active",
+      "isHr": true,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "4 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
+    },
+    "ALX003": {
+      "id": "ALX003",
+      "name": "Alex Johnson (All Roles)",
+      "email": "alex.all@enterprise.internal",
+      "department": "Executive Governance",
+      "role": "ADMIN",
+      "systemRole": "ADMIN",
+      "roles": [
+        "ADMIN",
+        "EMPLOYEE",
+        "HR_LEAD"
+      ],
+      "title": "Executive Admin, HR Lead & Staff Engineer",
+      "status": "active",
+      "isHr": true,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=160&q=80",
+      "securityLevel": 3,
+      "tenure": "4 years",
+      "passwordHash": "c0314a384e28d71878b07f7261d252b5da29af456b2d58d7aab1cf79d025abbc",
+      "leaveBalance": {
+        "casual": {
+          "remaining": 8,
+          "total": 12
+        },
+        "sick": {
+          "remaining": 6,
+          "total": 10
+        },
+        "earned": {
+          "remaining": 12,
+          "total": 18
+        },
+        "annual": {
+          "remaining": 12,
+          "total": 18
+        }
+      }
     }
   },
   "aiTelemetry": {
@@ -3852,5 +5587,753 @@
         "citationCount": 1
       }
     ]
-  }
+  },
+  "roles": [
+    {
+      "id": "ADMIN",
+      "name": "System Administrator",
+      "description": "Full platform governance, user administration, system settings, and audit access.",
+      "permissions": [
+        "manage_users",
+        "manage_roles",
+        "manage_settings",
+        "view_audit_logs",
+        "view_reports",
+        "manage_deliverables",
+        "manage_requests"
+      ],
+      "userCount": 1,
+      "isSystem": true
+    },
+    {
+      "id": "HR_LEAD",
+      "name": "HR Operations Lead",
+      "description": "Operational leadership, triage oversight, sensitive case escalations, deliverables.",
+      "permissions": [
+        "manage_requests",
+        "view_reports",
+        "manage_deliverables",
+        "view_employee_data"
+      ],
+      "userCount": 1,
+      "isSystem": true
+    },
+    {
+      "id": "HR_SPECIALIST",
+      "name": "HR Specialist",
+      "description": "Direct case handling, AI Copilot assistance, response drafting, and queue processing.",
+      "permissions": [
+        "manage_requests",
+        "view_employee_data",
+        "manage_deliverables"
+      ],
+      "userCount": 2,
+      "isSystem": true
+    },
+    {
+      "id": "EMPLOYEE",
+      "name": "Employee Self-Service",
+      "description": "Standard employee self-service, request submission, and profile review.",
+      "permissions": [
+        "view_own_profile",
+        "create_own_requests",
+        "view_own_requests",
+        "use_employee_services"
+      ],
+      "userCount": 4,
+      "isSystem": true
+    }
+  ],
+  "settings": {
+    "slaSettings": {
+      "standardHours": 24,
+      "highPriorityHours": 12,
+      "sensitiveCaseHours": 4
+    },
+    "ticketCategories": [
+      {
+        "id": "leave",
+        "name": "Leave & Time Off",
+        "enabled": true
+      },
+      {
+        "id": "payroll",
+        "name": "Payroll & Compensation",
+        "enabled": true
+      },
+      {
+        "id": "benefits",
+        "name": "Benefits & Insurance",
+        "enabled": true
+      },
+      {
+        "id": "documents",
+        "name": "HR Verification Documents",
+        "enabled": true
+      },
+      {
+        "id": "compliance",
+        "name": "Policy & Workplace Conduct",
+        "enabled": true
+      },
+      {
+        "id": "employee_relations",
+        "name": "Employee Relations",
+        "enabled": true
+      },
+      {
+        "id": "reimbursement",
+        "name": "Corporate Expense & Reimbursement",
+        "enabled": true
+      },
+      {
+        "id": "remote_work",
+        "name": "Remote Work & Relocation",
+        "enabled": true
+      },
+      {
+        "id": "general_hr",
+        "name": "General HR Inquiries",
+        "enabled": true
+      },
+      {
+        "id": "other",
+        "name": "Other Inquiries",
+        "enabled": true
+      }
+    ],
+    "featureToggles": {
+      "aiCopilot": true,
+      "aiTriage": true,
+      "reports": true,
+      "notifications": true,
+      "realtimeSse": true
+    }
+  },
+  "auditLogs": [
+    {
+      "id": "AUDIT-MUZVIM1T-778",
+      "timestamp": "2026-10-08T18:32:12.833Z",
+      "actor": "Rachel Adams",
+      "actorId": "ADM002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM002",
+      "description": "User Rachel Adams (rachel.adams@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVHIYE-836",
+      "timestamp": "2026-10-08T18:31:22.166Z",
+      "actor": "Rachel Adams",
+      "actorId": "ADM002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM002",
+      "description": "User Rachel Adams (rachel.adams@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVEAOO-434",
+      "timestamp": "2026-10-08T18:28:51.480Z",
+      "actor": "Alex Johnson (Admin + HR Lead)",
+      "actorId": "ALX002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX002",
+      "description": "User Alex Johnson (Admin + HR Lead) (alex.admin.hr@enterprise.internal) authenticated successfully with roles [ADMIN, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVDPTX-766",
+      "timestamp": "2026-10-08T18:28:24.453Z",
+      "actor": "Alex Johnson (Admin + Emp)",
+      "actorId": "ALX001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX001",
+      "description": "User Alex Johnson (Admin + Emp) (alex.admin.emp@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVCDVP-179",
+      "timestamp": "2026-10-08T18:27:22.309Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVB72K-182",
+      "timestamp": "2026-10-08T18:26:26.828Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZVAPDS-463",
+      "timestamp": "2026-10-08T18:26:03.904Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SS1-870",
+      "timestamp": "2026-10-08T18:23:48.337Z",
+      "actor": "Alex Johnson (All Roles)",
+      "actorId": "ALX003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX003",
+      "description": "User Alex Johnson (All Roles) (alex.all@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SRQ-929",
+      "timestamp": "2026-10-08T18:23:48.326Z",
+      "actor": "Alex Johnson (Admin + HR Lead)",
+      "actorId": "ALX002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX002",
+      "description": "User Alex Johnson (Admin + HR Lead) (alex.admin.hr@enterprise.internal) authenticated successfully with roles [ADMIN, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SRE-654",
+      "timestamp": "2026-10-08T18:23:48.314Z",
+      "actor": "Alex Johnson (Admin + Emp)",
+      "actorId": "ALX001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX001",
+      "description": "User Alex Johnson (Admin + Emp) (alex.admin.emp@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SR3-493",
+      "timestamp": "2026-10-08T18:23:48.303Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SQS-527",
+      "timestamp": "2026-10-08T18:23:48.292Z",
+      "actor": "David Chen",
+      "actorId": "EMP004",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP004",
+      "description": "User David Chen (david.chen@enterprise.internal) authenticated successfully with roles [HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SQG-783",
+      "timestamp": "2026-10-08T18:23:48.280Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV7SQ9-138",
+      "timestamp": "2026-10-08T18:23:48.273Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QEF-970",
+      "timestamp": "2026-10-08T18:19:05.319Z",
+      "actor": "Alex Johnson (All Roles)",
+      "actorId": "ALX003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX003",
+      "description": "User Alex Johnson (All Roles) (alex.all@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QE6-713",
+      "timestamp": "2026-10-08T18:19:05.310Z",
+      "actor": "Alex Johnson (Admin + HR Lead)",
+      "actorId": "ALX002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX002",
+      "description": "User Alex Johnson (Admin + HR Lead) (alex.admin.hr@enterprise.internal) authenticated successfully with roles [ADMIN, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QDV-163",
+      "timestamp": "2026-10-08T18:19:05.299Z",
+      "actor": "Alex Johnson (Admin + Emp)",
+      "actorId": "ALX001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ALX001",
+      "description": "User Alex Johnson (Admin + Emp) (alex.admin.emp@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QDK-417",
+      "timestamp": "2026-10-08T18:19:05.288Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QD9-862",
+      "timestamp": "2026-10-08T18:19:05.277Z",
+      "actor": "David Chen",
+      "actorId": "EMP004",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP004",
+      "description": "User David Chen (david.chen@enterprise.internal) authenticated successfully with roles [HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QCY-768",
+      "timestamp": "2026-10-08T18:19:05.266Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST, ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZV1QCR-607",
+      "timestamp": "2026-10-08T18:19:05.259Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZUAGSZ-731",
+      "timestamp": "2026-10-08T17:57:53.171Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZU8E49-25",
+      "timestamp": "2026-10-08T17:56:16.377Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGFVM8-824",
+      "timestamp": "2026-10-08T11:30:11.024Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGFIPY-185",
+      "timestamp": "2026-10-08T11:29:54.310Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGEUYD-852",
+      "timestamp": "2026-10-08T11:29:23.509Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGEHXI-982",
+      "timestamp": "2026-10-08T11:29:06.630Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGDY7W-189",
+      "timestamp": "2026-10-08T11:28:41.084Z",
+      "actor": "Marcus Vance",
+      "actorId": "HR002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR002",
+      "description": "User Marcus Vance (marcus.vance@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZGDJPG-823",
+      "timestamp": "2026-10-08T11:28:22.276Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZFLUB7-716",
+      "timestamp": "2026-10-08T11:06:49.651Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZFKW4S-80",
+      "timestamp": "2026-10-08T11:06:05.356Z",
+      "actor": "Marcus Vance",
+      "actorId": "HR002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR002",
+      "description": "User Marcus Vance (marcus.vance@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZFKK6Y-791",
+      "timestamp": "2026-10-08T11:05:49.882Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZFJYTH-385",
+      "timestamp": "2026-10-08T11:05:22.181Z",
+      "actor": "Marcus Vance",
+      "actorId": "HR002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR002",
+      "description": "User Marcus Vance (marcus.vance@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZFHH41-63",
+      "timestamp": "2026-10-08T11:03:25.921Z",
+      "actor": "Rupam Sharma",
+      "actorId": "EMP002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP002",
+      "description": "User Rupam Sharma (rupam.sharma@enterprise.org) authenticated successfully with roles [EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZF1GD2-607",
+      "timestamp": "2026-10-08T10:50:58.454Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZF0WZP-158",
+      "timestamp": "2026-10-08T10:50:33.349Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZF03QS-109",
+      "timestamp": "2026-10-08T10:49:55.444Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEWLNE-502",
+      "timestamp": "2026-10-08T10:47:12.026Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFYBX-856",
+      "timestamp": "2026-10-08T10:34:15.309Z",
+      "actor": "Elena Rostova",
+      "actorId": "HR003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR003",
+      "description": "User Elena Rostova (elena.rostova@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFYAM-329",
+      "timestamp": "2026-10-08T10:34:15.262Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFYA7-772",
+      "timestamp": "2026-10-08T10:34:15.247Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFY9R-213",
+      "timestamp": "2026-10-08T10:34:15.231Z",
+      "actor": "Marcus Lee",
+      "actorId": "ADM003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM003",
+      "description": "User Marcus Lee (marcus.lee@enterprise.internal) authenticated successfully with roles [ADMIN, HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFY90-742",
+      "timestamp": "2026-10-08T10:34:15.204Z",
+      "actor": "David Chen",
+      "actorId": "EMP004",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP004",
+      "description": "User David Chen (david.chen@enterprise.internal) authenticated successfully with roles [ADMIN, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFY8H-615",
+      "timestamp": "2026-10-08T10:34:15.185Z",
+      "actor": "Rachel Adams",
+      "actorId": "ADM002",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM002",
+      "description": "User Rachel Adams (rachel.adams@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEFY7U-725",
+      "timestamp": "2026-10-08T10:34:15.162Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZEEIJP-698",
+      "timestamp": "2026-10-08T10:33:08.197Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [ADMIN, EMPLOYEE, HR_LEAD].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZ3YTVC-247",
+      "timestamp": "2026-10-08T05:41:00.216Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "DEACTIVATE_USER",
+      "resource": "USER",
+      "resourceId": "EMP005",
+      "description": "Admin deactivated account for Test Candidate Updated (EMP005).",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZ3YTUQ-956",
+      "timestamp": "2026-10-08T05:41:00.194Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "CHANGE_ROLE",
+      "resource": "USER",
+      "resourceId": "EMP005",
+      "description": "Admin updated user Test Candidate Updated (EMP005) - role changed from EMPLOYEE to HR_SPECIALIST.",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MUZ3YTU3-641",
+      "timestamp": "2026-10-08T05:41:00.171Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "CREATE_USER",
+      "resource": "USER",
+      "resourceId": "EMP005",
+      "description": "Admin created user Test Candidate (test.engineer.1791438060162@enterprise.internal) with role EMPLOYEE.",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-101",
+      "timestamp": "2026-10-08T00:30:34.647Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "SYSTEM_INITIALIZE",
+      "resource": "SYSTEM",
+      "resourceId": "CORE-01",
+      "description": "Enterprise HR Portal and Admin Control Plane initialized.",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-102",
+      "timestamp": "2026-10-08T02:30:34.647Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "ROLE_AUDIT",
+      "resource": "ROLE",
+      "resourceId": "ADMIN",
+      "description": "Verified SOC2 permission boundaries for Administrator and Specialist roles.",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-103",
+      "timestamp": "2026-10-08T04:30:34.647Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "POLICY_SYNC",
+      "resource": "SETTINGS",
+      "resourceId": "SLA-RULE",
+      "description": "Synchronized default SLA benchmarks: Standard (24h), High Priority (12h), Sensitive (4h).",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    }
+  ]
 }

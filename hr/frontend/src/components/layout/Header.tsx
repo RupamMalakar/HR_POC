@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCommandPalette,
   onToggleMobileMenu
 }) => {
-  const { user, logout, demoLogin } = useAuth();
+  const { user, logout } = useAuth();
   const current = tabTitles[activeTab] || tabTitles.dashboard;
   const [imgError, setImgError] = useState(false);
 
@@ -97,18 +97,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Right: Aligned navigation controls & profile */}
+      {/* Right: Search, Theme Toggle, Profile & Logout */}
       <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-        {/* Quick Portal Switcher */}
-        <button
-          onClick={() => demoLogin('EMPLOYEE')}
-          className="hidden lg:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/30 hover:border-emerald-400/50 text-emerald-300 text-xs font-mono font-medium transition-all shadow-sm cursor-pointer"
-          title="Switch view to Alex Johnson (Employee / User Self-Service Portal)"
-        >
-          <span className="material-symbols-outlined text-[16px]">person</span>
-          <span>User Portal →</span>
-        </button>
-
         {/* Glass Search Input - Click opens command palette */}
         <div
           onClick={onOpenCommandPalette}

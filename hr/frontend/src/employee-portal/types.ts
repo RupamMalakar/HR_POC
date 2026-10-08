@@ -49,6 +49,13 @@ export interface HrRequest {
   timeline: RequestTimelineEvent[];
   comments: RequestComment[];
   attachmentName?: string;
+  leaveDetails?: {
+    leaveType: string;
+    days: number;
+    startDate?: string;
+    endDate?: string;
+  };
+  leaveDeducted?: boolean;
 }
 
 export interface NotificationItem {
@@ -74,6 +81,7 @@ export interface LeaveBalance {
   casual: { remaining: number; total: number };
   sick: { remaining: number; total: number };
   earned: { remaining: number; total: number };
+  annual?: { remaining: number; total: number };
 }
 
 export interface PolicyItem {

@@ -19,6 +19,8 @@ import { ReviewDrawer } from './components/modals/ReviewDrawer';
 import { LoginView } from './components/auth/LoginView';
 import { EmployeePortal } from './components/views/EmployeePortal';
 import { SplitWorkflowView } from './components/views/SplitWorkflowView';
+import { AdminPortal } from './components/admin/AdminPortal';
+import { UnauthorizedView } from './components/admin/UnauthorizedView';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTheme } from './context/ThemeContext';
 import { hrService } from './services/hrService';
@@ -530,27 +532,88 @@ function HROperationsPortal() {
 }
 
 function PortalRouter() {
-  const { user, isLoading } = useAuth();
+  const { user, isAdmin, defaultPortal, canAccess, isLoading } = useAuth();
   const { setPortalMode } = useTheme();
 
+  // Reactive URL location state that triggers re-render on navigation
+  const [currentLocation, setCurrentLocation] = useState(() => ({
+    pathname: typeof window !== 'undefined' ? window.location.pathname : '/',
+    search: typeof window !== 'undefined' ? window.location.search : ''
+  }));
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      if (typeof window !== 'undefined') {
+        setCurrentLocation({
+          pathname: window.location.pathname,
+          search: window.location.search
+        });
+      }
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('portal-navigation', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('portal-navigation', handleLocationChange);
+    };
+  }, []);
+
+  const searchParams = new URLSearchParams(currentLocation.search);
   const isSplitView = typeof window !== 'undefined' && (
-    new URLSearchParams(window.location.search).get('view') === 'split' ||
-    window.location.pathname === '/split'
+    searchParams.get('view') === 'split' ||
+    currentLocation.pathname === '/split'
   );
 
-  const urlPortal = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('portal') : null;
+  const urlPortal = searchParams.get('portal');
+  const isAdminRoute = typeof window !== 'undefined' && (
+    currentLocation.pathname.startsWith('/admin') ||
+    urlPortal === 'admin'
+  );
+
   const isEmployeePort = typeof window !== 'undefined' && (
     window.location.port === '5174' ||
     window.location.port === '3000'
   );
 
-  const isEmployee = !user?.isHr || (user?.role as string) === 'EMPLOYEE' || urlPortal === 'employee' || isEmployeePort;
+  const navigatePortal = (target: 'admin' | 'hr' | 'employee') => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (target === 'admin') {
+        url.pathname = '/admin';
+        url.searchParams.set('portal', 'admin');
+        url.searchParams.delete('tab');
+      } else if (target === 'hr') {
+        url.pathname = '/';
+        url.searchParams.set('portal', 'hr');
+        url.searchParams.delete('tab');
+      } else {
+        url.pathname = '/';
+        url.searchParams.set('portal', 'employee');
+        url.searchParams.delete('tab');
+      }
+
+      window.history.pushState({}, '', url.toString());
+      setCurrentLocation({
+        pathname: url.pathname,
+        search: url.search
+      });
+      window.dispatchEvent(new Event('portal-navigation'));
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
 
   useEffect(() => {
     if (user) {
-      setPortalMode(isEmployee ? 'employee' : 'hr');
+      if (isAdminRoute && isAdmin) {
+        setPortalMode('hr');
+      } else if (urlPortal === 'employee' || defaultPortal === 'employee') {
+        setPortalMode('employee');
+      } else {
+        setPortalMode('hr');
+      }
     }
-  }, [isEmployee, user?.isHr, user?.role, setPortalMode]);
+  }, [isAdminRoute, isAdmin, urlPortal, defaultPortal, user, setPortalMode]);
 
   if (isSplitView) {
     return <SplitWorkflowView />;
@@ -570,21 +633,61 @@ function PortalRouter() {
     return <LoginView />;
   }
 
-  if (urlPortal === 'employee' || (isEmployeePort && (!user.isHr || user.role === 'EMPLOYEE'))) {
+  // 1. Explicit Admin Route Guard
+  if (isAdminRoute) {
+    if (!canAccess('admin')) {
+      return (
+        <UnauthorizedView
+          requiredRole="ADMIN"
+          title="Administrator Access Required"
+          message={`Account ${user.name} is not authorized to access the Admin Portal.`}
+          onReturnToPortal={() => navigatePortal(defaultPortal)}
+        />
+      );
+    }
+    return <AdminPortal onSwitchPortal={navigatePortal} />;
+  }
+
+  // 2. Explicit Employee Portal Request
+  if (urlPortal === 'employee' || isEmployeePort) {
+    if (!canAccess('employee')) {
+      return (
+        <UnauthorizedView
+          requiredRole="EMPLOYEE"
+          title="Employee Portal Access Required"
+          message={`Account ${user.name} does not possess the EMPLOYEE role.`}
+          onReturnToPortal={() => navigatePortal(defaultPortal)}
+        />
+      );
+    }
     return <EmployeePortal />;
   }
 
-  if (urlPortal === 'hr' && user.isHr) {
+  // 3. Explicit HR Operations Portal Request
+  if (urlPortal === 'hr') {
+    if (!canAccess('hr')) {
+      return (
+        <UnauthorizedView
+          requiredRole="HR_LEAD or HR_SPECIALIST"
+          title="HR Operations Access Required"
+          message={`Account ${user.name} does not possess an HR role.`}
+          onReturnToPortal={() => navigatePortal(defaultPortal)}
+        />
+      );
+    }
     return <HROperationsPortal />;
   }
 
-  // Role: !user.isHr or EMPLOYEE -> Show User / Employee Self-Service Portal
-  if (!user.isHr || user.role === 'EMPLOYEE') {
-    return <EmployeePortal />;
+  // 4. Default Landing based on user's authoritative default portal
+  if (defaultPortal === 'admin') {
+    return <AdminPortal onSwitchPortal={navigatePortal} />;
   }
 
-  // Role: HR_ADMIN or HR_SPECIALIST or user.isHr -> Show HR Operations Cockpit
-  return <HROperationsPortal />;
+  if (defaultPortal === 'hr') {
+    return <HROperationsPortal />;
+  }
+
+  return <EmployeePortal />;
 }
 
 export function App() {

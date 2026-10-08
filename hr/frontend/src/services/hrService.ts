@@ -199,6 +199,10 @@ export const hrService = {
     };
   },
 
+  subscribeToSync(callback: (event: { type: string; data: any }) => void) {
+    return this.subscribe(callback);
+  },
+
   async getMetrics(): Promise<DashboardMetrics> {
     try {
       const res = await fetch('http://localhost:8000/api/v1/dashboard/metrics');
@@ -331,6 +335,22 @@ export const hrService = {
     return item;
   },
 
+  async getEmployeeLeaveBalance(userId?: string): Promise<any | null> {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('hr_auth_token') : null;
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      else if (userId) headers['Authorization'] = `Bearer token_${userId}_session`;
+
+      const res = await fetch('http://localhost:8000/api/v1/employee/leave-balance', { headers });
+      if (res.ok) {
+        const data = await res.json();
+        return data.leaveBalance || data;
+      }
+    } catch {}
+    return null;
+  },
+
   async reviewRequest(id: string, notes: string, status: 'resolved' | 'in_review' = 'resolved'): Promise<RequestItem> {
     const statusUpper = status === 'resolved' ? 'RESOLVED' : 'IN PROGRESS';
     try {
@@ -352,8 +372,15 @@ export const hrService = {
           try { localStorage.setItem('hr_cached_requests', JSON.stringify(state.requests)); } catch {}
         }
         return updated;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server returned error (${res.status})`);
       }
-    } catch {}
+    } catch (err: any) {
+      if (err.message && !err.message.includes('fetch')) {
+        throw err;
+      }
+    }
 
     await delay(120);
     const req = state.requests.find(r => r.id === id || r.id?.toLowerCase() === id.toLowerCase());

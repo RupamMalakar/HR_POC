@@ -358,41 +358,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               )}
             </button>
-
-            {/* AI Telemetry & Tokens */}
-            <button
-              onClick={() => onSelectTab('ai-telemetry')}
-              className={`rounded-xl transition-all duration-200 text-left relative group ${
-                isCollapsed 
-                  ? 'w-10 h-10 p-0 flex items-center justify-center mx-auto' 
-                  : 'w-full flex items-center gap-3 px-3 py-2.5'
-              } ${
-                activeTab === 'ai-telemetry'
-                  ? 'bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-indigo-500/20 text-white font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] border border-cyan-400/40 shadow-[0_0_16px_rgba(0,240,255,0.25)]'
-                  : 'text-cyan-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent'
-              }`}
-            >
-              {activeTab === 'ai-telemetry' && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-cyan-400 shadow-[0_0_12px_#00f0ff]" />
-              )}
-              <span className="material-symbols-outlined text-[20px] text-cyan-400">
-                memory
-              </span>
-              {!isCollapsed && (
-                <>
-                  <span className="text-sm font-semibold">AI Telemetry</span>
-                  <span className="ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-semibold">
-                    Tokens
-                  </span>
-                </>
-              )}
-              {isCollapsed && (
-                <div className="absolute left-full ml-3 px-2.5 py-1 bg-[#0c1024] border border-cyan-400/30 rounded-lg text-xs text-cyan-300 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg flex items-center gap-1.5">
-                  <span>AI Telemetry</span>
-                  <span className="text-[9px] font-mono text-cyan-400">• Tokens</span>
-                </div>
-              )}
-            </button>
           </nav>
         </div>
       </div>

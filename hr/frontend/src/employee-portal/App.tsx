@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { DashboardView } from './views/DashboardView';
@@ -45,11 +45,18 @@ export default function EmployeePortalApp() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // Sync user name if available
+  // Sync authenticated user identity
   useEffect(() => {
-    if (user?.name) {
+    if (user) {
+      CURRENT_USER.employeeId = user.id;
+      CURRENT_USER.id = user.id;
       CURRENT_USER.name = user.name;
       CURRENT_USER.email = user.email || CURRENT_USER.email;
+      CURRENT_USER.role = user.title || user.role || CURRENT_USER.role;
+      CURRENT_USER.department = user.department || CURRENT_USER.department;
+      if (user.avatarUrl || user.avatar) {
+        CURRENT_USER.avatar = user.avatarUrl || user.avatar;
+      }
     }
   }, [user]);
 
@@ -59,6 +66,15 @@ export default function EmployeePortalApp() {
       if (event.type === 'REQUEST_CREATED') {
         const item = event.data?.request;
         if (item) {
+          // Strictly display only tickets belonging to the authenticated user
+          if (user?.id) {
+            const uid = String(user.id).toLowerCase();
+            const uEmail = String(user.email || '').toLowerCase();
+            const isMatch = (item.employeeId && String(item.employeeId).toLowerCase() === uid) ||
+                            (item.employee?.id && String(item.employee.id).toLowerCase() === uid) ||
+                            (item.employee?.email && String(item.employee.email).toLowerCase() === uEmail);
+            if (!isMatch) return;
+          }
           setRequests((prev) => {
             if (prev.some((r) => r.id === item.id || (r.id && item.id && r.id.toLowerCase() === item.id.toLowerCase()))) {
               return prev;
@@ -161,7 +177,19 @@ export default function EmployeePortalApp() {
       try {
         const serverReqs = await hrService.getRequests();
         if (Array.isArray(serverReqs)) {
-          const mapped: HrRequest[] = serverReqs.map((r: any) => {
+          // Strictly display only tickets belonging to the authenticated user
+          const myRawReqs = serverReqs.filter((r: any) => {
+            if (!user?.id) return true;
+            const uid = String(user.id).toLowerCase();
+            const uEmail = String(user.email || '').toLowerCase();
+            return (
+              (r.employeeId && String(r.employeeId).toLowerCase() === uid) ||
+              (r.employee?.id && String(r.employee.id).toLowerCase() === uid) ||
+              (r.employee?.email && String(r.employee.email).toLowerCase() === uEmail)
+            );
+          });
+
+          const mapped: HrRequest[] = myRawReqs.map((r: any) => {
             const cat = r.category === 'leave' ? 'Leave & Time'
               : r.category === 'payroll' ? 'Payroll'
               : r.category === 'benefits' ? 'Employee Info'
@@ -191,7 +219,7 @@ export default function EmployeePortalApp() {
                   date: r.createdDate || 'Today',
                   title: 'Request Created',
                   desc: 'Submitted through HR Service Desk self-service portal.',
-                  actor: r.employee?.name || CURRENT_USER.name,
+                  actor: r.employee?.name || user?.name || CURRENT_USER.name,
                 }
               ],
               comments: Array.isArray(r.comments) ? r.comments : [],
@@ -201,7 +229,7 @@ export default function EmployeePortalApp() {
 
           setRequests(mapped);
           try {
-            localStorage.setItem('hr_employee_portal_requests', JSON.stringify(mapped));
+            localStorage.setItem(`hr_employee_requests_${user?.id || 'default'}`, JSON.stringify(mapped));
           } catch {}
         }
       } catch (err) {
@@ -209,11 +237,44 @@ export default function EmployeePortalApp() {
       }
     }
     loadRequestsFromDatabase();
-  }, []);
+  }, [user?.id, user?.email]);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   const [leaveBalance, setLeaveBalance] = useState<LeaveBalance>(INITIAL_LEAVE_BALANCE);
   const [policies, setPolicies] = useState<PolicyItem[]>(POLICIES);
+
+  // Authoritative Leave Balance Fetching from Backend
+  const fetchCurrentLeaveBalance = useCallback(async () => {
+    try {
+      const currentEmpId = user?.id || CURRENT_USER.employeeId;
+      const bal = await hrService.getEmployeeLeaveBalance(currentEmpId);
+      if (bal) {
+        setLeaveBalance(bal);
+      }
+    } catch (err) {
+      console.warn('Could not fetch authoritative leave balance:', err);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    fetchCurrentLeaveBalance();
+  }, [fetchCurrentLeaveBalance]);
+
+  // Real-time SSE synchronization for Leave Balance updates
+  useEffect(() => {
+    const unsubscribe = hrService.subscribeToSync((event: { type: string; data: any }) => {
+      if (event.type === 'LEAVE_BALANCE_UPDATED' || event.type === 'REQUEST_UPDATED') {
+        const data = event.data;
+        const currentEmpId = user?.id || CURRENT_USER.employeeId;
+        if (data?.leaveBalance && (!data.employeeId || String(data.employeeId).toLowerCase() === String(currentEmpId).toLowerCase())) {
+          setLeaveBalance(data.leaveBalance);
+        } else if (data?.request) {
+          fetchCurrentLeaveBalance();
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [user?.id, fetchCurrentLeaveBalance]);
 
   // Modal States
   const [selectedRequest, setSelectedRequest] = useState<HrRequest | null>(null);
@@ -282,6 +343,7 @@ export default function EmployeePortalApp() {
       ],
       comments: [],
       attachmentName: newReqData.attachmentName,
+      leaveDetails: (newReqData as any)?.leaveDetails,
     };
 
     setRequests((prev) => {
@@ -313,6 +375,7 @@ export default function EmployeePortalApp() {
         description: fullReq.description,
         timeline: fullReq.timeline,
         attachmentName: fullReq.attachmentName,
+        leaveDetails: (newReqData as any)?.leaveDetails,
         employee: {
           id: user?.id || CURRENT_USER.employeeId,
           name: user?.name || CURRENT_USER.name,
@@ -387,20 +450,15 @@ export default function EmployeePortalApp() {
     daysCount: number,
     leaveType: 'casual' | 'sick' | 'earned'
   ) => {
-    // Deduct leave balance
-    setLeaveBalance((prev) => {
-      const current = prev[leaveType];
-      const remaining = Math.max(0, current.remaining - daysCount);
-      return {
-        ...prev,
-        [leaveType]: {
-          ...current,
-          remaining,
-        },
-      };
-    });
-
-    handleAddRequest(newRequest);
+    // Leave balance is NOT deducted while pending/submitted.
+    // It will be authoritatively deducted and synced by backend upon HR/Manager approval.
+    handleAddRequest({
+      ...newRequest,
+      leaveDetails: {
+        leaveType,
+        days: daysCount,
+      },
+    } as any);
     setShowApplyLeaveModal(false);
   };
 
