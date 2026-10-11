@@ -68,6 +68,16 @@ export interface RequestItem {
   categoryDisplay?: string;
   department?: string;
   lastUpdated?: string;
+  leaveDetails?: {
+    leaveType?: string;
+    days?: number;
+    isHalfDay?: boolean;
+    startDate?: string;
+    endDate?: string;
+  };
+  leaveDays?: number;
+  leaveType?: string;
+  leaveDeducted?: boolean;
 }
 
 export type TriageSensitivity = 'NORMAL' | 'SENSITIVE' | 'HIGHLY_SENSITIVE' | 'NEEDS_REVIEW';

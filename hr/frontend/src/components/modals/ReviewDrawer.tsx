@@ -156,11 +156,19 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
     }
   };
 
+  const [resolveError, setResolveError] = useState<string | null>(null);
+
   const handleResolve = async () => {
     setIsResolving(true);
-    await onResolve(item.id, 'Case verified and resolved per company policy.');
-    setIsResolving(false);
-    onClose();
+    setResolveError(null);
+    try {
+      await onResolve(item.id, 'Case verified and resolved per company policy.');
+      setIsResolving(false);
+      onClose();
+    } catch (err: any) {
+      setIsResolving(false);
+      setResolveError(err.message || 'Failed to resolve case.');
+    }
   };
 
   return (
@@ -237,6 +245,21 @@ export const ReviewDrawer: React.FC<ReviewDrawerProps> = ({
             </button>
           </div>
         </div>
+
+        {resolveError && (
+          <div className="px-6 py-2.5 bg-rose-500/15 border-b border-rose-500/30 text-rose-300 text-xs flex items-center justify-between gap-3 animate-fadeIn">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px] text-rose-400">error</span>
+              <span><strong>Action Blocked:</strong> {resolveError}</span>
+            </div>
+            <button
+              onClick={() => setResolveError(null)}
+              className="text-rose-400 hover:text-rose-200 text-xs px-2 py-0.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         {/* ================================================================= */}
         {/* 2. THE EMPLOYEE PROBLEM STATEMENT (PROMINENT & UN-COLLAPSED)      */}

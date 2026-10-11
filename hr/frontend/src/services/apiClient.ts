@@ -45,7 +45,7 @@ export async function request<T>(
     let errorMsg = `API Request failed with status ${response.status}`;
     try {
       const errJson = await response.json();
-      if (errJson.message) errorMsg = errJson.message;
+      if (errJson.error || errJson.message) errorMsg = errJson.error || errJson.message;
     } catch {
       // ignore
     }

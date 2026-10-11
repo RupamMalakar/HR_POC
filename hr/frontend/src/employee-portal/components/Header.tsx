@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenMobileSidebar,
   unreadCount,
 }) => {
-  const { user, logout, demoLogin } = useAuth();
+  const { user, logout } = useAuth();
   const active = activeScreen || currentScreen || 'dashboard';
   const handleNavigate = onNavigate || onSelectScreen || (() => {});
   const handleToggleMobile = onOpenMobileSidebar || onToggleMobileMenu || (() => {});
@@ -115,19 +115,8 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
-      {/* Right: Quick Switcher, Theme Toggle, Actions, User Profile */}
+      {/* Right: Theme Toggle, Actions, User Profile */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 whitespace-nowrap">
-        {/* Switch to HR Specialist Cockpit */}
-        <button
-          onClick={() => demoLogin('HR_SPECIALIST')}
-          className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 text-[#0D9488] text-xs font-semibold transition-all shrink-0 whitespace-nowrap"
-          title="Switch role to HR Specialist / Admin Cockpit"
-        >
-          <Sparkles className="w-3.5 h-3.5 shrink-0" />
-          <span className="hidden xl:inline">HR Specialist View →</span>
-          <span className="xl:hidden">HR View →</span>
-        </button>
-
         {/* Theme Mode Switcher */}
         <div className="shrink-0 flex items-center">
           <ThemeToggle className="scale-90" />
@@ -225,17 +214,6 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
 
               <div className="my-1 border-t border-white/60 dark:border-white/10"></div>
-
-              <button
-                onClick={() => {
-                  demoLogin('HR_SPECIALIST');
-                  setProfileOpen(false);
-                }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-teal-700 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-500/20 rounded-xl transition-colors text-left font-medium"
-              >
-                <Sparkles className="w-4 h-4 text-[#0D9488] dark:text-teal-400" />
-                <span>Switch to HR Specialist View</span>
-              </button>
 
               <button
                 onClick={() => {
