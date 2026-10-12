@@ -161,7 +161,11 @@ export const AskHrView: React.FC<AskHrViewProps> = ({
       
       try {
         const { hrService } = await import('../../services/hrService');
-        const response = await hrService.queryCopilot(query);
+        const historyPayload = messages.map(m => ({
+          role: m.sender,
+          content: m.text
+        }));
+        const response = await hrService.queryCopilot(query, historyPayload);
         
         const assistantMsg: ChatMessage = {
           id: response.id,

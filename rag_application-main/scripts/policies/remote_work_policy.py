@@ -1,366 +1,197 @@
-"""Remote Work & Hybrid Workplace Policy (HR-POL-004) dense content module."""
+"""TCS Workplace & Return to Office Policy (TCS-HR-POL-004) dense content module."""
 from policies.common import make_article
 
 def get_document():
     sections = [
         make_article(
-            "Article 1. Hybrid Workplace Operating Framework & Attendance Expectations",
-            "1.1 Hybrid Scheduling, Mandatory In-Office Days & Geographic Eligibility",
-            "Nexus Corporation embraces a modern, flexible hybrid work philosophy that balances the productivity of focused remote work with "
-            "the innovation, cultural connection, and mentorship achieved through in-person collaboration. Under our hybrid operating model, "
-            "regular full-time employees in eligible roles may work remotely up to 3 days per week, with a mandatory minimum of 2 days per week "
-            "spent on-site at their designated regional office hub. To maximize collaborative synergy across cross-functional teams, Tuesday and "
-            "Thursday are established as corporate-wide Mandatory In-Office Days for all hybrid personnel residing within 50 miles of an office hub.",
-            "Employees residing more than 50 miles from any Nexus facility may be classified as Designated Fully Remote upon written approval "
-            "from the Department Vice President and Chief People Officer. Fully remote employees are required to attend quarterly on-site department "
-            "summits and annual corporate kickoffs, with business travel, lodging, and meals fully covered under the corporate travel policy. "
-            "Essential on-site personnel—such as data center engineers, hardware lab technicians, and facilities staff—are not eligible for hybrid schedules.",
-            ["Workforce Classification", "In-Office Cadence Mandate", "Geographic Radius Rule", "Core Collaboration Expectations", "Travel Reimbursement"],
+            "Article 1. Workplace Operating Framework & Return to Office (RTO) Governance",
+            "1.1 Mandatory 5-Day Work from Office, 85% Turnstile Attendance & Campus Presence",
+            "Tata Consultancy Services (TCS) recognizes that in-person collaboration, physical mentorship, collective problem-solving, "
+            "and cross-functional teaming within our delivery campuses form the cornerstone of our organizational culture, associate "
+            "professional development, and client delivery assurance. In accordance with executive leadership directives, all associates "
+            "are mandated to work full-time (5 days per week) from their designated TCS delivery centres, base branch campuses, or assigned "
+            "client delivery locations. Remote work and ad-hoc work from home (WFH) have been formally phased out as regular operating modes.",
+            "Associates must maintain a minimum in-office attendance compliance of 85% of working days per calendar month, as registered "
+            "by the automated turnstile access badge-in and badge-out telemetry at TCS campus gates and ODC security doors. Monthly turnstile "
+            "attendance logs are reconciled electronically on the 1st of each month and transmitted to Delivery Heads (DH) and Unit HR (UHR). "
+            "Attendance compliance directly governs eligibility for Quarterly Performance Pay (QPP), variable compensation allocations, annual "
+            "merit increments, project bonus disbursements, and career promotion cycles.",
+            ["Compliance Parameter", "Mandatory Operating Standard", "Tracking System", "Business Impact"],
             [
-                ["Hybrid Personnel (Standard)", "Tuesdays & Thursdays Mandatory (2 days/wk)", "Residing within 50 miles of hub", "In-person meetings, team design sprints", "Standard local commuting rules"],
-                ["Designated Fully Remote", "Quarterly on-site summits only", "Residing > 50 miles from any hub", "Virtual attendance; quarterly travel", "Corporate travel policy covers summits"],
-                ["Essential On-Site Personnel", "Monday through Friday On-Site (5 days/wk)", "Assigned to physical lab / datacenter", "Direct physical systems maintenance", "Eligible for on-site differential"],
-                ["Temporary Remote Exception", "Approved duration (up to 30 days)", "Temporary personal/medical necessity", "Full remote deliverables & availability", "No travel reimbursement"],
-                ["Interns & Apprentices", "Tuesdays, Wednesdays & Thursdays (3 days)", "Must reside within commute radius", "In-person mentorship & paired work", "Standard local commuting rules"],
+                ["In-Office Working Days", "5 Days / Week (Monday to Friday)", "Turnstile Access Gates", "Baseline condition of employment"],
+                ["Monthly Turnstile Compliance", "Minimum 85% of Working Days", "Automated Turnstile Telemetry", "Eligibility for QPP & Variable Pay"],
+                ["Core Working Shift Hours", "9 Hours / Day (including 1h breaks)", "Timesheet & Turnstile match", "Overtime & shift allowance tracking"],
+                ["Ad-Hoc WFH Availability", "Phased Out (Disallowed by default)", "Ultimatix Gate Lockout", "Marked as Unauthorized / LOP if unapproved"],
+                ["Annual Promotion Linkage", ">= 85% Annual In-Office Rate", "Talent Review Board", "Mandatory gate for grade progression"],
             ],
-            [120, 110, 110, 110, 90],
+            [120, 135, 140, 145],
             [
-                "Attendance on designated mandatory in-office days is tracked via automated keycard badge swipes at facility entry turnstiles.",
-                "Unexcused absenteeism on mandatory in-office days exceeding two occurrences in a quarter results in revocation of remote privileges.",
-                "Employees may request to switch their designated remote days with 48 hours advance notice and written manager approval.",
+                "Turnstile attendance records cannot be manually altered or overridden by immediate project managers.",
+                "Proxy punching or using another associate's smartcard triggers immediate summary termination under TCoC Clause 4.",
+                "Non-compliance with the 85% monthly attendance threshold results in automatic withholding of the associate's quarterly performance pay.",
             ],
-            "CORE COLLABORATION DAY MANDATE:",
-            "Tuesdays and Thursdays are dedicated to high-bandwidth creative collaboration, one-on-ones, sprint planning, and architectural reviews. "
-            "Team leads must schedule major collaborative rituals on these days and avoid heavy all-day isolated coding blocks."
+            "MANDATORY RETURN TO OFFICE (RTO) ATTENDANCE MANDATE:",
+            "Physical campus presence is an essential, non-negotiable term of employment across all TCS delivery units. Associates failing "
+            "to report to assigned campuses without approved medical accommodations will be placed on formal administrative leave without pay."
         ),
         make_article(
-            "Article 2. Home Office Ergonomic Setup Stipend & High-Speed Internet Allowance",
-            "2.1 One-Time Ergonomic Setup Reimbursement & Ongoing Monthly Internet Subsidy",
-            "To ensure that all employees have a safe, ergonomic, and highly productive home working environment, Nexus provides a comprehensive "
-            "financial subsidy package. All full-time regular hybrid and remote employees receive a One-Time Home Office Setup Stipend of $500. "
-            "This stipend covers ergonomic task chairs, sit-stand motorized desks, external monitors, keyboard and mouse peripherals, laptop riser "
-            "stands, and noise-canceling headsets. Purchases must be submitted via Navan Expense within 60 calendar days of employment commencement.",
-            "In addition, Nexus provides all active hybrid and remote employees with an ongoing High-Speed Internet Allowance of $50 per month, "
-            "disbursed automatically as a non-taxable reimbursement on the second bi-weekly payroll of each month. Remote employees must maintain "
-            "a stable broadband internet connection with a minimum download speed of 100 Mbps and upload speed of 20 Mbps, capable of supporting "
-            "continuous HD video conferencing, cloud development environments, and secure VPN data tunnels simultaneously without latency spikes.",
-            ["Allowance Category", "Funding Allocation", "Eligibility Window", "Approved Eligible Items", "Documentation Required"],
+            "Article 2. Standard Shift Hours, Turnstile Telemetry & Working Time Governance",
+            "2.1 9-Hour Workday, 45-Hour Week, Shift Schedules & Core Collaboration Windows",
+            "The standard operating schedule for full-time associates is 9 consecutive hours per working day (equivalent to 45 hours per "
+            "standard working week), which includes 8 active delivery/working hours and 1 hour of cumulative meal and refreshment breaks. "
+            "The standard general shift window operates from 09:00 to 18:00 hours (Monday through Friday). For teams operating across rotational, "
+            "staggered, or 24x7 mission-critical client support rosters, shift schedules are defined in accordance with client Master Services "
+            "Agreements (MSA) and approved by the Delivery Centre Head (DCH).",
+            "To qualify as a full day's attendance, the duration between the associate's first morning turnstile badge-in and last evening "
+            "badge-out must reflect a minimum span of 8 hours and 30 minutes on campus. A campus stay between 4.5 hours and 8.5 hours is "
+            "classified as half-day attendance. Less than 4.5 hours on campus is marked as Absent / Loss of Pay (LOP) unless regularized "
+            "with sanctioned half-day casual or sick leave on Ultimatix. Core collaboration hours (10:00 to 16:30) require mandatory presence.",
+            ["Turnstile Stay Duration", "Attendance Classification", "Payroll Impact", "Ultimatix System Action"],
             [
-                ["Home Office Ergonomic Stipend", "$500 one-time reimbursement", "First 60 days of employment", "Ergonomic chair, desk, monitor, keyboard, riser", "Itemized retail purchase receipts"],
-                ["Monthly High-Speed Internet", "$50 per month ($600 / year)", "Ongoing for all hybrid/remote staff", "Broadband ISP, fiber, cable, mesh Wi-Fi gear", "Automated payroll credit (No receipts)"],
-                ["Corporate Hardware Bundle", "Provisioned by IT Logistics", "Shipped prior to start date", "MacBook Pro / ThinkPad, YubiKey, dock, monitor", "Asset custody acknowledgment signed"],
-                ["Ergonomic Medical Subsidy", "Up to $300 additional", "Upon physical therapist consult", "Orthopedic chair pads, vertical mice, footrests", "PT ergonomic evaluation form"],
-                ["Mobile Phone Reimbursement", "$40 per month (Role-dependent)", "Sales, On-Call Engineers, Managers", "Cellular voice & mobile hotspot data plans", "Navan Expense monthly submission"],
+                [">= 8 Hours 30 Minutes", "Full Working Day Present", "100% Full Daily Remuneration", "Standard Present marked"],
+                ["4.5 Hours to 8.49 Hours", "Half Working Day Present", "0.5 Day Pay (Requires 0.5 Day Leave)", "Half-day warning alert triggered"],
+                ["< 4.5 Hours on Campus", "Classified as Absent", "Loss of Pay (LOP) applied", "Automated Absence notification"],
+                ["Shift 1 (Morning: 06:00 - 15:00)", "Rotational Client Rota", "Standard Shift Allowance added", "Shift roster code validation"],
+                ["Shift 2 (Afternoon: 14:00 - 23:00)", "Rotational Client Rota", "Night Transport Cab provided", "Drop cab escort security"],
+                ["Shift 3 (Night: 22:00 - 07:00)", "Mission Critical 24x7 Rota", "Enhanced Night Shift Allowance", "Mandatory female associate security escorts"],
             ],
-            [120, 105, 110, 115, 90],
+            [120, 130, 140, 150],
             [
-                "Equipment purchased with the $500 stipend becomes the personal property of the employee and does not require return upon separation.",
-                "Employees are responsible for assembling and maintaining home furniture in compliance with OSHA home ergonomic safety guidelines.",
-                "If home internet service suffers an extended outage exceeding 4 hours, employees must report to the nearest office hub or use mobile hotspot.",
+                "Turnstile records are synchronized nightly with the corporate SAP/Ultimatix payroll engine.",
+                "Associates must swipe their own smartcard individually; tailgating through open turnstiles is an explicit security violation.",
+                "Night shift transport is provided free of cost to associates working shifts extending beyond 20:00 or starting before 07:00.",
             ],
-            "BROADBAND SPEED REQUIREMENT:",
-            "Remote employees must maintain broadband speeds of at least 100 Mbps down / 20 Mbps up. Conduct quarterly speed tests at speedtest.net "
-            "and retain screenshots in case of network troubleshooting escalations with corporate IT support."
+            "CAMPUS SAFETY & TURNSTILE GATE INTEGRITY:",
+            "All physical entries and exits through campus security gates, ODC doors, and turnstiles must be logged via smartcard. Turnstile "
+            "discrepancies must be reconciled within 48 hours via Ultimatix Attendance Regularization with managerial concurrence."
         ),
         make_article(
-            "Article 3. International Remote Work Program ('Work from Anywhere')",
-            "3.1 20-Day Global Mobility Allowance, Tax Residency Rules & Country Restrictions",
-            "Nexus Corporation recognizes the profound value of global mobility and personal flexibility. Under our innovative 'Work from Anywhere' "
-            "(WFA) program, full-time regular employees in good standing may work remotely from an approved international location for up to 20 "
-            "business days per calendar year. This program allows employees to extend personal overseas vacations, visit extended family abroad, "
-            "or explore new cultural destinations while continuing to deliver full-time business results without consuming annual PTO balances.",
-            "To ensure absolute compliance with international labor laws, permanent establishment corporate tax exposure, and export control regulations, "
-            "all international remote work must be pre-approved at least 30 calendar days in advance via the Global Mobility Portal. Remote work is "
-            "strictly prohibited from countries subject to US Treasury Office of Foreign Assets Control (OFAC) trade sanctions or State Department "
-            "Level 4 Travel Advisories. Employees must execute a statutory Tax and Legal Affidavit confirming they will not establish local tax residency.",
-            ["Global Mobility Tier", "Maximum Duration", "Advance Notice SLA", "Eligible Destinations", "Approval Authority"],
+            "Article 3. Secure Borderless Workspaces (SBWS) Protocol & ODC Security Controls",
+            "3.1 Zero-Trust Endpoint Architecture, ODC Clean Floor Policy & Device Governance",
+            "The TCS Secure Borderless Workspaces (SBWS) framework governs all enterprise computing infrastructure across on-premise "
+            "workstations, corporate laptops, virtual desktop environments (VDI), and cloud workstations. All corporate endpoints are locked "
+            "down with centralized endpoint security agents—including Palo Alto GlobalProtect VPN, Symantec/Trellix Data Loss Prevention (DLP), "
+            "CrowdStrike Falcon EDR, and strict device control policies. The use of unauthorized personal laptops, BYOD devices, external "
+            "USB mass storage devices, personal hard drives, and mobile hotspot tethering is strictly prohibited.",
+            "Within designated Offshore Development Centres (ODCs) and Dedicated Client Facilities (DCFs), associates must adhere strictly "
+            "to the ODC Clean Floor Mandate. Mobile phones, personal cameras, audio recording devices, USB drives, smart watches with cellular "
+            "data, and personal storage media must be deposited in secure external locker facilities prior to entering the ODC. Any attempt "
+            "to photograph computer monitors, extract customer source code, or capture client proprietary data triggers immediate turnstile "
+            "gate pass revocation and summary dismissal under TCoC Clause 5.",
+            ["Security Domain", "Mandatory SBWS Protocol", "Monitoring Technology", "Enforcement Consequence"],
             [
-                ["Standard Global WFA", "Up to 20 business days / calendar year", "At least 30 calendar days prior", "Approved Tier 1 & 2 countries (EU, UK, JP, etc.)", "Manager + Global Mobility HR"],
-                ["Emergency Compassionate WFA", "Up to 15 additional business days", "72 hours notice (emergency)", "Family medical crisis abroad", "VP of People Operations"],
-                ["High-Risk Security Countries", "STRICTLY PROHIBITED (0 days)", "N/A (Automated network block)", "OFAC sanctioned; ITAR / EAR restricted zones", "No exceptions permitted by law"],
-                ["Domestic Out-of-State WFA", "Up to 30 calendar days / year", "14 calendar days advance notice", "Any US state / territory with legal nexus", "Direct Line Manager approval"],
-                ["Cross-Border Relocation", "Permanent relocation pathway", "6 months formal legal review", "Countries where Nexus maintains legal entity", "Executive Committee + Legal"],
+                ["Endpoint USB Ports", "Hardware Disablement / Blocked", "Symantec / Trellix DLP", "Port disabled; alert sent to GSOC"],
+                ["ODC Physical Floor", "Clean Floor (No mobiles / cameras)", "CCTV & Security Frisking", "Locker storage mandatory"],
+                ["Network Access", "Corporate Wired LAN / Secured Wi-Fi", "802.1X Enterprise Certificate", "Rogue networks blocked"],
+                ["Screen Inactivity", "Automatic Lock after 3 Minutes", "Group Policy Enforcement", "Screen lock (Win+L / Ctrl+Cmd+Q)"],
+                ["Data Exfiltration", "Strictly Blocked across all channels", "DLP Cloud Shadow Monitoring", "Immediate security investigation"],
             ],
-            [120, 105, 110, 115, 90],
+            [110, 145, 140, 145],
             [
-                "Employees working abroad must maintain core collaboration hours overlapping with their home team by at least 4 contiguous hours daily.",
-                "All corporate data access while abroad must route through Palo Alto GlobalProtect VPN; public Wi-Fi is strictly banned without VPN.",
-                "Violating the 20-day limit triggers foreign tax withholdings, local labor law penalties, and potential employment termination.",
+                "Associates must never leave active sessions unlocked or unattended; screens must be locked whenever stepping away from desks.",
+                "Customer proprietary IP must never be forwarded to personal email addresses or hosted on unapproved personal cloud drives.",
+                "Physical security guards conduct random spot-checks at ODC turnstiles to verify compliance with the Clean Floor policy.",
             ],
-            "OFAC SANCTIONED COUNTRY BAN:",
-            "Connecting corporate devices to Nexus systems from OFAC-sanctioned jurisdictions (Cuba, Iran, North Korea, Syria, Crimea/Donetsk/Luhansk) "
-            "is a federal crime. Automated geo-blocking terminates network access instantly upon detection and notifies federal authorities."
+            "ODC INTEGRITY & ZERO DATA LEAKAGE MANDATE:",
+            "Customer trust is paramount. Bypassing ODC physical controls, bringing mobile recording devices onto the delivery floor, or "
+            "attempting unauthorized code exfiltration constitutes criminal breach of trust and results in immediate legal prosecution."
         ),
         make_article(
-            "Article 4. Information Security, Endpoint Protection & GlobalProtect VPN",
-            "4.1 Secure Remote Computing, Palo Alto VPN & Removable Media Controls",
-            "Remote work environments introduce distinct cybersecurity threat vectors that require rigorous technical and behavioral safeguards. "
-            "All remote work must be conducted exclusively on corporate-issued, encrypted hardware provisioned and managed by Nexus IT Operations. "
-            "The use of personal desktop computers, personal laptops, shared household tablets, or public internet cafe terminals to access corporate "
-            "email, Slack, GitHub, Jira, or customer databases is strictly forbidden and constitutes a terminable security violation.",
-            "Whenever connecting to corporate cloud resources, remote employees must authenticate through the Palo Alto GlobalProtect Virtual "
-            "Private Network (VPN) using full tunnel encryption. Multi-factor authentication via Okta Verify Push or FIDO2 hardware YubiKeys is "
-            "mandatory on all logins. Endpoint protection agents—including CrowdStrike Falcon EDR, Jamf Pro (macOS), and Microsoft Intune (Windows)—"
-            "must remain active, uninhibited, and updated at all times. Physical USB mass storage ports are permanently disabled on all laptops.",
-            ["Security Control", "Technical Standard", "Employee Obligation", "Monitoring & Verification", "Sanction for Non-Compliance"],
+            "Article 4. Temporary Medical Accommodations & Exceptional Telecommuting Approval",
+            "4.1 Exceptional WFH Eligibility, Approval Matrix & Strict Time-Bound Limits",
+            "In strictly defined circumstances where an associate suffers from acute temporary physical immobility (e.g., severe orthopedic "
+            "fractures, major post-operative convalescence, high-risk pregnancy complications certified by an obstetrician, or contagious "
+            "infections requiring medical isolation), a temporary, time-bound telecommuting exception may be requested. Exceptional WFH is "
+            "not an entitlement and is granted solely upon formal medical validation and project delivery viability.",
+            "Temporary WFH requests must be submitted through Ultimatix with supporting medical documentation from a Registered Medical "
+            "Practitioner (RMP). Approval requires the dual concurrence of the Delivery Centre Head (DCH) and the Unit HR Head (UHR). "
+            "The maximum duration for any single medical telecommuting approval is 15 consecutive working days. Extensions beyond 15 days "
+            "require formal case review by the TCS Occupational Health Centre (OHC) Medical Board and Delivery Head (DH) signoff. In no "
+            "circumstances may temporary WFH exceed 60 calendar days within a rolling 12-month period.",
+            ["Medical / Accommodation Scenario", "Maximum WFH Span Allowed", "Required Medical Documentation", "Approval Authority"],
             [
-                ["Always-On Corporate VPN", "Palo Alto GlobalProtect AES-256", "Connect before accessing any tools", "Automated network telemetry logs", "Account lock upon external direct hit"],
-                ["Multi-Factor Authentication", "FIDO2 YubiKey or Okta Verify Push", "Never share or approve unknown push", "Okta Identity Engine risk scoring", "Immediate credential revocation"],
-                ["Endpoint Detection & EDR", "CrowdStrike Falcon active sensor", "Never attempt to disable or tamper", "24/7/365 SOC continuous monitoring", "Immediate device isolation by SOC"],
-                ["Screen Privacy & Clean Desk", "3M Privacy filters in public spaces", "Lock screen when leaving desk (Win+L)", "Periodic remote audit checks", "Formal written security warning"],
-                ["Local Data Storage Bans", "All files saved to Google Drive / Git", "Zero customer PII on local desktop", "DLP automated file scanning agent", "Forensic wipe; disciplinary action"],
+                ["Acute Orthopedic Immobility", "Up to 15 Working Days", "Orthopedic Surgeon Hospital Certificate", "DCH & Unit HR Head"],
+                ["High-Risk Pregnancy Bedrest", "Up to 30 Working Days", "Gynecologist Ultrasound & Clinical Report", "OHC Medical Board & DCH"],
+                ["Severe Post-Operative Recovery", "Up to 15 Working Days", "Hospital Discharge Summary & Treatment Plan", "DCH & Unit HR Head"],
+                ["Contagious Medical Quarantine", "Up to 7 Working Days", "OHC Certified Infectious Isolation Notice", "OHC Medical Officer"],
+                ["Convenience / Commute Reasons", "Zero (Strictly Prohibited)", "Not Applicable (Inadmissible)", "Auto-rejected by Ultimatix"],
             ],
-            [110, 115, 125, 100, 90],
+            [130, 120, 150, 140],
             [
-                "Laptops must never be left unattended in vehicles, coffee shops, airport waiting lounges, or hotel conference rooms.",
-                "In the event of a lost, stolen, or compromised device, notify security@nexus-corp.internal immediately (within 1 hour max).",
-                "IT Security initiates automated cryptographic remote wipes within 15 minutes of any confirmed device loss report.",
+                "Associates on approved temporary WFH must remain accessible via Microsoft Teams throughout standard core working hours.",
+                "Working remotely from public cafes, hotel lobbies, unencrypted co-working spaces, or shared public Wi-Fi is strictly banned.",
+                "Attendance during approved temporary medical WFH is mapped with full system telemetry and JIRA/timesheet deliverables.",
             ],
-            "PUBLIC WI-FI SECURITY WARNING:",
-            "Connecting to unencrypted public Wi-Fi networks (airports, hotels, cafes) without active GlobalProtect VPN is strictly prohibited. "
-            "Use cellular mobile hotspot tethering whenever secure, password-protected private Wi-Fi is unavailable."
+            "EXCEPTIONAL MEDICAL GOVERNANCE PROTOCOL:",
+            "Requests citing commute distance, traffic congestion, personal convenience, or domestic routine are strictly ineligible for WFH. "
+            "Such requests are automatically rejected by the Ultimatix workflow engine without supervisory review."
         ),
         make_article(
-            "Article 5. Core Collaboration Hours, Asynchronous Communication & Availability",
-            "5.1 Synchronous Overlap, Slack Protocols & Response Time Service Levels",
-            "Effective distributed teamwork requires clear, transparent communication norms and shared expectations around availability. "
-            "All hybrid and remote employees are required to be online, logged into Slack and Google Workspace, and actively accessible during "
-            "Corporate Core Collaboration Hours from 10:00 AM to 4:00 PM local time across their designated regional operational time zone. "
-            "Core hours represent the designated window for cross-functional standups, client meetings, design reviews, and synchronous alignment.",
-            "Outside core collaboration hours, Nexus champions asynchronous communication workflows to promote sustained deep focus and work-life "
-            "balance. Employees are not expected to monitor or respond to work emails or Slack messages outside their standard 8-hour workday, "
-            "during weekends, or while on approved PTO. For urgent operational emergencies outside standard hours, documented on-call rotations "
-            "utilizing PagerDuty will alert designated engineers via phone calls with accompanying on-call premium compensation.",
-            ["Communication Channel", "Primary Purpose", "Expected Response Time (Core)", "Etiquette Standard", "Off-Hours Expectation"],
+            "Article 5. Prohibition of International Remote Work & Data Sovereignty Mandate",
+            "5.1 Cross-Border Telecommuting Ban, Tax Nexus Risk & Data Residency Legislation",
+            "Associates are strictly prohibited from performing TCS or client professional duties from any foreign country or international "
+            "jurisdiction outside their contracted employment location without formal overseas deputation (Global Deputation - GD). "
+            "Work from Anywhere (WFA) abroad or unauthorized international telecommuting constitutes an illegal violation of international "
+            "tax laws, creates permanent corporate establishment (PE) tax liabilities for TCS, and breaches client contractual data residency.",
+            "Client Master Services Agreements (MSA) and international data privacy statutes—including the EU General Data Protection Regulation "
+            "(GDPR), US HIPAA, and international export control regimes—strictly prohibit accessing customer production systems, source code "
+            "repositories, or personally identifiable information (PII) from unapproved international IP addresses. Any associate found "
+            "connecting to TCS networks or client systems via foreign IP addresses triggers automatic GlobalProtect VPN network blacklisting "
+            "and immediate termination for cause under TCoC Clause 1.",
+            ["Risk Category", "Statutory & Regulatory Driver", "TCS Policy Prohibition", "Corporate Liability"],
             [
-                ["Slack Direct Messages", "Urgent questions, real-time unblocking", "Within 60 minutes during core hours", "Clear, professional, concise text", "Do Not Disturb (DND) respected"],
-                ["Slack Public Channels", "Project discussions, team updates", "Within 2 to 4 business hours", "Threaded replies; tag @here sparingly", "No response expected off-hours"],
-                ["Corporate Email (Gmail)", "Formal agreements, external client notes", "Within 24 business hours", "Professional formatting, clear subjects", "No response expected off-hours"],
-                ["Zoom Video Conferences", "Interactive design, 1-on-1s, sprints", "Punctual attendance at scheduled time", "Camera on during small meetings", "Scheduled within core hours only"],
-                ["PagerDuty Emergency Alert", "Critical production outages (Sev-1)", "Acknowledge within 15 minutes", "On-call engineer immediate triage", "Compensated on-call rotation"],
+                ["Corporate Tax Nexus", "International Permanent Establishment (PE)", "Absolute ban on foreign telecommuting", "Multi-million dollar corporate tax fines"],
+                ["Data Sovereignty", "GDPR Art 44-50 / HIPAA / CCPA", "No unauthorized international data transit", "Severe regulatory penalties & MSA loss"],
+                ["Immigration Compliance", "Foreign Tourist / Non-immigrant Visas", "Working on tourist visa strictly illegal", "Deportation & blacklisting by consulates"],
+                ["Client Contractual Breach", "MSA Dedicated Delivery Location Clause", "Breach of ODC exclusivity covenants", "Contract termination & client damages"],
             ],
-            [110, 115, 110, 115, 90],
+            [120, 140, 140, 140],
             [
-                "Employees stepping away from their desk for more than 30 minutes during core hours must update their Slack status accordingly.",
-                "Meeting-Free Thursdays: All Thursdays from 1:00 PM to 5:00 PM are designated focus time with zero internal meetings permitted.",
-                "Non-exempt employees must never send Slack messages or check email after clocking out at the end of their shift.",
+                "Connecting to TCS corporate VPN from international foreign locations without approved GD letter triggers immediate GSOC alert.",
+                "Associates traveling abroad for personal vacations must leave corporate laptops and hardware in secure custody at their base branch.",
+                "Any associate traveling internationally with corporate assets without written Overseas Transit Authorization will be intercepted.",
             ],
-            "MEETING ETIQUETTE & RECORDING CONSENT:",
-            "All virtual meetings with external parties or team recordings require explicit notification of attendees prior to recording. "
-            "Recordings must be saved to authorized secure corporate repositories with 90-day automated lifecycle deletion policies."
+            "DATA SOVEREIGNTY & EXPORT CONTROL ENFORCEMENT:",
+            "Unauthorized international remote work places TCS and our enterprise clients in severe legal jeopardy under foreign tax and "
+            "export control authorities. Violators face immediate summary dismissal, financial restitution, and legal referral."
         ),
         make_article(
-            "Article 6. Ergonomic Standards, Workspace Safety & Remote Workers' Compensation",
-            "6.1 OSHA Remote Work Compliance, Home Hazard Mitigation & Injury Reporting",
-            "Nexus Corporation is committed to protecting the occupational health and physical safety of remote employees in full compliance "
-            "with OSHA standards. Remote employees are required to maintain a dedicated, clean, quiet, and hazard-free home workspace. The home "
-            "workstation must feature adequate illumination, properly grounded electrical outlets (prohibiting daisy-chained extension cords), "
-            "clear walking pathways free of trip hazards, and ergonomic positioning of computer monitors, seating, and input peripherals.",
-            "Remote employees are covered by Workers' Compensation Insurance for work-related injuries or occupational illnesses sustained while "
-            "performing official job duties within their designated home workspace during scheduled working hours. Coverage does not extend to non-work "
-            "areas of the home (kitchens, yards, garages) or injuries sustained during personal activities. Any work-related injury must be reported "
-            "to People Operations and Facilities within 24 hours of occurrence via the Safety Desk portal to ensure prompt statutory claim filing.",
-            ["Safety & Health Dimension", "OSHA Regulatory Reference", "Home Workstation Standard", "Verification & Self-Audit", "Reporting Channel"],
+            "Article 6. Workplace Ergonomics, Occupational Health & OHC Facility Standards",
+            "6.1 Ergonomic Standards, OHC Campus Facilities & Health Risk Mitigation",
+            "TCS is committed to maintaining world-class workplace ergonomics, health safety, and wellness infrastructure across all campuses. "
+            "All delivery centres provide height-adjustable pneumatic task chairs, dual-monitor workstations with ergonomic viewing angles, "
+            "anti-glare ambient lighting, central HVAC climate control with HEPA filtration, and designated ergonomic collaboration pods.",
+            "Every major TCS campus features a fully staffed 24x7 Occupational Health Centre (OHC) with qualified medical doctors, nursing "
+            "staff, emergency ICU ambulances, basic life support (BLS) equipment, and tie-ups with leading multi-speciality tertiary hospitals "
+            "within a 5-kilometer radius. Associates experiencing physical discomfort, repetitive strain injury (RSI), or occupational stress "
+            "may avail ergonomic posture assessments and preventive physiotherapy sessions at the OHC free of cost.",
+            ["OHC Healthcare Service", "Campus Availability", "Operating Standard", "Emergency Protocols"],
             [
-                ["Ergonomic Posture & Seating", "OSHA Ergonomics Guidelines", "Adjustable chair with lumbar support; 90° elbow", "Annual self-assessment photo audit", "Safety Desk portal ticket"],
-                ["Electrical Safety & Outlets", "OSHA 29 CFR 1910.303", "Grounded 3-prong outlets; UL-listed surge strips", "Self-certified inspection checklist", "Facilities advisory ticket"],
-                ["Fire Prevention & Egress", "OSHA 29 CFR 1910.36", "Working smoke detector; clear 36\" exit pathway", "Annual home safety attestation", "HR Annual Attestation module"],
-                ["Work-Related Injury at Home", "State Workers' Comp Statutes", "Occurring during official work performance", "Formal incident investigation by HR", "Report in 24 hours to People Ops"],
-                ["Virtual PT Ergonomic Consult", "Corporate Wellness Program", "1-on-1 virtual evaluation by licensed PT", "Available upon employee request", "Modern Health / Hinge Health app"],
+                ["General Medical Consultation", "24x7 across all major campuses", "Qualified MBBS Medical Officers", "Walk-in & scheduled appointment"],
+                ["Emergency ICU Ambulance", "Dedicated on-campus vehicle", "Paramedic & oxygen support equipped", "Instant transit to tertiary hospital"],
+                ["Ergonomic Posture Clinic", "Weekly specialist sessions", "Physiotherapist evaluation", "Workstation adjustments recommended"],
+                ["Annual Health Check-Up", "Annual drive for all associates", "Comprehensive pathology & vitals", "Free under TCS-HIS wellness banner"],
+                ["Fit4Life Fitness Facilities", "On-campus gymnasiums", "Certified fitness instructors", "Cardio, weights & yoga facilities"],
             ],
-            [110, 110, 130, 100, 90],
+            [120, 130, 145, 145],
             [
-                "All remote employees must complete the mandatory Home Office Ergonomic Self-Assessment in Workday within 30 days of hire.",
-                "Nexus reserves the right to conduct virtual or in-person health and safety inspections of home workspaces upon reasonable notice.",
-                "Ergonomic accessories recommended by a licensed physical therapist are 100% reimbursed up to the $300 supplemental limit.",
+                "Emergency response alarms and medical call buttons are installed across all delivery floors and ODCs.",
+                "Associates are encouraged to take brief 5-minute eye relaxation breaks every 60 minutes of intensive monitor work.",
+                "Campus cafeterias are audited monthly by food safety inspectors to ensure absolute nutritional quality and hygiene.",
             ],
-            "WORKERS' COMP INJURY REPORTING SLA:",
-            "Report any occupational accident or injury sustained while working remotely to People Operations at hr-safety@nexus-corp.internal "
-            "within 24 hours. Failure to report promptly may jeopardize statutory workers' compensation insurance claim validity."
-        ),
-        make_article(
-            "Article 7. Interstate Domestic Relocation, Tax Nexus & Geographic Pay Banding",
-            "7.1 Mandatory 60-Day Relocation Notice, Corporate Tax Nexus & State Withholding",
-            "Because employee residence locations trigger complex state and municipal payroll tax withholding, corporate income tax nexus, "
-            "unemployment insurance liabilities, and state-specific labor law obligations, remote employees may not relocate their primary "
-            "residence without prior written authorization from People Operations and Legal Compliance. Employees planning an interstate "
-            "relocation must submit a formal Relocation Request via the Employee Portal at least 60 calendar days prior to the planned move date.",
-            "Nexus Corporation maintains legal employment entities in designated US states. If an employee requests relocation to a jurisdiction "
-            "where Nexus does not currently maintain a registered business entity, the request may be denied or require executive approval. "
-            "Additionally, compensation at Nexus is benchmarked against regional geographic cost-of-labor tiers (Tier 1: SF/NYC/Seattle; "
-            "Tier 2: Austin/Denver/Chicago; Tier 3: General US). Relocating across tiers triggers an automatic base salary calibration.",
-            ["Geographic Pay Tier", "Metropolitan Reference Markets", "Pay Differential Benchmark", "Tax Nexus Registration", "Relocation Notice Window"],
-            [
-                ["Tier 1 (High Cost of Labor)", "San Francisco, New York City, Seattle, San Jose", "100% Base Benchmark (Standard)", "Nexus active corporate entity", "60 Calendar Days advance notice"],
-                ["Tier 2 (Medium Cost of Labor)", "Austin, Denver, Boston, Chicago, Los Angeles", "90% - 95% of Tier 1 Benchmark", "Nexus active corporate entity", "60 Calendar Days advance notice"],
-                ["Tier 3 (National Standard)", "All other US metropolitan and rural regions", "80% - 85% of Tier 1 Benchmark", "Registration check required", "60 Calendar Days advance notice"],
-                ["Unregistered State Request", "Jurisdictions without current Nexus entity", "Case-by-case legal review", "Requires Secretary of State filing", "90 Calendar Days advance notice"],
-                ["Temporary Relocation (<60d)", "Temporary stay while maintaining primary home", "No salary adjustment applied", "No state tax nexus triggered", "14 Calendar Days advance notice"],
-            ],
-            [110, 115, 115, 110, 90],
-            [
-                "Relocating without prior HR authorization constitutes unauthorized absence and gross misconduct resulting in termination.",
-                "Salary adjustments resulting from geographic tier moves take effect on the first payroll cycle following confirmed residency.",
-                "Nexus does not provide moving or relocation expense reimbursements for voluntary employee-initiated relocations.",
-            ],
-            "UNAUTHORIZED RELOCATION PENALTIES:",
-            "Moving your primary tax residence without notifying People Operations creates severe tax penalties and civil liability for "
-            "unpaid state payroll taxes. Employees are personally liable for back taxes and penalties arising from undisclosed relocations."
-        ),
-        make_article(
-            "Article 8. Performance Accountability, Deliverables Tracking & Remote Eligibility",
-            "8.1 Objective Milestones, Productivity Metrics & Revocation of Remote Privileges",
-            "Remote work at Nexus Corporation is an earned operational privilege, not an unconditional statutory entitlement. Continued "
-            "eligibility for remote and hybrid work is contingent upon sustained high performance, punctuality, active communication, and the "
-            "consistent attainment of quarterly Objectives and Key Results (OKRs). Performance is evaluated based on concrete work output, "
-            "code commits, customer deliverables, and milestone completion, rather than mere physical or digital presence.",
-            "If an employee performance drops below acceptable standards—evidenced by an overall rating of Tier 2 (Partially Meets) or Tier 1 "
-            "(Unsatisfactory), missed deadlines, unresponsiveness during core hours, or placement on a Performance Improvement Plan (PIP)—the "
-            "department manager, in consultation with People Operations, may immediately suspend or permanently revoke remote work privileges. "
-            "Employees whose remote privileges are revoked must report to the nearest regional office hub on a full-time 5-day on-site basis.",
-            ["Performance Criterion", "Measurement Metric", "Satisfactory Standard", "Underperformance Trigger", "Action / Sanction"],
-            [
-                ["OKR Goal Attainment", "Quarterly deliverable completion %", "At least 85% of planned deliverables", "Below 70% completion for two quarters", "Placement on 30-day PIP; remote review"],
-                ["Core Hours Availability", "Slack responsiveness & standup attendance", "Active 10:00 AM - 4:00 PM local", "Unexplained unreachability > 3 times", "Formal counseling; in-office mandate"],
-                ["Quality of Deliverables", "Peer review scores & QA error rates", "Meets or exceeds team engineering SLAs", "Frequent rework, high bug escape rates", "Mandatory paired work on-site"],
-                ["Meeting Participation", "Attendance at required team ceremonies", "100% attendance (absences pre-excused)", "Missed client meetings or sprint standups", "Manager written warning in file"],
-                ["Overall Performance Rating", "Annual Lattice appraisal score", "Tier 3 (Meets Expectations) or above", "Tier 1 or Tier 2 rating", "Revocation of remote work status"],
-            ],
-            [110, 110, 110, 110, 100],
-            [
-                "Revocation of remote privileges requires 14 calendar days written advance notice to allow the employee to arrange commuting.",
-                "Employees on a formal PIP are required to work on-site 5 days a week during the PIP duration to facilitate intensive coaching.",
-                "Remote privileges may be reinstated after 6 months of sustained Tier 3+ performance and Department Director approval.",
-            ],
-            "MANAGEMENT PREROGATIVE ON REVOCATION:",
-            "Department Vice Presidents possess full operational authority to modify or revoke remote arrangements for teams or individuals "
-            "when business needs, customer escalation trends, or collaborative deliverables require sustained in-person co-location."
-        ),
-        make_article(
-            "Article 9. Company Hardware Custody, Equipment Refresh & Offboarding Asset Recovery",
-            "9.1 Asset Tracking, 3-Year Refresh Cadence & Prepaid Return Logistics",
-            "All hardware equipment provisioned by Nexus—including MacBook Pro and Lenovo ThinkPad laptops, external monitors, docking "
-            "stations, and security hardware tokens—remains the sole legal property of Nexus Corporation. Employees are designated as custodial "
-            "trustees of company assets and are responsible for exercising reasonable care to prevent damage, loss, or unauthorized access. "
-            "All assets are assigned a unique barcode asset tag registered in the enterprise IT Asset Management (ITAM) database.",
-            "Nexus operates a standard 36-month hardware refresh lifecycle for engineering and technical roles, and a 48-month lifecycle for "
-            "operational roles. Upon reaching the refresh threshold, IT Logistics automatically ships a new, pre-configured laptop to the employee "
-            "residence with automated data migration software. Upon separation from employment—whether voluntary or involuntary—all corporate "
-            "hardware must be securely returned to Nexus within 5 business days using prepaid, insured shipping containers dispatched by IT.",
-            ["Hardware Asset Type", "Standard Provisioning Spec", "Refresh Lifecycle", "Employee Custody Obligation", "Offboarding Return Mandate"],
-            [
-                ["Engineering Laptop", "Apple MacBook Pro 16\" M3 Max / 64GB", "36 Months (3 Years)", "Keep encrypted; no personal use", "Must return within 5 business days"],
-                ["Business / Operations Laptop", "Lenovo ThinkPad X1 Carbon / 32GB", "48 Months (4 Years)", "Keep encrypted; install corporate software", "Must return within 5 business days"],
-                ["Hardware Security Key", "Yubico YubiKey 5C NFC (Pair)", "Replace upon damage/loss", "Attach to personal keychain; protect credentials", "Must return or verify destruction"],
-                ["Dual Display Monitors", "Dell UltraSharp 27\" 4K USB-C Hub", "60 Months (5 Years)", "Maintain in home workspace", "Employee may retain if tenure > 2 yrs"],
-                ["Peripherals & Cables", "Logitech MX Master 3S Mouse & Keys", "Replaced as needed", "Careful daily operation", "Employee may retain upon departure"],
-            ],
-            [110, 115, 95, 110, 110],
-            [
-                "Laptops not returned within 10 business days of separation are declared stolen property, remotely wiped, and referred to law enforcement.",
-                "Employees are not held financially liable for accidental hardware damage covered under AppleCare+ or Lenovo Accidental Damage Protection.",
-                "Gross negligence, intentional destruction, or loss of equipment may result in payroll deductions to the extent permitted by law.",
-            ],
-            "EQUIPMENT RETURN LOGISTICS:",
-            "Upon resignation or termination, IT Logistics dispatches prepaid FedEx shipping boxes with custom molded foam to your home address. "
-            "Pack all hardware securely and drop off at any authorized FedEx location within 5 business days of your final day of employment."
-        ),
-        make_article(
-            "Article 10. Medical Remote Accommodations, Caregiver Flexibility & Temporary Exceptions",
-            "10.1 ADA Remote Work Accommodations, Interactive Dialogue & Temporary Flexibility",
-            "Nexus Corporation is deeply dedicated to providing reasonable accommodations to qualified individuals with physical or mental "
-            "disabilities under Title I of the Americans with Disabilities Act (ADA) and the ADA Amendments Act (ADAAA). When an employee "
-            "documented medical condition prevents regular commuting or physical on-site presence, full-time remote work may be evaluated "
-            "and granted as a reasonable accommodation through a structured, good-faith interactive process with People Operations.",
-            "Employees seeking medical remote accommodations must submit a formal Accommodation Request through the HR Benefits Portal, "
-            "accompanied by documentation from a licensed healthcare provider outlining the functional limitations and duration. In addition, "
-            "Nexus provides Temporary Caregiver Flexibility allowing employees experiencing family medical emergencies or childcare crises to "
-            "work 100% remotely for up to 30 calendar days upon Department Director approval, without requiring formal ADA certification.",
-            ["Accommodation Category", "Qualifying Criteria", "Medical Documentation", "Approval Timeline", "Review & Recertification"],
-            [
-                ["Permanent ADA Remote Track", "Documented physical or mental disability", "Licensed physician medical certification", "Interactive dialogue in 5 business days", "Annual medical recertification"],
-                ["Temporary Medical Remote", "Post-surgical recovery, pregnancy, injury", "Physician note with estimated return date", "Expedited approval within 48 hours", "Re-evaluated every 60 days"],
-                ["Emergency Caregiver Exception", "Acute family medical emergency or crisis", "Self-certification form in HR Portal", "Director approval within 24 hours", "Maximum 30 days per event"],
-                ["Immunocompromised Protection", "Documented immunosuppressive therapy", "Oncologist / Specialist clinical note", "Immediate temporary remote status", "Biannual clinical review"],
-                ["Neurodivergent Work Modality", "ADHD, autism spectrum, sensory needs", "Clinical psychologist assessment report", "Interactive workspace adaptation", "Annual check-in with HR Lead"],
-            ],
-            [115, 115, 110, 100, 100],
-            [
-                "Remote accommodation determinations are made on an individualized, case-by-case basis considering essential job functions.",
-                "Medical documentation is stored in an encrypted HIPAA-compliant vault accessible exclusively to the HR Benefits team.",
-                "Denial of a requested accommodation is reviewed by the Chief Legal Officer and Chief People Officer before final notice.",
-            ],
-            "ADA INTERACTIVE PROCESS SLA:",
-            "People Operations initiates the interactive accommodation dialogue within 5 business days of receiving medical documentation. "
-            "During the evaluation period, temporary remote work is granted to safeguard employee health without prejudice."
-        ),
-        make_article(
-            "Article 11. Compliance Auditing, Spot Inspections & Revocation of Remote Privileges",
-            "11.1 Quarterly Badge Telemetry Audits, Spot Security Checks & Formal Appeals",
-            "To maintain equity, transparency, and operational accountability across our hybrid workforce, People Operations conducts regular "
-            "Quarterly Compliance Audits of on-site attendance data. Badge swipe telemetry from facility turnstiles is cross-referenced with "
-            "approved remote schedules in Workday to verify adherence to mandatory Tuesday and Thursday in-office commitments. Employees who "
-            "fall below 80% compliance with mandatory on-site days within a single quarter are flagged for supervisory compliance review.",
-            "First compliance flags trigger a documented counseling conversation between the employee and manager. Continued non-compliance "
-            "in the subsequent quarter triggers formal revocation of remote privileges and a mandatory 5-day on-site requirement for a minimum "
-            "of 90 calendar days. Employees who believe a revocation was issued in error or due to extenuating personal circumstances may submit "
-            "a formal written appeal to the Employee Relations Appeals Panel within 7 business days of revocation notice.",
-            ["Audit Dimension", "Audit Mechanism", "Audit Frequency", "Accountability Authority", "Escalation & Consequences"],
-            [
-                ["Badge Swipe Verification", "Automated turnstile security logs", "Monthly data pulls / Quarterly audit", "People Operations Operations Lead", "Compliance flag sent to manager"],
-                ["Security Endpoint Posture", "CrowdStrike & Jamf posture scans", "Continuous automated telemetry", "Security Operations Center (SOC)", "Automated VPN block upon failure"],
-                ["Workday Time Tracking", "Daily timesheet clock-in audits", "Bi-weekly payroll close review", "Payroll Compliance Manager", "Mandatory overtime correction / PIP"],
-                ["Broadband Speed Validation", "Self-reported quarterly speedtest", "Quarterly attestation check", "IT Service Desk Operations", "Follow-up ISP review / subsidy review"],
-                ["Home Safety Attestation", "Annual virtual ergonomic checklist", "Annual attestation in January", "Facilities Safety Operations", "Mandatory ergonomic retraining"],
-            ],
-            [110, 110, 110, 110, 100],
-            [
-                "Badge data is used strictly for aggregate policy compliance verification and never for micromanaging individual movement.",
-                "Managers cannot grant permanent verbal exemptions from mandatory in-office days; all exemptions require written VP approval.",
-                "Appeals submitted to the Employee Relations Appeals Panel receive a final binding written decision within 10 business days.",
-            ],
-            "ANNUAL REMOTE WORK AGREEMENT:",
-            "All hybrid and remote employees must review, sign, and re-certify their Remote Work Agreement by January 31st of each calendar year. "
-            "Failure to complete the annual re-certification will result in automatic suspension of remote privileges."
-        ),
-        make_article(
-            "Article 12. Corporate Governance, Statutory Tax Disclosures & Executive Authorization",
-            "12.1 Regulatory Alignment, Telecommuting Tax Compliance & Policy Governance",
-            "This Remote Work & Hybrid Workplace Policy operates under the legal governance of the Executive Leadership Team and the Board "
-            "Compensation Committee of Nexus Corporation. The policy is designed in strict compliance with federal, state, and local employment "
-            "regulations, including the Fair Labor Standards Act (FLSA), Occupational Safety and Health Act (OSHA), Americans with Disabilities "
-            "Act (ADA), Internal Revenue Code Section 132 (fringe benefits), and international telework directives across our operating entities.",
-            "Employees are reminded that home office tax deductions under federal IRS rules are generally restricted for W-2 corporate employees "
-            "under the Tax Cuts and Jobs Act (TCJA). Nexus does not provide personal tax advice, and employees are advised to consult a certified "
-            "tax professional regarding state tax withholdings, local commuter taxes, and home office considerations. This policy supersedes all "
-            "prior local agreements, manager exceptions, and verbal representations regarding remote work cadence and arrangements.",
-            ["Governance Pillar", "Statutory Framework", "Oversight Committee", "Enforcement Responsibility", "Annual Calibration Cycle"],
-            [
-                ["Fair Labor Standards (FLSA)", "29 U.S.C. Chapter 8 (Overtime)", "Wage & Hour Compliance Board", "People Operations & Payroll", "Biannual audit of non-exempt hours"],
-                ["Occupational Safety (OSHA)", "29 U.S.C. 654 (General Duty)", "Facilities Safety Committee", "Director of Global Facilities", "Annual home safety audit report"],
-                ["Tax Nexus & Withholding", "IRS Code & State Tax Statutes", "Corporate Tax & Finance Team", "Chief Financial Officer (CFO)", "Quarterly multi-state tax review"],
-                ["Data Security & Export", "NIST 800-53 & OFAC Regulations", "Cybersecurity Governance Board", "Chief Information Security Officer", "Continuous automated compliance"],
-                ["Disability Accommodations", "ADA Title I & Rehabilitation Act", "Accommodations Review Board", "VP of People Operations", "Annual EEO calibration review"],
-            ],
-            [115, 115, 110, 100, 100],
-            [
-                "Nexus reserves the right to amend, suspend, or terminate this policy at any time upon 30 days written notice to employees.",
-                "Questions regarding policy interpretation should be submitted via the HR Help Desk portal under 'Workforce Mobility'.",
-                "Retaliation against any employee exercising statutory rights under telework accommodation provisions is strictly forbidden.",
-            ],
-            "EXECUTIVE RATIFICATION CLAUSE:",
-            "This policy has been formally ratified by the Chief People Officer, General Counsel, and Chief Financial Officer of Nexus Corporation "
-            "effective January 1, 2026, establishing binding operational standards for all global operations and operating subsidiaries."
-        ),
+            "FIT4LIFE ASSOCIATE WELLNESS INITIATIVE:",
+            "TCS Fit4Life fosters a culture of fitness and preventive wellness. Associates are encouraged to participate in annual marathon "
+            "events, corporate step challenges, and campus wellness sports leagues to promote active lifestyle habits."
+        )
     ]
 
     return {
         "filename": "remote_work_policy.pdf",
         "meta": {
-            "id": "HR-POL-004",
-            "title": "Remote Work & Hybrid Workplace Policy",
-            "category": "Workforce Flexibility | Hybrid Work Operations",
+            "id": "TCS-HR-POL-004",
+            "title": "TCS Workplace & Return to Office (RTO) Operating Framework",
+            "category": "Workplace Management | Delivery Operations",
             "eff_date": "January 1, 2026",
         },
-        "sections": sections,
+        "sections": sections
     }

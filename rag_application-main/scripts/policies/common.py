@@ -30,12 +30,12 @@ class NumberedCanvas(canvas.Canvas):
     def draw_page_decorations(self, page_count):
         self.saveState()
         self.setFont("Helvetica-Bold", 7.5)
-        self.setFillColor(colors.HexColor("#0D9488"))
+        self.setFillColor(colors.HexColor("#003B70"))
         if self._pageNumber > 1:
-            self.drawString(36, 764, "NEXUS ENTERPRISE HR REGULATORY MANUAL")
+            self.drawString(36, 764, "TATA CONSULTANCY SERVICES  \u2022  GLOBAL HR REGULATORY MANUAL")
             self.setFont("Helvetica", 7.5)
             self.setFillColor(colors.HexColor("#64748B"))
-            self.drawRightString(612 - 36, 764, "OFFICIAL OPERATING STANDARD  |  CONFIDENTIAL")
+            self.drawRightString(612 - 36, 764, "TCS ULTIMATIX COMPLIANCE  |  OFFICIAL ASSOCIATE STANDARD")
             self.setStrokeColor(colors.HexColor("#CBD5E1"))
             self.setLineWidth(0.5)
             self.line(36, 758, 612 - 36, 758)
@@ -44,9 +44,9 @@ class NumberedCanvas(canvas.Canvas):
         self.line(36, 34, 612 - 36, 34)
         self.setFont("Helvetica", 7.5)
         self.setFillColor(colors.HexColor("#64748B"))
-        self.drawString(36, 24, "People Operations, Legal Compliance & Audit  \u2022  Corporate Governance Standard")
+        self.drawString(36, 24, "TCS People Operations, Legal Compliance & Ethics  \u2022  Tata Code of Conduct (TCoC)")
         self.setFont("Helvetica-Bold", 7.5)
-        self.setFillColor(colors.HexColor("#0F172A"))
+        self.setFillColor(colors.HexColor("#003B70"))
         self.drawRightString(612 - 36, 24, f"Page {self._pageNumber} of {page_count}")
         self.restoreState()
 
@@ -55,16 +55,16 @@ def get_styles():
     b = getSampleStyleSheet()
     return {
         "Title": ParagraphStyle("DocTitle", parent=b["Title"], fontName="Helvetica-Bold",
-            fontSize=12.5, leading=15.0, textColor=colors.HexColor("#0F172A"), alignment=0, spaceAfter=2),
+            fontSize=12.5, leading=15.0, textColor=colors.HexColor("#003B70"), alignment=0, spaceAfter=2),
         "Meta": ParagraphStyle("DocMeta", parent=b["Normal"], fontName="Helvetica-Bold",
-            fontSize=7.0, leading=8.8, textColor=colors.HexColor("#0D9488")),
+            fontSize=7.0, leading=8.8, textColor=colors.HexColor("#0284C7")),
         "MetaVal": ParagraphStyle("DocMetaVal", parent=b["Normal"], fontName="Helvetica",
             fontSize=7.0, leading=8.8, textColor=colors.HexColor("#475569")),
         "Heading": ParagraphStyle("DocHeading", parent=b["Heading2"], fontName="Helvetica-Bold",
-            fontSize=8.8, leading=11.2, textColor=colors.HexColor("#1E293B"),
+            fontSize=8.8, leading=11.2, textColor=colors.HexColor("#0F172A"),
             spaceBefore=4.0, spaceAfter=1.5, keepWithNext=True),
         "SubHeading": ParagraphStyle("DocSubHeading", parent=b["Heading3"], fontName="Helvetica-Bold",
-            fontSize=7.5, leading=9.5, textColor=colors.HexColor("#0F766E"),
+            fontSize=7.5, leading=9.5, textColor=colors.HexColor("#0369A1"),
             spaceBefore=2.5, spaceAfter=1.2, keepWithNext=True),
         "Body": ParagraphStyle("DocBody", parent=b["Normal"], fontName="Helvetica",
             fontSize=7.15, leading=9.9, textColor=colors.HexColor("#334155"), spaceAfter=2.0),
@@ -72,22 +72,22 @@ def get_styles():
             fontSize=7.15, leading=9.7, textColor=colors.HexColor("#334155"),
             leftIndent=10, firstLineIndent=-7, spaceAfter=1.4),
         "TableHeader": ParagraphStyle("TableHeader", parent=b["Normal"], fontName="Helvetica-Bold",
-            fontSize=6.8, leading=8.4, textColor=colors.HexColor("#1E293B")),
+            fontSize=6.8, leading=8.4, textColor=colors.HexColor("#0F172A")),
         "TableCell": ParagraphStyle("TableCell", parent=b["Normal"], fontName="Helvetica",
             fontSize=6.5, leading=8.2, textColor=colors.HexColor("#334155")),
         "Callout": ParagraphStyle("DocCallout", parent=b["Normal"], fontName="Helvetica",
-            fontSize=6.8, leading=9.0, textColor=colors.HexColor("#0F766E")),
+            fontSize=6.8, leading=9.0, textColor=colors.HexColor("#0369A1")),
     }
 
 
 def add_meta_header(story, styles, doc_id, title, category, eff_date):
-    story.append(Paragraph(f"<b>NEXUS HR COMPLIANCE REPOSITORY</b> &bull; {doc_id} &bull; v5.0", styles["Meta"]))
+    story.append(Paragraph(f"<b>TCS GLOBAL ASSOCIATE COMPLIANCE REPOSITORY</b> &bull; {doc_id} &bull; v6.0", styles["Meta"]))
     story.append(Spacer(1, 1.5))
     story.append(Paragraph(title, styles["Title"]))
     story.append(Spacer(1, 1.5))
     meta = [[Paragraph("<b>CATEGORY</b>", styles["Meta"]), Paragraph(category, styles["MetaVal"]),
              Paragraph("<b>EFFECTIVE DATE</b>", styles["Meta"]), Paragraph(eff_date, styles["MetaVal"]),
-             Paragraph("<b>REVIEW CYCLE</b>", styles["Meta"]), Paragraph("Annual Corporate Audit", styles["MetaVal"])]]
+             Paragraph("<b>REVIEW CYCLE</b>", styles["Meta"]), Paragraph("Annual Tata Corporate Audit", styles["MetaVal"])]]
     t = Table(meta, colWidths=[65, 115, 85, 105, 80, 90])
     t.setStyle(TableStyle([
         ("BACKGROUND", (0,0), (-1,-1), colors.HexColor("#F8FAFC")),
@@ -98,7 +98,7 @@ def add_meta_header(story, styles, doc_id, title, category, eff_date):
     ]))
     story.append(t)
     story.append(Spacer(1, 2))
-    story.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#0D9488"), spaceAfter=2.5))
+    story.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#003B70"), spaceAfter=2.5))
 
 
 def add_table(story, styles, headers, rows, widths):
@@ -123,8 +123,8 @@ def add_callout(story, styles, label, text):
     data = [[Paragraph(f"<b>{label}</b><br/>{text}", styles["Callout"])]]
     t = Table(data, colWidths=[540])
     t.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,-1), colors.HexColor("#F0FDFA")),
-        ("BOX", (0,0), (-1,-1), 0.75, colors.HexColor("#0D9488")),
+        ("BACKGROUND", (0,0), (-1,-1), colors.HexColor("#F0F9FF")),
+        ("BOX", (0,0), (-1,-1), 0.75, colors.HexColor("#0284C7")),
         ("TOPPADDING", (0,0), (-1,-1), 3.0), ("BOTTOMPADDING", (0,0), (-1,-1), 3.0),
         ("LEFTPADDING", (0,0), (-1,-1), 5), ("RIGHTPADDING", (0,0), (-1,-1), 5),
     ]))
@@ -136,41 +136,40 @@ def add_callout(story, styles, label, text):
 def add_footer(story, styles):
     story.append(Spacer(1, 2))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#CBD5E1"), spaceAfter=2.5))
-    story.append(Paragraph("Document Governance, Audit History &amp; Statutory Authorization", styles["Heading"]))
+    story.append(Paragraph("Document Governance, Audit History &amp; Tata Code of Conduct Authorization", styles["Heading"]))
     add_table(story, styles,
         ["Revision", "Release Date", "Author / Department", "Summary of Regulatory Changes"],
         [
-            ["v1.0", "Jan 15, 2024", "People Operations Taskforce",
-             "Initial corporate codification of all baseline policy categories. Full legal review by General Counsel and Board HR Committee completed."],
-            ["v2.0", "Nov 10, 2024", "Legal &amp; Compliance Committee",
-             "Updated statutory bereavement protections. Expanded FMLA/ADA interactive accommodation and civic duty leave provisions with state-level addenda."],
-            ["v3.0", "Jan 01, 2025", "Executive Total Rewards Council",
-             "401(k) match enhanced to 4% dollar-for-dollar. Parental leave extended from 12 to 16 weeks (primary) and 4 to 6 weeks (secondary caregiver)."],
-            ["v4.0", "Oct 15, 2025", "Global Workforce Mobility Team",
-             "Formalized 20-day international remote cadence with tax residency affidavits, data sovereignty checks, and OFAC sanctioned-country network blocks."],
-            ["v5.0", "Jan 01, 2026", "Chief People Officer &amp; General Counsel",
-             "Annual consolidation. AI triage citation integration, SHA-256 digital signature records, CSPM policy additions, and GDPR Article 33 breach notification alignment."],
+            ["v1.0", "Jan 15, 2024", "TCS Global HR Taskforce",
+             "Initial codification of associate policies aligned with Tata Code of Conduct (TCoC) and statutory labor standards."],
+            ["v2.0", "Nov 10, 2024", "Corporate Ethics &amp; Compliance",
+             "Updated statutory maternity/paternity protections, POSH ICC inquiry guidelines, and bereavement leave rules."],
+            ["v3.0", "Jan 01, 2025", "TCS Total Rewards Council",
+             "Bouquet of Benefits (BoB) tax optimization, NPS corporate Tier 1 integration, and TCS Health Insurance Scheme (TCS-HIS) enhancement."],
+            ["v4.0", "Oct 15, 2025", "Delivery Operations &amp; Workplace",
+             "Codified 5-day return-to-office (RTO) attendance linkage with quarterly performance pay (QPP) and Secure Borderless Workspaces (SBWS)."],
+            ["v6.0", "Jan 01, 2026", "Chief Human Resources Officer &amp; Legal",
+             "Annual consolidation. ISO 27001 ISMS controls, Generative AI acceptable usage governance, and Ultimatix ESS automation."],
         ],
         [40, 70, 150, 280])
     add_table(story, styles,
         ["Signatory Role", "Authorized Representative", "Approval Status", "Digital Signature Hash"],
         [
-            ["Chief People Officer (CPO)", "Elena Rostova, SPHR",
-             "APPROVED &amp; RATIFIED", "SHA256: 7f8a9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a...c1d2e3f4"],
-            ["General Counsel &amp; VP Legal", "Marcus Vance, Esq.",
-             "COMPLIANCE VERIFIED", "SHA256: 9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c...e4f5a6b7"],
-            ["Chief Financial Officer (CFO)", "David H. Sterling, CPA",
-             "FISCAL BUDGET RATIFIED", "SHA256: 3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e...a7b8c9d0"],
-            ["VP People Operations &amp; Audit", "Sarah Jenkins, SHRM-SCP",
-             "AUDIT CERTIFIED", "SHA256: 5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a...c8d9e0f1"],
+            ["Chief Human Resources Officer (CHRO)", "Milind Lakkad",
+             "APPROVED &amp; RATIFIED", "SHA256: 7f8a9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a...tcs001"],
+            ["General Counsel &amp; Ethics Officer", "S. Venkataramanan, Esq.",
+             "COMPLIANCE VERIFIED", "SHA256: 9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c...tcs002"],
+            ["Chief Financial Officer (CFO)", "Samir Seksaria, FCA",
+             "FISCAL BUDGET RATIFIED", "SHA256: 3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e...tcs003"],
+            ["Global Head - Delivery Excellence", "K. Ananth Krishnan",
+             "GOVERNANCE CERTIFIED", "SHA256: 5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a...tcs004"],
         ],
         [130, 130, 110, 170])
     story.append(Paragraph(
-        "<i>Statutory Disclosure: This official regulatory document constitutes binding corporate policy for Nexus Corporation "
-        "and all operating subsidiaries. Questions regarding statutory interpretation, policy exceptions, or accommodation requests "
-        "must be submitted to People Operations via the Employee Portal within 10 business days. Unauthorized reproduction, "
-        "distribution, or external disclosure outside authorized personnel channels is strictly prohibited under applicable trade "
-        "secret and confidentiality law. This document supersedes all prior versions and verbal representations.</i>",
+        "<i>Statutory Disclosure: This official regulatory document constitutes binding corporate policy for Tata Consultancy Services "
+        "Limited and all global subsidiaries. Inquiries regarding statutory interpretation, policy exceptions, or Ultimatix regularizations "
+        "must be logged via the Ultimatix Global Helpdesk within 5 business days. Unauthorized reproduction or distribution outside "
+        "authorized associate channels is strictly prohibited under Tata Code of Conduct (TCoC). This document supersedes all prior versions.</i>",
         styles["Body"]))
 
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 interface WelcomeBannerProps {
   onNewAction: () => void;
@@ -13,6 +14,11 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
   resolvedCount,
   urgentCount
 }) => {
+  const { user } = useAuth();
+  const currentHour = new Date().getHours();
+  const timeGreeting = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
+  const firstName = user?.name ? user.name.trim().split(' ')[0] : 'Sarah';
+
   return (
     <header className="rounded-3xl p-6 md:p-8 bg-gradient-to-r from-blue-900/25 via-indigo-900/20 to-purple-900/25 backdrop-blur-2xl border border-white/15 shadow-glass-elevated relative overflow-hidden specular-border">
       <div className="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
@@ -27,9 +33,9 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
             <span className="text-white/80">Triage Agent 3.4 Active</span>
           </div>
           <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight">
-            Good morning,{' '}
+            {timeGreeting},{' '}
             <span className="bg-gradient-to-r from-white via-slate-100 to-cyan-200 bg-clip-text text-transparent">
-              Sarah
+              {firstName}
             </span>
           </h2>
           <p className="text-white/60 text-sm md:text-base mt-1.5 max-w-2xl font-light">

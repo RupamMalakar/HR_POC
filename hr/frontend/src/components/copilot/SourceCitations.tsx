@@ -96,18 +96,28 @@ export const SourceCitations: React.FC<SourceCitationsProps> = ({ citations }) =
                 </div>
 
                 <div className="flex items-center justify-between text-[11px] text-white/60 font-mono pt-1 border-t border-white/5">
-                  <span className="truncate text-white/40 text-[10px]" title={source.filename}>
-                    {source.filename}
-                  </span>
+                  <a
+                    href={`/policies/${source.filename}${source.pages.length > 0 ? `#page=${source.pages[0]}` : ''}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-cyan-300 hover:text-cyan-100 hover:underline transition-colors"
+                    title={`Open ${source.filename} in new tab`}
+                  >
+                    <span>View PDF</span>
+                    <ExternalLink className="w-3 h-3 text-cyan-400" />
+                  </a>
                   {source.pages.length > 0 && (
                     <div className="flex items-center gap-1">
                       {source.pages.map(page => (
-                        <span
+                        <a
                           key={page}
-                          className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-200 border border-cyan-500/30 text-[10px] font-semibold"
+                          href={`/policies/${source.filename}#page=${page}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-200 hover:bg-cyan-500/40 border border-cyan-500/30 text-[10px] font-semibold transition-colors"
                         >
                           Page {page}
-                        </span>
+                        </a>
                       ))}
                     </div>
                   )}

@@ -122,13 +122,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const inProgressCount = requests.filter((r) => r.status === 'IN PROGRESS').length || 2;
   const resolvedCount = requests.filter((r) => r.status === 'RESOLVED').length || 12;
 
+  const displayName = CURRENT_USER?.name || 'there';
+  const firstName = displayName.trim().split(' ')[0];
+  const currentHour = new Date().getHours();
+  const timeGreeting = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
+
   return (
     <div className="flex flex-col w-full max-w-[1560px] mx-auto space-y-6">
       {/* 1. WELCOME SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-[32px] leading-tight text-[#0F172A] font-bold tracking-tight">
-            Good morning, Rupam! 👋
+            {timeGreeting}, {firstName}! 👋
           </h1>
           <p className="text-[16px] text-[#334155]">How can we help you today?</p>
         </div>

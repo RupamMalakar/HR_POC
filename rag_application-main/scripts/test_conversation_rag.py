@@ -62,17 +62,29 @@ def test_conversational_rag():
     assert len(res4.sources) > 0, "Leave carry-over follow-up must return sources!"
     print("PASSED Test 4!\n")
 
-    # Test 5: Out of scope policy
-    print("--- Test 5: Missing Policy ('What is the pet insurance policy?') ---")
-    req5 = ChatRequest(question="What is the pet insurance policy?")
+    # Test 5: Out of scope policy (Personal yachts / Private jets)
+    print("--- Test 5: Out of Scope Policy ('What is the policy for employee personal yachts?') ---")
+    req5 = ChatRequest(question="What is the policy for employee personal yachts?")
     res5 = service.answer_question(req5)
     print(f"Answer: {res5.answer[:140]}...")
     print(f"Sources count: {len(res5.sources)}")
-    assert len(res5.sources) == 0, "Missing policy must not return misleading sources!"
+    assert len(res5.sources) == 0, "Out-of-scope inquiry must not return misleading sources!"
+    assert "did not find an official corporate policy" in res5.answer, "Must indicate policy was not found!"
     print("PASSED Test 5!\n")
 
+    # Test 6: Specific Benefit Query ('What is the pet insurance policy?')
+    print("--- Test 6: Specific Benefit Query ('What is the pet insurance policy?') ---")
+    req6 = ChatRequest(question="What is the pet insurance policy?")
+    res6 = service.answer_question(req6)
+    print(f"Answer: {res6.answer[:160]}...")
+    print(f"Sources: {[f'{s.document} (p.{s.page})' for s in res6.sources]}")
+    assert len(res6.sources) > 0, "Pet insurance must return benefits guide source!"
+    assert any("benefits" in s.document.lower() for s in res6.sources), "Source must be benefits guide!"
+    assert "Nationwide" in res6.answer or "Pet" in res6.answer, "Must mention pet insurance details!"
+    print("PASSED Test 6!\n")
+
     print("=======================================================")
-    print("      ALL 5 TESTS PASSED SUCCESSFULLY!")
+    print("      ALL 6 TESTS PASSED SUCCESSFULLY!")
     print("=======================================================\n")
 
 

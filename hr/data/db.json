@@ -1,9 +1,9 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 7,
+      "count": 6,
       "changePercent": 0,
-      "comparisonText": "7 active"
+      "comparisonText": "6 active"
     },
     "highPriority": {
       "count": 3,
@@ -19,7 +19,7 @@
       "targetPercent": 92
     },
     "avgSla": "0m",
-    "resolvedOvernight": 18,
+    "resolvedOvernight": 19,
     "aiTriagedToday": 21,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
@@ -28,35 +28,35 @@
     "7D": {
       "range": "7D",
       "labels": [
+        "Tue",
+        "Wed",
+        "Thu",
         "Fri",
         "Sat",
         "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu"
+        "Mon"
       ],
       "incoming": [
         0,
-        0,
-        0,
-        0,
-        0,
         1,
-        10
+        10,
+        0,
+        0,
+        0,
+        0
       ],
       "resolved": [
         0,
-        0,
-        0,
-        0,
-        0,
         4,
-        7
+        7,
+        0,
+        0,
+        0,
+        1
       ],
-      "openTotal": 7,
-      "receivedToday": 10,
-      "resolvedToday": 7
+      "openTotal": 6,
+      "receivedToday": 0,
+      "resolvedToday": 1
     },
     "30D": {
       "range": "30D",
@@ -68,19 +68,19 @@
       ],
       "incoming": [
         3,
-        6,
-        5,
+        11,
+        0,
         11
       ],
       "resolved": [
         3,
-        3,
-        4,
-        8
+        7,
+        0,
+        9
       ],
-      "openTotal": 7,
-      "receivedToday": 10,
-      "resolvedToday": 7
+      "openTotal": 6,
+      "receivedToday": 0,
+      "resolvedToday": 1
     },
     "90D": {
       "range": "90D",
@@ -97,11 +97,11 @@
       "resolved": [
         0,
         10,
-        8
+        9
       ],
-      "openTotal": 7,
-      "receivedToday": 10,
-      "resolvedToday": 7
+      "openTotal": 6,
+      "receivedToday": 0,
+      "resolvedToday": 1
     }
   },
   "requests": [
@@ -345,8 +345,8 @@
       "categoryDisplay": "Leave & Time",
       "priority": "medium",
       "priorityDisplay": "Medium",
-      "status": "open",
-      "statusUpper": "SUBMITTED",
+      "status": "resolved",
+      "statusUpper": "RESOLVED",
       "waitingTime": "Just now",
       "leaveDetails": {
         "leaveType": "annual",
@@ -354,7 +354,7 @@
       },
       "leaveDays": 3,
       "leaveType": "earned",
-      "leaveDeducted": false,
+      "leaveDeducted": true,
       "createdAt": "2026-10-08T11:26:08.677Z",
       "createdDate": "Oct 08, 2026",
       "aiTriage": {
@@ -396,11 +396,21 @@
           "title": "Leave Cancelled & Balance Restored",
           "desc": "Restored 3 days back to Annual Leave balance.",
           "actor": "Sarah Jenkins (HR Ops)"
+        },
+        {
+          "date": "Oct 12, 2026, 9:55 AM",
+          "title": "Leave Approved & Balance Deducted",
+          "desc": "Approved 3 days deducted from Annual Leave balance. (Remaining: 9 days)",
+          "actor": "Sarah Jenkins (HR Ops)"
         }
       ],
       "comments": [],
-      "resolutionNotes": "",
-      "lastUpdated": "Just now"
+      "resolutionNotes": "Approved and resolved directly by HR Operations Lead.",
+      "lastUpdated": "Just now",
+      "resolverName": "Sarah Jenkins (HR Ops)",
+      "resolvedAt": "2026-10-12T09:55:56.800Z",
+      "leaveDeductedDays": 3,
+      "leaveDeductedType": "earned"
     },
     {
       "id": "REQ-CASE-5",
@@ -3938,8 +3948,9 @@
       "id": "INS-SLA-BREACH",
       "type": "warning",
       "icon": "alarm",
-      "description": "4 tickets have exceeded the standard 24-hour response SLA. 3 are high priority. Average wait time is ~356 hours.",
-      "changeText": "4 overdue (>24h)",
+      "title": "Resolution SLA Bottleneck Detected",
+      "description": "6 tickets have exceeded the standard 24-hour response SLA. 3 are high priority. Average wait time is ~327 hours.",
+      "changeText": "6 overdue (>24h)",
       "impact": "CRITICAL",
       "suggestedRemediation": "Assign dedicated HR specialists to overdue tickets immediately. Enable automated SLA escalation alerts in the request intake pipeline.",
       "relatedCategory": "leave",
@@ -3950,8 +3961,8 @@
       "type": "warning",
       "icon": "rule",
       "title": "Policy Grounding & Coverage Gaps",
-      "description": "7 active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.",
-      "changeText": "7 ungrounded",
+      "description": "6 active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.",
+      "changeText": "6 ungrounded",
       "impact": "HIGH",
       "suggestedRemediation": "Trigger an AI re-triage pass across unclassified tickets. Ensure every specialist response cites an authoritative section in the Employee Handbook.",
       "relatedCategory": "compliance",
@@ -3962,8 +3973,8 @@
       "type": "emerald",
       "icon": "speed",
       "title": "High Resolution Velocity",
-      "description": "72% of all received cases (18/25) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.",
-      "changeText": "72% throughput",
+      "description": "76% of all received cases (19/25) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.",
+      "changeText": "76% throughput",
       "impact": "LOW",
       "suggestedRemediation": "Standardize successful resolution workflows into automated response templates to lock in velocity gains.",
       "relatedCategory": "other",
@@ -4003,6 +4014,18 @@
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1791798956801",
+      "actorType": "user",
+      "actorName": "HR Operations",
+      "actionText": "HR updated case REQ-CASE-7 to RESOLVED",
+      "timeAgo": "Just now",
+      "subText": "Approved and resolved directly by HR Operations Lead.",
+      "tag": {
+        "text": "RESOLVED",
+        "color": "emerald"
+      }
+    },
     {
       "id": "ACT-1791458937964",
       "actorType": "user",
@@ -4817,11 +4840,11 @@
           "total": 10
         },
         "earned": {
-          "remaining": 12,
+          "remaining": 9,
           "total": 18
         },
         "annual": {
-          "remaining": 12,
+          "remaining": 9,
           "total": 18
         }
       }
@@ -5225,6 +5248,81 @@
   },
   "aiTelemetry": {
     "invocations": [
+      {
+        "id": "INV-MV52ZL7R",
+        "timestamp": "10:00:13 AM",
+        "isoDate": "2026-10-12T10:00:13.095Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV52WVOU",
+        "timestamp": "09:58:06 AM",
+        "isoDate": "2026-10-12T09:58:06.702Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV52VKFF",
+        "timestamp": "09:57:05 AM",
+        "isoDate": "2026-10-12T09:57:05.451Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV52UW9H",
+        "timestamp": "09:56:34 AM",
+        "isoDate": "2026-10-12T09:56:34.133Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV526G75",
+        "timestamp": "09:37:33 AM",
+        "isoDate": "2026-10-12T09:37:33.569Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
       {
         "id": "INV-MUYFNC2D",
         "timestamp": "06:20:13 PM",
@@ -6130,6 +6228,90 @@
     }
   },
   "auditLogs": [
+    {
+      "id": "AUDIT-MV52Z3AK-955",
+      "timestamp": "2026-10-12T09:59:49.868Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV52TNAG-911",
+      "timestamp": "2026-10-12T09:55:35.848Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV52RVBY-841",
+      "timestamp": "2026-10-12T09:54:12.958Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV5264PR-468",
+      "timestamp": "2026-10-12T09:37:18.687Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV524CS7-530",
+      "timestamp": "2026-10-12T09:35:55.831Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV5235XB-267",
+      "timestamp": "2026-10-12T09:35:00.287Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV51ZZ8L-876",
+      "timestamp": "2026-10-12T09:32:31.653Z",
+      "actor": "John Smith",
+      "actorId": "ADM001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "ADM001",
+      "description": "User John Smith (john.smith@enterprise.internal) authenticated successfully with roles [ADMIN].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
     {
       "id": "AUDIT-MUZVIM1T-778",
       "timestamp": "2026-10-08T18:32:12.833Z",
