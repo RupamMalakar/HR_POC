@@ -1,9 +1,9 @@
 {
   "metrics": {
     "openRequests": {
-      "count": 6,
+      "count": 7,
       "changePercent": 0,
-      "comparisonText": "6 active"
+      "comparisonText": "7 active"
     },
     "highPriority": {
       "count": 3,
@@ -20,7 +20,7 @@
     },
     "avgSla": "0m",
     "resolvedOvernight": 19,
-    "aiTriagedToday": 21,
+    "aiTriagedToday": 22,
     "aiAssistedCases": 0,
     "draftsGenerated": 0
   },
@@ -28,35 +28,35 @@
     "7D": {
       "range": "7D",
       "labels": [
-        "Tue",
         "Wed",
         "Thu",
         "Fri",
         "Sat",
         "Sun",
-        "Mon"
+        "Mon",
+        "Tue"
       ],
       "incoming": [
-        0,
         1,
         10,
         0,
         0,
         0,
-        0
+        0,
+        1
       ],
       "resolved": [
-        0,
         4,
         7,
         0,
         0,
         0,
-        1
+        1,
+        0
       ],
-      "openTotal": 6,
-      "receivedToday": 0,
-      "resolvedToday": 1
+      "openTotal": 7,
+      "receivedToday": 1,
+      "resolvedToday": 0
     },
     "30D": {
       "range": "30D",
@@ -70,7 +70,7 @@
         3,
         11,
         0,
-        11
+        12
       ],
       "resolved": [
         3,
@@ -78,9 +78,9 @@
         0,
         9
       ],
-      "openTotal": 6,
-      "receivedToday": 0,
-      "resolvedToday": 1
+      "openTotal": 7,
+      "receivedToday": 1,
+      "resolvedToday": 0
     },
     "90D": {
       "range": "90D",
@@ -92,19 +92,81 @@
       "incoming": [
         0,
         14,
-        11
+        12
       ],
       "resolved": [
         0,
         10,
         9
       ],
-      "openTotal": 6,
-      "receivedToday": 0,
-      "resolvedToday": 1
+      "openTotal": 7,
+      "receivedToday": 1,
+      "resolvedToday": 0
     }
   },
   "requests": [
+    {
+      "id": "REQ-1026",
+      "title": "leave",
+      "subject": "leave",
+      "employeeId": "EMP003",
+      "employee": {
+        "id": "EMP003",
+        "name": "Maya Patel",
+        "department": "Design & Product",
+        "email": "maya.patel@enterprise.internal",
+        "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=160&q=80",
+        "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=160&q=80",
+        "role": "EMPLOYEE",
+        "title": "Product Manager"
+      },
+      "category": "leave",
+      "categoryDisplay": "Leave & Time",
+      "priority": "medium",
+      "priorityDisplay": "Medium",
+      "status": "open",
+      "statusUpper": "SUBMITTED",
+      "waitingTime": "Just now",
+      "leaveDetails": {
+        "leaveType": "earned",
+        "days": 1
+      },
+      "leaveDays": 1,
+      "leaveType": "earned",
+      "leaveDeducted": false,
+      "createdAt": "2026-10-13T11:12:45.608Z",
+      "createdDate": "Oct 13, 2026",
+      "aiTriage": {
+        "confidence": 0.96,
+        "classification": "LEAVE Inquiry",
+        "autoRouted": true
+      },
+      "triage": {
+        "category": "leave",
+        "categoryDisplay": "Leave & Attendance",
+        "priority": "MEDIUM",
+        "sensitivity": "NORMAL",
+        "confidence": 0.96,
+        "relevantPolicy": "Annual Paid Vacation & Earned Leave Policy",
+        "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+        "reason": "Absence patterns matched against statutory eligibility and employee leave balance.",
+        "status": "TRIAGED",
+        "analyzedAt": "2026-10-13T11:12:45.613Z"
+      },
+      "description": "give leave fast",
+      "tags": [
+        "leave"
+      ],
+      "timeline": [
+        {
+          "date": "Oct 13, 2026, 11:12 AM",
+          "title": "Request Created",
+          "desc": "Submitted through HR Service Desk self-service portal.",
+          "actor": "Maya Patel"
+        }
+      ],
+      "comments": []
+    },
     {
       "id": "REQ-2619",
       "title": "Casual Leave application (2 days)",
@@ -1863,6 +1925,19 @@
     }
   ],
   "triageQueue": [
+    {
+      "id": "TRG-1791889965613",
+      "requestId": "REQ-1026",
+      "title": "leave",
+      "employeeName": "Maya Patel",
+      "predictedCategory": "leave",
+      "confidenceScore": 0.96,
+      "urgencyScore": "MEDIUM",
+      "reasoning": "Absence patterns matched against statutory eligibility and employee leave balance.",
+      "suggestedAction": "Review Calendar Overlap & Route for Supervisor Endorsement",
+      "status": "TRIAGED",
+      "timestamp": "Just now"
+    },
     {
       "id": "TRG-1791458874254",
       "requestId": "REQ-2619",
@@ -3937,8 +4012,8 @@
       "type": "warning",
       "icon": "trending_up",
       "title": "Leave & Attendance Volume Spike",
-      "description": "Leave & Attendance tickets represent 64% of total case volume (16 of 25 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
-      "changeText": "64% of volume",
+      "description": "Leave & Attendance tickets represent 65% of total case volume (17 of 26 cases). This exceeds the expected 25% threshold and may signal an operational bottleneck.",
+      "changeText": "65% of volume",
       "impact": "HIGH",
       "suggestedRemediation": "Review Leave & Attendance SOP and publish a policy clarification FAQ. Consider triggering an automated acknowledgment template for new Leave & Attendance submissions.",
       "relatedCategory": "leave",
@@ -3949,7 +4024,7 @@
       "type": "warning",
       "icon": "alarm",
       "title": "Resolution SLA Bottleneck Detected",
-      "description": "6 tickets have exceeded the standard 24-hour response SLA. 3 are high priority. Average wait time is ~327 hours.",
+      "description": "6 tickets have exceeded the standard 24-hour response SLA. 3 are high priority. Average wait time is ~353 hours.",
       "changeText": "6 overdue (>24h)",
       "impact": "CRITICAL",
       "suggestedRemediation": "Assign dedicated HR specialists to overdue tickets immediately. Enable automated SLA escalation alerts in the request intake pipeline.",
@@ -3961,8 +4036,8 @@
       "type": "warning",
       "icon": "rule",
       "title": "Policy Grounding & Coverage Gaps",
-      "description": "6 active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.",
-      "changeText": "6 ungrounded",
+      "description": "7 active tickets lack verified grounding against official company policy documents. Resolving them without grounded citations introduces compliance variance.",
+      "changeText": "7 ungrounded",
       "impact": "HIGH",
       "suggestedRemediation": "Trigger an AI re-triage pass across unclassified tickets. Ensure every specialist response cites an authoritative section in the Employee Handbook.",
       "relatedCategory": "compliance",
@@ -3973,8 +4048,8 @@
       "type": "emerald",
       "icon": "speed",
       "title": "High Resolution Velocity",
-      "description": "76% of all received cases (19/25) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.",
-      "changeText": "76% throughput",
+      "description": "73% of all received cases (19/26) are successfully resolved. HR throughput velocity is exceeding SLA benchmark targets.",
+      "changeText": "73% throughput",
       "impact": "LOW",
       "suggestedRemediation": "Standardize successful resolution workflows into automated response templates to lock in velocity gains.",
       "relatedCategory": "other",
@@ -3997,8 +4072,8 @@
     {
       "category": "leave",
       "name": "Leave & Attendance",
-      "count": 16,
-      "percentage": 64
+      "count": 17,
+      "percentage": 65
     },
     {
       "category": "documents",
@@ -4014,6 +4089,18 @@
     }
   ],
   "activities": [
+    {
+      "id": "ACT-1791889965613",
+      "actorType": "user",
+      "actorName": "Maya Patel",
+      "actionText": "Maya Patel submitted REQ-1026 (Leave & Time)",
+      "timeAgo": "Just now",
+      "subText": "leave",
+      "tag": {
+        "text": "New Ticket",
+        "color": "cyan"
+      }
+    },
     {
       "id": "ACT-1791798956801",
       "actorType": "user",
@@ -5249,6 +5336,81 @@
   "aiTelemetry": {
     "invocations": [
       {
+        "id": "INV-MV6LA72O",
+        "timestamp": "11:20:07 AM",
+        "isoDate": "2026-10-13T11:20:07.248Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV6L9JB6",
+        "timestamp": "11:19:36 AM",
+        "isoDate": "2026-10-13T11:19:36.450Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV6L8TNM",
+        "timestamp": "11:19:03 AM",
+        "isoDate": "2026-10-13T11:19:03.202Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV6L1Q70",
+        "timestamp": "11:13:32 AM",
+        "isoDate": "2026-10-13T11:13:32.124Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
+        "id": "INV-MV6KZ8YE",
+        "timestamp": "11:11:36 AM",
+        "isoDate": "2026-10-13T11:11:36.470Z",
+        "service": "Test Bench",
+        "model": "gpt-4o",
+        "promptTokens": 20,
+        "completionTokens": 40,
+        "totalTokens": 60,
+        "latencyMs": 120,
+        "cost": 0.0007,
+        "status": "200_OK",
+        "queryPreview": "Live model test inquiry",
+        "citationCount": 1
+      },
+      {
         "id": "INV-MV52ZL7R",
         "timestamp": "10:00:13 AM",
         "isoDate": "2026-10-12T10:00:13.095Z",
@@ -6228,6 +6390,66 @@
     }
   },
   "auditLogs": [
+    {
+      "id": "AUDIT-MV6MXT4Q-33",
+      "timestamp": "2026-10-13T12:06:28.538Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV6MV43K-519",
+      "timestamp": "2026-10-13T12:04:22.784Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV6MKBYO-865",
+      "timestamp": "2026-10-13T11:55:59.760Z",
+      "actor": "Maya Patel",
+      "actorId": "EMP003",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP003",
+      "description": "User Maya Patel (maya.patel@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV6LEWA6-27",
+      "timestamp": "2026-10-13T11:23:46.542Z",
+      "actor": "Alex Johnson",
+      "actorId": "EMP001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "EMP001",
+      "description": "User Alex Johnson (alex.johnson@enterprise.internal) authenticated successfully with roles [EMPLOYEE].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "AUDIT-MV6L7LWR-772",
+      "timestamp": "2026-10-13T11:18:06.507Z",
+      "actor": "Sarah Jenkins",
+      "actorId": "HR001",
+      "action": "USER_LOGIN",
+      "resource": "AUTH",
+      "resourceId": "HR001",
+      "description": "User Sarah Jenkins (sarah.jenkins@enterprise.internal) authenticated successfully with roles [HR_SPECIALIST].",
+      "status": "SUCCESS",
+      "ip": "127.0.0.1"
+    },
     {
       "id": "AUDIT-MV52Z3AK-955",
       "timestamp": "2026-10-12T09:59:49.868Z",

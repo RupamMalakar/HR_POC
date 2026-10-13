@@ -139,10 +139,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const taxPolicy = policies.find((p) => p.id === 'pol-2') || policies[1];
   const hybridPolicy = policies.find((p) => p.id === 'pol-3') || policies[2];
 
-  // Request counts
-  const openCount = requests.filter((r) => r.status === 'SUBMITTED').length || 5;
-  const inProgressCount = requests.filter((r) => r.status === 'IN PROGRESS').length || 2;
-  const resolvedCount = requests.filter((r) => r.status === 'RESOLVED').length || 12;
+  // Request counts strictly matching the active user's actual requests
+  const isSubmitted = (s?: string) => {
+    const val = (s || '').trim().toUpperCase();
+    return val === 'SUBMITTED' || val === 'OPEN';
+  };
+  const isInProgress = (s?: string) => {
+    const val = (s || '').trim().toUpperCase();
+    return val === 'IN PROGRESS' || val === 'IN_PROGRESS' || val === 'IN_REVIEW' || val === 'PENDING';
+  };
+  const isResolved = (s?: string) => {
+    const val = (s || '').trim().toUpperCase();
+    return val === 'RESOLVED' || val === 'CLOSED' || val === 'APPROVED';
+  };
+
+  const openCount = requests.filter((r) => isSubmitted(r.status)).length;
+  const inProgressCount = requests.filter((r) => isInProgress(r.status)).length;
+  const resolvedCount = requests.filter((r) => isResolved(r.status)).length;
+
+  const availableLeavesDays = leaveBalance
+    ? (leaveBalance.casual?.remaining ?? 0) + (leaveBalance.sick?.remaining ?? 0) + (leaveBalance.earned?.remaining ?? 0)
+    : 18;
 
   const { user } = useAuth();
   const activeUser = user || CURRENT_USER;
@@ -508,7 +525,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="space-y-1">
               <span className="text-[12px] text-[#64748B] font-medium">Available Leaves</span>
               <div className="text-[32px] leading-tight font-bold text-[#0F172A]">
-                18 <span className="text-[14px] text-[#64748B] font-normal">days</span>
+                {availableLeavesDays} <span className="text-[14px] text-[#64748B] font-normal">days</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
